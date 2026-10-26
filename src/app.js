@@ -5,7 +5,13 @@ const $ = selector => document.querySelector(selector);
 const home = $("#home"), listView = $("#list-view"), notice = $("#notice");
 let token = readShareToken(), list = null, items = [], busy = false, editingId = null;
 function message(text, isError = false) { notice.textContent = text; notice.classList.toggle("error", isError); notice.hidden = !text; }
-function setBusy(value) { busy = value; document.querySelectorAll("button").forEach(button => { button.disabled = value; }); }
+function setBusy(value) {
+  busy = value;
+  document.querySelectorAll("button").forEach(button => { button.disabled = value; });
+  if (!value) { syncCreateButton(); syncItemButton(); }
+}
+function syncCreateButton() { $("#create-button").disabled = busy || !$("#list-name").value.trim(); }
+function syncItemButton() { $("#save-item").disabled = busy || !$("#item-name").value.trim(); }
 async function run(action, fields = {}) { return callApi({ action, ...(action === "create_list" ? {} : { token }), ...fields }); }
 function errorText(error) { return error instanceof ApiError ? error.message : "Ocorreu um erro inesperado. Tente novamente."; }
 function shareUrl() { return makeShareLink(new URL(location.pathname, location.origin).href, token); }
@@ -40,6 +46,10 @@ async function loadList() {
   if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" });
   list = data.list; items = data.items; showList(); render();
 }
+$("#list-name").addEventListener("input", syncCreateButton);
+$("#item-name").addEventListener("input", syncItemButton);
+syncCreateButton();
+syncItemButton();
 function clearItemForm() { editingId = null; $("#item-form").reset(); $("#item-quantity").value = "1"; $("#item-form-title").textContent = "Adicionar item"; $("#save-item").textContent = "Adicionar item"; $("#cancel-edit").hidden = true; }
 function editItem(item) { editingId = item.id; $("#item-name").value = item.name; $("#item-quantity").value = item.quantity ?? 1; $("#item-unit").value = item.unit || "un"; $("#item-price").value = item.estimated_price ?? ""; $("#item-notes").value = item.notes || ""; $("#item-form-title").textContent = "Editar item"; $("#save-item").textContent = "Salvar alterações"; $("#cancel-edit").hidden = false; $("#item-name").focus(); }
 function itemFields() { return { name: $("#item-name").value.trim(), quantity: Number($("#item-quantity").value), unit: $("#item-unit").value, estimated_price: $("#item-price").value === "" ? null : Number($("#item-price").value), notes: $("#item-notes").value.trim() }; }
@@ -53,7 +63,7 @@ $("#create-form").addEventListener("submit", async event => {
     if (!data?.list || typeof data.list.name !== "string" || typeof data.token !== "string" || !/^[a-f0-9]{64}$/.test(data.token)) throw new ApiError("O serviço retornou dados inesperados ao criar a lista.", { code: "INVALID_RESPONSE" });
     token = data.token; list = data.list; items = []; location.hash = new URLSearchParams({ token }).toString(); showList(); render(); message("Lista criada. Compartilhe o link para convidar outras pessoas.");
   } catch (error) { message(errorText(error), true); }
-  finally { setBusy(false); button.disabled = false; }
+  finally { setBusy(false); syncCreateButton(); }
 });
 $("#item-form").addEventListener("submit", async event => {
   event.preventDefault(); if (busy) return;
@@ -66,7 +76,7 @@ $("#item-form").addEventListener("submit", async event => {
     if (editingId) items = items.map(item => item.id === saved.id ? saved : item); else items = [...items, saved];
     clearItemForm(); render(); message(editingId ? "Item atualizado." : "Item adicionado.");
   } catch (error) { message(errorText(error), true); }
-  finally { setBusy(false); $("#save-item").disabled = false; }
+  finally { setBusy(false); }
 });
 $("#items").addEventListener("click", async event => {
   const editId = event.target.dataset.edit, deleteId = event.target.dataset.delete;
@@ -94,6 +104,6 @@ $("#share-button").addEventListener("click", async () => {
   catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); }
 });
 $("#copy-button").addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); message("Link copiado."); } catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); } });
-if (token) { home.hidden = true; listView.hidden = false; $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; $("#save-item").disabled = false; showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
+if (token) { home.hidden = true; listView.hidden = false; $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
 
 
