@@ -107,3 +107,7 @@ $("#copy-button").addEventListener("click", async () => { try { await navigator.
 if (token) { home.hidden = true; listView.hidden = false; $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
 
 
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}

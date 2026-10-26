@@ -17,3 +17,7 @@ A chave pública anon/publishable do Supabase pode ser configurada no `meta[name
 O código colado define `verify_jwt` e a função permite qualquer origem (`Access-Control-Allow-Origin: *`). Para uso anônimo, verifique se a função está implantada com verificação JWT do gateway desativada; a validação SHA-256 do token da lista continua no código da função. A chave privada da lista é a autorização. O CORS deve ser restringido à origem de produção quando possível. Não tive acesso ao Dashboard para confirmar ou alterar esses itens.
 
 O token de 256 bits é compartilhado por fragmento (`#token=...`), que não é enviado na requisição ao servidor Pages. O frontend não grava tokens em armazenamento persistente nem os imprime em logs. Nenhuma operação acessa as tabelas diretamente.
+
+## Instalar no celular
+
+O site inclui manifesto, ícone e service worker para instalação como aplicativo. Publique em HTTPS (GitHub Pages já oferece HTTPS). No Android, abra o site no Chrome e use **Instalar app** ou **Adicionar à tela inicial**. No iPhone, abra no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. A lista precisa de internet para sincronizar e compartilhar alterações.
