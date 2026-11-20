@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { validateItem, itemSubtotal, listTotal } from "../src/domain.js";
-import { makeShareLink, readShareToken } from "../src/links.js";
+import { makeShareLink, readShareToken, readShareTokenFromUrl } from "../src/links.js";
 import { callApi, ApiError } from "../src/api.js";
 test("validates item name, quantity, price and notes", () => {
   assert.deepEqual(validateItem({ name: " Arroz ", quantity: 2, unitPrice: 8.5, notes: "integral" }), {});
@@ -20,6 +20,15 @@ test("puts 64-character backend token in URL fragment and reads it back", () => 
   assert.equal(readShareToken(new URL(link)), token);
   assert.equal(readShareToken({ hash: "#token=not-a-real-token" }), null);
   assert.throws(() => makeShareLink("https://example.com/", "weak"), TypeError);
+});
+test("accepts Android share links only for the configured HTTPS page", () => {
+  const token = "b".repeat(64);
+  const base = "https://lindomarso.github.io/lista-compras-compartilhada/";
+  assert.equal(readShareTokenFromUrl(makeShareLink(base, token), base), token);
+  assert.equal(readShareTokenFromUrl(`http://lindomarso.github.io/lista-compras-compartilhada/#token=${token}`, base), null);
+  assert.equal(readShareTokenFromUrl(`https://example.com/lista-compras-compartilhada/#token=${token}`, base), null);
+  assert.equal(readShareTokenFromUrl(`${base}outro/#token=${token}`, base), null);
+  assert.equal(readShareTokenFromUrl(`${base}#token=fraco`, base), null);
 });
 test("calls the actual API contract with POST JSON and optional public key headers", async () => {
   let call;

@@ -1,0 +1,8 @@
+{
+  "appId": "com.lindomarso.listajunto",
+  "appName": "Lista Junto",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

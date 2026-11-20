@@ -1,9 +1,21 @@
 import { callApi, ApiError } from "./api.js";
 import { validateItem, itemSubtotal, listTotal, formatCurrency } from "./domain.js";
-import { readShareToken, makeShareLink } from "./links.js";
+import { readShareToken, readShareTokenFromUrl, makeShareLink } from "./links.js";
 const $ = selector => document.querySelector(selector);
 const home = $("#home"), listView = $("#list-view"), notice = $("#notice");
 let token = readShareToken(), list = null, items = [], busy = false, editingId = null;
+// The source version also runs directly in a browser, where bare npm imports
+// cannot be resolved. Load the native plugin only inside the bundled Android app.
+if (window.Capacitor?.isNativePlatform?.()) {
+  const { App } = await import("@capacitor/app");
+  App.addListener("appUrlOpen", ({ url }) => {
+    const shareBase = document.querySelector('meta[name="share-base-url"]')?.content || location.href;
+    const incomingToken = readShareTokenFromUrl(url, shareBase);
+    if (!incomingToken) return;
+    location.hash = new URLSearchParams({ token: incomingToken }).toString();
+    location.reload();
+  });
+}
 function message(text, isError = false) { notice.textContent = text; notice.classList.toggle("error", isError); notice.hidden = !text; }
 function setBusy(value) {
   busy = value;
@@ -14,8 +26,18 @@ function syncCreateButton() { $("#create-button").disabled = busy || !$("#list-n
 function syncItemButton() { $("#save-item").disabled = busy || !$("#item-name").value.trim(); }
 async function run(action, fields = {}) { return callApi({ action, ...(action === "create_list" ? {} : { token }), ...fields }); }
 function errorText(error) { return error instanceof ApiError ? error.message : "Ocorreu um erro inesperado. Tente novamente."; }
-function shareUrl() { return makeShareLink(new URL(location.pathname, location.origin).href, token); }
-function showList() { home.hidden = true; listView.hidden = false; $("#list-title").textContent = list.name; $("#share-link").value = shareUrl(); }
+function shareUrl() {
+  const shareBase = document.querySelector('meta[name="share-base-url"]')?.content?.trim();
+  const baseUrl = shareBase || new URL(location.pathname, location.origin).href;
+  return makeShareLink(baseUrl, token);
+}
+function showList() {
+  home.hidden = true;
+  listView.hidden = false;
+  $("#app-shell").classList.add("list-open");
+  $("#list-title").textContent = list.name;
+  $("#share-link").value = shareUrl();
+}
 function render() {
   const target = $("#items"); target.replaceChildren();
   const pending = items.filter(item => !item.purchased), purchased = items.filter(item => item.purchased);
@@ -104,7 +126,7 @@ $("#share-button").addEventListener("click", async () => {
   catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); }
 });
 $("#copy-button").addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); message("Link copiado."); } catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); } });
-if (token) { home.hidden = true; listView.hidden = false; $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
+if (token) { home.hidden = true; listView.hidden = false; $("#app-shell").classList.add("list-open"); $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
 
 
 
