@@ -6,7 +6,7 @@ export function validateItem(item) {
     const quantity = Number(item.quantity);
     if (!Number.isFinite(quantity) || quantity <= 0 || quantity > 1000000) errors.quantity = "A quantidade deve ser maior que zero.";
   }
-  if (item?.unitPrice !== undefined && item.unitPrice !== "") {
+  if (item?.unitPrice != null && item.unitPrice !== "") {
     const price = Number(item.unitPrice);
     if (!Number.isFinite(price) || price < 0 || price > 100000000) errors.unitPrice = "Informe um preço válido e não negativo.";
   }
@@ -19,7 +19,11 @@ export function itemSubtotal(quantity, unitPrice) {
   return Math.round((q * p + Number.EPSILON) * 100) / 100;
 }
 export function listTotal(items) {
-  return items.reduce((sum, item) => sum + (itemSubtotal(item.quantity, item.unitPrice) ?? 0), 0);
+  const cents = items.reduce((sum, item) => sum + Math.round((itemSubtotal(item.quantity, itemUnitPrice(item)) ?? 0) * 100), 0);
+  return cents / 100;
+}
+export function itemUnitPrice(item) {
+  return Object.hasOwn(item, "estimated_price") ? item.estimated_price : item.unitPrice;
 }
 export function formatCurrency(value) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);

@@ -13,6 +13,15 @@ test("computes subtotal and total without mixing unit and total price", () => {
   assert.equal(itemSubtotal(2, ""), null);
   assert.equal(listTotal([{ quantity: 2, estimated_price: 3.25, unitPrice: 3.25 }, { quantity: 1, unitPrice: 10 }]), 16.5);
 });
+test("totals prices from the shared-list API, including purchased items and absent prices", () => {
+  assert.equal(listTotal([
+    { quantity: 2, estimated_price: 8.5 },
+    { quantity: 1, estimated_price: "7.25" },
+    { quantity: 1, estimated_price: 18.9, purchased: true },
+    { quantity: 12, estimated_price: null, unitPrice: 4 },
+    { quantity: 1 },
+  ]), 43.15);
+});
 test("puts 64-character backend token in URL fragment and reads it back", () => {
   const token = "a".repeat(64);
   const link = makeShareLink("https://lindomarso.github.io/lista-compras-compartilhada/", token);

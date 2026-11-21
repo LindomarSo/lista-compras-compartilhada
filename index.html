@@ -1,23 +1,121 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f7f1"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lista Junto"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="description" content="Crie e compartilhe sua lista de compras com quem você quiser."><meta name="supabase-anon-key" content=""><meta name="share-base-url" content="https://lindomarso.github.io/lista-compras-compartilhada/">
-  <title>Lista Junto — compras em conjunto</title><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"><link rel="stylesheet" href="./src/styles.css"><script type="module" src="./src/app.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lista Junto">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Monte a lista de compras da casa e convide quem vai comprar com você. Sem cadastro.">
+  <meta name="supabase-anon-key" content="">
+  <meta name="share-base-url" content="https://lindomarso.github.io/lista-compras-compartilhada/">
+  <meta name="play-store-url" content="">
+  <title>Lista Junto — compras em conjunto</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./src/styles.css">
+  <script type="module" src="./src/app.js"></script>
 </head>
 <body>
-  <main class="layout" id="app-shell">
-    <header class="topbar"><a class="brand" href="./" aria-label="Lista Junto, início"><span class="brand-icon" aria-hidden="true">↗</span> lista<span>junto</span></a><span class="top-note">Compras em conjunto, sem complicação</span></header>
-    <section class="hero" aria-labelledby="title"><div class="hero-copy"><p class="eyebrow">MAIS SIMPLES, JUNTOS</p><h1 id="title">Tudo que falta.<br><span>Na mesma lista.</span></h1><p class="intro">Monte sua lista de compras e compartilhe com a família. Todo mundo acompanha as mudanças em um só lugar.</p></div><div class="basket" aria-hidden="true"><span>🥬</span><span>🍊</span><span>🥖</span><span class="basket-check">✓</span></div></section>
-    <section id="home" class="card" aria-labelledby="card-title"><div class="card-heading"><div class="heading-icon" aria-hidden="true">＋</div><div><p class="eyebrow">COMECE POR AQUI</p><h2 id="card-title">Crie uma lista compartilhada</h2></div></div>
-      <form id="create-form"><label for="list-name">Nome da lista</label><div class="form-row"><input id="list-name" name="listName" type="text" maxlength="100" placeholder="Ex.: Compras da semana" autocomplete="off" required><button id="create-button" type="submit">Criar lista <span aria-hidden="true">→</span></button></div><p class="helper">Compartilhe um link privado para todos adicionarem e conferirem itens.</p></form>
-      <section id="saved-lists" class="saved-lists" hidden aria-labelledby="saved-title"><h3 id="saved-title">Minhas listas</h3><ul id="saved-list-items"></ul><p class="helper">Salvas neste dispositivo. Para compartilhar, use o link da lista.</p></section>
+  <main class="layout">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Lista Junto, início">
+        <span class="brand-icon" aria-hidden="true">↗</span>
+        <span>lista<span class="brand-accent">junto</span></span>
+      </a>
+    </header>
+
+    <section id="home" aria-labelledby="home-title">
+      <h1 id="home-title" tabindex="-1">Lista de compras da casa</h1>
+      <section id="saved-lists" class="card saved-lists" hidden aria-labelledby="saved-title">
+        <h2 id="saved-title">Minhas listas</h2>
+        <ul id="saved-list-items" class="rows"></ul>
+      </section>
+      <section class="card" aria-labelledby="new-list-title">
+        <h2 id="new-list-title">Nova lista</h2>
+        <p class="helper">Monte a lista e convide quem vai comprar com você. Sem cadastro.</p>
+        <form id="create-form">
+          <label for="list-name">Nome da lista</label>
+          <div class="form-row">
+            <input id="list-name" name="listName" type="text" maxlength="100" value="Compras da semana" autocomplete="off" required>
+            <button id="create-button" type="submit">Criar lista</button>
+          </div>
+        </form>
+      </section>
+      <p id="home-notice" class="notice" role="status" hidden></p>
     </section>
-    <section id="list-view" class="card list-card" hidden aria-labelledby="list-title"><div class="list-header"><div><p class="eyebrow">SUA LISTA COMPARTILHADA</p><h2 id="list-title"></h2></div><div class="list-actions"><button id="delete-list-button" class="delete-list" type="button">Excluir lista</button><button id="share-button" class="secondary" type="button"><svg class="share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Compartilhar</span></button></div></div>
-      <form id="item-form" class="item-form"><h3 id="item-form-title">Adicionar item</h3><div class="item-fields"><div class="field-name"><label for="item-name">Produto</label><input id="item-name" maxlength="200" required placeholder="Ex.: Tomate"></div><div><label for="item-quantity">Quantidade</label><input id="item-quantity" type="number" min="0.01" step="any" value="1" required></div><div><label for="item-unit">Unidade</label><select id="item-unit"><option>un</option><option>kg</option><option>g</option><option>l</option><option>ml</option><option>pacote</option><option>caixa</option></select></div><div><label for="item-price">Preço unitário</label><input id="item-price" type="number" min="0" step="0.01" placeholder="0,00"></div><div class="field-notes"><label for="item-notes">Observações (opcional)</label><input id="item-notes" maxlength="500" placeholder="Marca, detalhes..."></div><div class="field-action"><button id="save-item" type="submit">Adicionar item</button><button id="cancel-edit" class="text-button" type="button" hidden>Cancelar</button></div></div></form>
-      <div class="items-heading"><h3>Itens</h3><span id="item-count"></span></div><div id="items-state" class="empty-state">Carregando lista…</div><ul id="items" class="items" aria-live="polite"></ul><div class="list-total"><span>Total estimado</span><strong id="list-total">—</strong></div>
+
+    <section id="list-view" hidden aria-labelledby="list-title">
+      <div class="list-header">
+        <h1 id="list-title" tabindex="-1">Lista de compras</h1>
+        <div id="list-actions" class="actions" hidden>
+          <button id="share-button" type="button" aria-haspopup="dialog">Convidar</button>
+          <details class="menu">
+            <summary class="icon-button" aria-label="Opções da lista"><span aria-hidden="true">⋯</span></summary>
+            <div class="menu-actions">
+              <button id="delete-list-button" class="danger" type="button">Excluir lista</button>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div id="sync-panel" class="notice sync-panel" hidden>
+        <p id="sync-status" role="status"></p>
+        <button id="retry-button" class="secondary" type="button" hidden>Tentar novamente</button>
+      </div>
+
+      <div id="list-content" class="card list-card" hidden>
+        <form id="item-form">
+          <label id="item-form-title" for="item-name">Adicionar produto</label>
+          <div class="composer">
+            <input id="item-name" name="product" maxlength="120" required placeholder="Ex.: Tomate" enterkeyhint="done" autocomplete="off">
+            <button id="save-item" type="submit">Adicionar</button>
+          </div>
+          <details id="item-details" class="item-details">
+            <summary>Detalhes do item</summary>
+            <div class="detail-fields">
+              <div><label for="item-quantity">Quantidade</label><input id="item-quantity" type="number" min="0.01" step="any" value="1" required></div>
+              <div><label for="item-unit">Unidade</label><select id="item-unit"><option>un</option><option>kg</option><option>g</option><option>l</option><option>ml</option><option>pacote</option><option>caixa</option></select></div>
+              <div><label for="item-price">Preço por unidade</label><input id="item-price" type="number" min="0" step="0.01" placeholder="0,00"></div>
+              <div><label for="item-notes">Observações</label><input id="item-notes" maxlength="500" placeholder="Marca, detalhes…"></div>
+            </div>
+          </details>
+          <button id="cancel-edit" class="secondary" type="button" hidden>Cancelar edição</button>
+        </form>
+        <p id="list-notice" class="notice" role="status" hidden></p>
+
+        <section class="items-section" aria-labelledby="pending-title">
+          <header class="items-heading"><h2 id="pending-title">Para comprar</h2><span id="pending-count"></span></header>
+          <p id="items-state" class="empty-state"></p>
+          <ul id="items" class="rows"></ul>
+        </section>
+        <details id="purchased-section" class="purchased-section" hidden>
+          <summary><span>Comprados</span><span id="purchased-count" class="item-count"></span></summary>
+          <ul id="purchased-items" class="rows"></ul>
+        </details>
+        <div class="list-total"><span>Total estimado</span><strong id="list-total">—</strong></div>
+      </div>
+      <p id="install-panel" class="install-panel" hidden><a id="install-link" href="https://play.google.com/store/apps/details?id=com.lindomarso.listajunto" target="_blank" rel="noopener noreferrer">Instalar pelo Google Play</a></p>
     </section>
-    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div><footer><span>Feito para dividir a lista, não a dor de cabeça.</span><span class="footer-mark">LJ</span></footer>
   </main>
+
+  <dialog id="invite-dialog" aria-labelledby="invite-title">
+    <div class="dialog-heading">
+      <h2 id="invite-title">Convidar para a lista</h2>
+      <form method="dialog"><button class="icon-button" type="submit" aria-label="Fechar convite">×</button></form>
+    </div>
+    <p class="helper">Quem tiver o link pode adicionar e marcar itens.</p>
+    <div class="dialog-actions">
+      <button id="send-invite-button" type="button" autofocus>Compartilhar convite</button>
+      <button id="copy-link-button" class="secondary" type="button">Copiar link</button>
+    </div>
+    <div id="manual-copy" hidden>
+      <label for="invite-link">Link da lista</label>
+      <input id="invite-link" type="text" readonly>
+    </div>
+    <p id="invite-notice" class="notice" role="status" hidden></p>
+  </dialog>
 </body>
 </html>

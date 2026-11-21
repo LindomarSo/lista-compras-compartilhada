@@ -16,7 +16,7 @@ A chave pública anon/publishable do Supabase pode ser configurada no `meta[name
 
 O código colado define `verify_jwt` e a função permite qualquer origem (`Access-Control-Allow-Origin: *`). Para uso anônimo, verifique se a função está implantada com verificação JWT do gateway desativada; a validação SHA-256 do token da lista continua no código da função. A chave privada da lista é a autorização. O CORS deve ser restringido à origem de produção quando possível. Não tive acesso ao Dashboard para confirmar ou alterar esses itens.
 
-O token de 256 bits é compartilhado por fragmento (`#token=...`), que não é enviado na requisição ao servidor Pages. O frontend não grava tokens em armazenamento persistente nem os imprime em logs. Nenhuma operação acessa as tabelas diretamente.
+O token de 256 bits é compartilhado por fragmento (`#token=...`), que não é enviado na requisição ao servidor Pages. O frontend guarda o token e a última versão da lista no armazenamento local deste dispositivo para **Minhas listas**. A lista aberta busca alterações a cada 15 segundos enquanto estiver visível e online, ao voltar para ela e ao reconectar. A cópia offline permite consulta. Nenhuma operação acessa as tabelas diretamente.
 
 ## Android com Capacitor
 
@@ -32,6 +32,8 @@ O Android Studio pode gerar um Android App Bundle (AAB) assinado em **Build > Ge
 
 Os convites continuam apontando para `https://lindomarso.github.io/lista-compras-compartilhada/` e carregam o token no fragmento da URL. O app Android declara um App Link HTTPS para essa página. Para o Android verificar e abrir convites diretamente no app, publique também na raiz do domínio `https://lindomarso.github.io/.well-known/assetlinks.json` com o pacote `com.lindomarso.listajunto` e a impressão SHA-256 do certificado de assinatura usado pela Play Console. O exemplo está em `docs/assetlinks.json.example`. Como este repositório publica em um caminho de projeto, a associação na raiz do domínio precisa ser hospedada no site raiz de `lindomarso.github.io` ou o app deve passar a usar um domínio próprio. Sem esse arquivo no host, os convites ainda abrem no site, mas o Android não consegue confirmar automaticamente o App Link.
 
+A ficha, o roteiro de capturas Android, os testes em dois celulares e o piloto estão em [docs/google-play-release.md](docs/google-play-release.md).
+
 ## Instalar no celular
 
-O site inclui manifesto, ícone e service worker para instalação como aplicativo. Publique em HTTPS (GitHub Pages já oferece HTTPS). No Android, abra o site no Chrome e use **Instalar app** ou **Adicionar à tela inicial**. No iPhone, abra no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. A lista precisa de internet para sincronizar e compartilhar alterações.
+O site inclui manifesto, ícone e service worker para instalação como aplicativo. Publique em HTTPS (GitHub Pages já oferece HTTPS). No Android, abra o site no Chrome e use **Instalar app** ou **Adicionar à tela inicial**. No iPhone, abra no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**.

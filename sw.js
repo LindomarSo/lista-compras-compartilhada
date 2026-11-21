@@ -1,4 +1,4 @@
-const CACHE_NAME = "lista-junto-shell-v3";
+const CACHE_NAME = "lista-junto-shell-v4";
 const SHELL_FILES = [
   "./",
   "./index.html",
@@ -20,16 +20,17 @@ self.addEventListener("install", event => {
 });
 
 self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(names => Promise.all(names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))))
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith("lista-junto-shell-") && name !== CACHE_NAME).map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener("fetch", event => {
   const request = event.request;
   const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== self.location.origin) return;
+  if (request.method !== "GET" || !url.href.startsWith(self.registration.scope)) return;
 
   event.respondWith((async () => {
     const cached = await caches.match(request);
