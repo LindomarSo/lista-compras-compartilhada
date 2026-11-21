@@ -225,6 +225,19 @@ button:disabled { cursor: not-allowed; }
 .list-open .list-card { margin-top: 34px; }
 .list-open .topbar { border-bottom: 0; }
 .list-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 23px; }
+.list-actions { display: flex; align-items: center; gap: 8px; }
+.delete-list { background: #fbefed; color: #9c493f; }
+.delete-list:hover { background: #f7dfdc; }
+.saved-lists { margin-top: 25px; border-top: 1px solid var(--line); padding-top: 20px; }
+.saved-lists h3 { margin: 0 0 10px; font-size: 15px; }
+.saved-lists ul { margin: 0; padding: 0; list-style: none; }
+.saved-lists li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid #edf1eb; padding: 8px 0; }
+.saved-list-open, .saved-list-delete { min-height: 40px; background: transparent; color: var(--green); padding: 0 10px; }
+.saved-list-open { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+.saved-list-open:hover { background: #f1f6ef; }
+.saved-list-name { overflow: hidden; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.saved-list-action { flex: none; font-size: 12px; font-weight: 750; }
+.saved-list-delete { color: #a7473d; }
 .list-header h2 { max-width: 700px; overflow-wrap: anywhere; font-size: clamp(23px, 4vw, 30px); letter-spacing: -0.8px; }
 
 .secondary {
@@ -317,6 +330,8 @@ footer { display: flex; align-items: center; justify-content: space-between; pad
   .form-row button { width: 100%; }
   .list-open .list-card { margin-top: 16px; }
   .list-header { align-items: flex-start; gap: 10px; }
+  .list-actions { gap: 4px; }
+  .delete-list { min-height: 44px; padding: 0 8px; font-size: 11px; }
   .list-header h2 { font-size: 21px; }
   .list-header .secondary { min-height: 44px; padding: 0 12px; font-size: 12px; }
   .list-header .secondary span { display: none; }

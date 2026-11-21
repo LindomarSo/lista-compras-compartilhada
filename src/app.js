@@ -4,6 +4,19 @@ import { readShareToken, readShareTokenFromUrl, makeShareLink } from "./links.js
 const $ = selector => document.querySelector(selector);
 const home = $("#home"), listView = $("#list-view"), notice = $("#notice");
 let token = readShareToken(), list = null, items = [], busy = false, editingId = null;
+const STORAGE_KEY = "lista-junto:saved-lists:v1";
+function savedLists() { try { const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); return Array.isArray(value) ? value.filter(row => row && /^[a-f0-9]{64}$/.test(row.token)) : []; } catch { return []; } }
+function saveCurrentList() {
+  if (!token || !list) return;
+  const rows = savedLists().filter(row => row.token !== token);
+  rows.unshift({ token, list, items, savedAt: new Date().toISOString() });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 50))); } catch { message("Não foi possível salvar neste dispositivo. Libere espaço no armazenamento do navegador.", true); }
+}
+function renderSavedLists() {
+  const rows = savedLists(), section = $("#saved-lists"), target = $("#saved-list-items"); target.replaceChildren(); section.hidden = rows.length === 0;
+  rows.forEach(row => { const li = document.createElement("li"), open = document.createElement("button"), name = document.createElement("span"), action = document.createElement("span"), remove = document.createElement("button"); open.type = remove.type = "button"; open.className = "saved-list-open"; open.setAttribute("aria-label", `Abrir lista ${row.list?.name || "Lista salva"}`); name.className = "saved-list-name"; name.textContent = row.list?.name || "Lista salva"; action.className = "saved-list-action"; action.textContent = "Abrir lista →"; open.dataset.openToken = row.token; open.append(name, action); remove.className = "saved-list-delete"; remove.textContent = "Remover"; remove.dataset.removeToken = row.token; li.append(open, remove); target.append(li); });
+}
+function restoreLocalList(savedToken) { const row = savedLists().find(entry => entry.token === savedToken); if (!row) return false; token = row.token; list = row.list; items = row.items; location.hash = new URLSearchParams({ token }).toString(); $("#share-button").disabled = false; $("#save-item").disabled = false; showList(); render(); message("Lista aberta do armazenamento deste dispositivo. Conecte-se à internet para sincronizar alterações."); return true; }
 // The source version also runs directly in a browser, where bare npm imports
 // cannot be resolved. Load the native plugin only inside the bundled Android app.
 if (window.Capacitor?.isNativePlatform?.()) {
@@ -36,7 +49,6 @@ function showList() {
   listView.hidden = false;
   $("#app-shell").classList.add("list-open");
   $("#list-title").textContent = list.name;
-  $("#share-link").value = shareUrl();
 }
 function render() {
   const target = $("#items"); target.replaceChildren();
@@ -66,7 +78,7 @@ function validListResponse(data) { return data && data.list && typeof data.list.
 async function loadList() {
   const data = await run("get_list");
   if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" });
-  list = data.list; items = data.items; showList(); render();
+  list = data.list; items = data.items; saveCurrentList(); showList(); render();
 }
 $("#list-name").addEventListener("input", syncCreateButton);
 $("#item-name").addEventListener("input", syncItemButton);
@@ -83,7 +95,7 @@ $("#create-form").addEventListener("submit", async event => {
   try {
     const data = await run("create_list", { name });
     if (!data?.list || typeof data.list.name !== "string" || typeof data.token !== "string" || !/^[a-f0-9]{64}$/.test(data.token)) throw new ApiError("O serviço retornou dados inesperados ao criar a lista.", { code: "INVALID_RESPONSE" });
-    token = data.token; list = data.list; items = []; location.hash = new URLSearchParams({ token }).toString(); showList(); render(); message("Lista criada. Compartilhe o link para convidar outras pessoas.");
+    token = data.token; list = data.list; items = []; location.hash = new URLSearchParams({ token }).toString(); saveCurrentList(); showList(); render(); renderSavedLists(); message("Lista criada e salva neste dispositivo. Compartilhe o link para convidar outras pessoas.");
   } catch (error) { message(errorText(error), true); }
   finally { setBusy(false); syncCreateButton(); }
 });
@@ -96,7 +108,7 @@ $("#item-form").addEventListener("submit", async event => {
     const data = editingId ? await run("update_item", { item_id: editingId, ...fields }) : await run("add_item", fields);
     const saved = localItem(data);
     if (editingId) items = items.map(item => item.id === saved.id ? saved : item); else items = [...items, saved];
-    clearItemForm(); render(); message(editingId ? "Item atualizado." : "Item adicionado.");
+    clearItemForm(); saveCurrentList(); render(); message(editingId ? "Item atualizado." : "Item adicionado.");
   } catch (error) { message(errorText(error), true); }
   finally { setBusy(false); }
 });
@@ -106,7 +118,7 @@ $("#items").addEventListener("click", async event => {
   if (!deleteId || busy) return;
   const item = items.find(candidate => candidate.id === deleteId); if (!item || !confirm(`Excluir “${item.name}” da lista?`)) return;
   setBusy(true); message("");
-  try { const result = await run("delete_item", { item_id: deleteId }); if (result?.success !== true) throw new ApiError("O serviço não confirmou a exclusão.", { code: "INVALID_RESPONSE" }); items = items.filter(candidate => candidate.id !== deleteId); render(); if (editingId === deleteId) clearItemForm(); message("Item excluído."); }
+  try { const result = await run("delete_item", { item_id: deleteId }); if (result?.success !== true) throw new ApiError("O serviço não confirmou a exclusão.", { code: "INVALID_RESPONSE" }); items = items.filter(candidate => candidate.id !== deleteId); saveCurrentList(); render(); if (editingId === deleteId) clearItemForm(); message("Item excluído."); }
   catch (error) { message(errorText(error), true); }
   finally { setBusy(false); }
 });
@@ -114,19 +126,31 @@ $("#items").addEventListener("change", async event => {
   const id = event.target.dataset.toggle; if (!id || busy) return;
   const item = items.find(candidate => candidate.id === id); if (!item) return;
   setBusy(true); message("");
-  try { const saved = localItem(await run("update_item", { item_id: id, purchased: event.target.checked })); items = items.map(candidate => candidate.id === id ? saved : candidate); render(); message(saved.purchased ? "Item marcado como comprado." : "Item voltou para pendentes."); }
+  try { const saved = localItem(await run("update_item", { item_id: id, purchased: event.target.checked })); items = items.map(candidate => candidate.id === id ? saved : candidate); saveCurrentList(); render(); message(saved.purchased ? "Item marcado como comprado." : "Item voltou para pendentes."); }
   catch (error) { event.target.checked = !event.target.checked; message(errorText(error), true); }
   finally { setBusy(false); }
 });
 $("#cancel-edit").addEventListener("click", clearItemForm);
 $("#share-button").addEventListener("click", async () => {
-  const link = shareUrl(); $("#share-panel").hidden = false;
+  const link = shareUrl();
   if (navigator.share) { try { await navigator.share({ title: list.name, text: "Confira nossa lista de compras", url: link }); return; } catch (error) { if (error.name === "AbortError") return; } }
   try { await navigator.clipboard.writeText(link); message("Link copiado. Envie para quem vai compartilhar a lista."); }
-  catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); }
+  catch { message("Não foi possível abrir o compartilhamento nem copiar o link. Verifique as permissões do navegador.", true); }
 });
-$("#copy-button").addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); message("Link copiado."); } catch { $("#share-link").focus(); $("#share-link").select(); message("Selecione e copie o link para compartilhar."); } });
-if (token) { home.hidden = true; listView.hidden = false; $("#app-shell").classList.add("list-open"); $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
+$("#saved-list-items").addEventListener("click", event => { if (event.target.dataset.openToken) { restoreLocalList(event.target.dataset.openToken); return; } const removeToken = event.target.dataset.removeToken; if (!removeToken || !confirm("Remover esta cópia salva neste dispositivo? A lista compartilhada continuará disponível pelo link.")) return; try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedLists().filter(row => row.token !== removeToken))); renderSavedLists(); message("Cópia local removida."); } catch { message("Não foi possível remover a cópia local.", true); } });
+$("#delete-list-button").addEventListener("click", async () => {
+  if (!token || busy || !confirm(`Excluir a lista “${list.name}” para todos? Esta ação não pode ser desfeita.`)) return;
+  setBusy(true); message("");
+  try {
+    const result = await run("delete_list");
+    if (result?.success !== true) throw new ApiError("O serviço não confirmou a exclusão da lista.", { code: "INVALID_RESPONSE" });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedLists().filter(row => row.token !== token)));
+    token = null; list = null; items = []; location.hash = ""; listView.hidden = true; home.hidden = false; $("#app-shell").classList.remove("list-open"); renderSavedLists(); message("Lista excluída.");
+  } catch (error) { message(error instanceof ApiError && error.status === 404 ? "A API atual não oferece exclusão de listas. A cópia local pode ser removida na página inicial." : errorText(error), true); }
+  finally { setBusy(false); }
+});
+renderSavedLists();
+if (token) { home.hidden = true; listView.hidden = false; $("#app-shell").classList.add("list-open"); $("#share-button").disabled = true; $("#save-item").disabled = true; $("#items-state").textContent = "Carregando lista…"; run("get_list").then(data => { if (!validListResponse(data)) throw new ApiError("O serviço retornou a lista em formato inesperado.", { code: "INVALID_RESPONSE" }); list = data.list; items = data.items; saveCurrentList(); $("#share-button").disabled = false; syncItemButton(); showList(); render(); }).catch(error => { if (restoreLocalList(token)) return; $("#items-state").textContent = errorText(error); message(errorText(error), true); }); }
 
 
 
