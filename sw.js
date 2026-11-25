@@ -1,7 +1,8 @@
-const CACHE_NAME = "lista-junto-shell-v4";
+const CACHE_NAME = "lista-junto-shell-v5";
 const SHELL_FILES = [
   "./",
   "./index.html",
+  "./privacidade.html",
   "./manifest.webmanifest",
   "./icons/icon.svg",
   "./icons/icon-192.png",

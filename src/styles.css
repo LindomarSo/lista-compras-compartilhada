@@ -27,6 +27,13 @@ a { color: var(--green-dark); }
 .saved-lists { margin-bottom: 1rem; }
 .saved-lists h2 { margin-bottom: .5rem; }
 .helper { color: var(--muted); font-size: .925rem; line-height: 1.5; margin: .375rem 0 1rem; }
+.app-footer { margin-top: 1rem; font-size: .925rem; }
+.app-footer a { display: inline-flex; align-items: center; min-height: 48px; }
+.privacy-policy { line-height: 1.6; overflow-wrap: anywhere; }
+.privacy-policy h1 { margin-bottom: .75rem; }
+.privacy-policy section { margin-top: 1.25rem; }
+.privacy-policy h2 { margin-bottom: .375rem; }
+.privacy-policy p + p { margin-top: .5rem; }
 
 button, input, select, summary { font: inherit; }
 button, input:not([type="checkbox"]), select, summary { min-height: 48px; }

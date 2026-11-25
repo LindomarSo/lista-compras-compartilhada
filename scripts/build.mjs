@@ -16,6 +16,7 @@ await writeFile(new URL("../dist/index.html", import.meta.url), builtHtml);
 const worker = await readFile(new URL("../sw.js", import.meta.url), "utf8");
 
 await Promise.all([
+  cp(new URL("../privacidade.html", import.meta.url), new URL("../dist/privacidade.html", import.meta.url)),
   cp(new URL("../src/", import.meta.url), new URL("../dist/src/", import.meta.url), { recursive: true }),
   cp(new URL("../icons/", import.meta.url), new URL("../dist/icons/", import.meta.url), { recursive: true }),
   cp(new URL("../manifest.webmanifest", import.meta.url), new URL("../dist/manifest.webmanifest", import.meta.url)),
