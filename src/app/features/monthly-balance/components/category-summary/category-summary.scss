@@ -1,0 +1,6 @@
+:host, mat-card { display: block; height: 100%; }
+li { display: grid; gap: .35rem; padding-block: .55rem; }
+li + li { border-top: 1px solid var(--lj-line); }
+.category-line { display: flex; justify-content: space-between; gap: .75rem; font-size: .9rem; }
+.track { height: .36rem; border-radius: 1rem; background: var(--lj-soft); }
+.track span { display: block; height: 100%; border-radius: inherit; background: var(--lj-green); }

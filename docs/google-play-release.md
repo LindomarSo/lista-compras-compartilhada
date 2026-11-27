@@ -30,7 +30,7 @@ Quando houver tráfego suficiente para um experimento na Play Console, compare a
 
 ## Materiais e configuração pendentes
 
-- Criar a política de privacidade em uma URL pública HTTPS e informar essa URL na Play Console.
+- Revisar a [política de privacidade](../privacidade.html), publicar pelo GitHub Pages e informar `https://lindomarso.github.io/lista-compras-compartilhada/privacidade.html` na Play Console.
 - Confirmar com a implementação da Edge Function/Supabase quais dados são armazenados, por quanto tempo, como são apagados e quais logs ou subprocessadores existem; usar essa confirmação para concluir a política e o formulário Data safety.
 - Produzir as quatro capturas Android indicadas acima.
 - Configurar Google Play App Signing e guardar a chave de upload em local seguro fora do repositório.

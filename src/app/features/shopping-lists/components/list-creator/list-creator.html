@@ -1,0 +1,13 @@
+<mat-card appearance="outlined" class="create-card">
+  <mat-card-content>
+    <h2>Nova lista</h2>
+    <p class="muted">A lista fica neste aparelho até você convidar alguém.</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nome da lista</mat-label>
+        <input id="list-name" matInput formControlName="name" maxlength="100" autocomplete="off" required>
+      </mat-form-field>
+      <button id="create-button" mat-flat-button type="submit" [disabled]="name.invalid || !name.value.trim()">Criar lista</button>
+    </form>
+  </mat-card-content>
+</mat-card>

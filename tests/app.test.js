@@ -1,8 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateItem, itemSubtotal, listTotal } from "../src/domain.js";
-import { makeShareLink, readShareToken, readShareTokenFromUrl } from "../src/links.js";
-import { callApi, ApiError } from "../src/api.js";
+import { validateItem, itemSubtotal, listTotal } from "../src/app/features/shopping-lists/models/list-rules.ts";
+import { legacyRoute, makeShareLink, readShareToken, readShareTokenFromUrl } from "../src/app/features/shopping-lists/models/links.ts";
+import { callApi, ApiError } from "../src/app/features/shopping-lists/services/list-api.ts";
+
+test("maps old entry URLs to Angular routes without moving tokens out of the fragment", () => {
+  const token = "a".repeat(64);
+  assert.equal(legacyRoute("#token=" + token), "/listas/compartilhada/" + token + "?convite=1");
+  assert.equal(legacyRoute("#local=" + token), "/listas/local/" + token);
+  assert.equal(legacyRoute("#balanco"), "/balanco");
+  assert.equal(legacyRoute("#token=invalido"), "/listas?aviso=convite");
+  assert.equal(legacyRoute("/listas"), null);
+});
 test("validates item name, quantity, price and notes", () => {
   assert.deepEqual(validateItem({ name: " Arroz ", quantity: 2, unitPrice: 8.5, notes: "integral" }), {});
   assert.ok(validateItem({ name: " ", quantity: 0, unitPrice: -1 }).name);
@@ -52,4 +61,5 @@ test("normalizes network, HTTP and invalid JSON errors", async () => {
   await assert.rejects(callApi({ action: "get_list" }, { fetchImpl: async () => { throw Error("internal detail"); } }), e => e instanceof ApiError && e.code === "NETWORK_ERROR" && !e.message.includes("internal detail"));
   await assert.rejects(callApi({ action: "get_list" }, { fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ error: "Link inválido ou ausente." }) }) }), e => e.code === "HTTP_ERROR" && e.message === "Link inválido ou ausente.");
   await assert.rejects(callApi({ action: "get_list" }, { fetchImpl: async () => ({ ok: true, status: 200, json: async () => { throw Error(); } }) }), e => e.code === "INVALID_RESPONSE");
+  await assert.rejects(callApi({ action: "get_list" }, { fetchImpl: async () => new Response(null, { status: 504 }) }), e => e.code === "NETWORK_ERROR");
 });

@@ -1,0 +1,7 @@
+<a class="skip-link" href="#conteudo" (click)="$event.preventDefault(); content.focus()">Pular para o conteúdo</a>
+<header class="topbar">
+  <a routerLink="/listas" class="brand" aria-label="Lista Junto, início"><span class="brand-icon" aria-hidden="true">↗</span><span>lista<span class="brand-accent">junto</span></span></a>
+</header>
+<main #content id="conteudo" tabindex="-1" class="layout"><router-outlet /></main>
+<footer><a href="./privacidade.html">Política de Privacidade</a></footer>
+<lj-app-navigation />

@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="./">
   <meta name="theme-color" content="#f5f7f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Lista Junto">
@@ -15,107 +16,9 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="./src/styles.css">
-  <script type="module" src="./src/app.js"></script>
 </head>
 <body>
-  <main class="layout">
-    <header class="topbar">
-      <a class="brand" href="./" aria-label="Lista Junto, início">
-        <span class="brand-icon" aria-hidden="true">↗</span>
-        <span>lista<span class="brand-accent">junto</span></span>
-      </a>
-    </header>
-
-    <section id="home" aria-labelledby="home-title">
-      <h1 id="home-title" tabindex="-1">Lista de compras da casa</h1>
-      <section id="saved-lists" class="card saved-lists" hidden aria-labelledby="saved-title">
-        <h2 id="saved-title">Minhas listas</h2>
-        <ul id="saved-list-items" class="rows"></ul>
-      </section>
-      <section class="card" aria-labelledby="new-list-title">
-        <h2 id="new-list-title">Nova lista</h2>
-        <p class="helper">Monte a lista e convide quem vai comprar com você. Sem cadastro.</p>
-        <form id="create-form">
-          <label for="list-name">Nome da lista</label>
-          <div class="form-row">
-            <input id="list-name" name="listName" type="text" maxlength="100" value="Compras da semana" autocomplete="off" required>
-            <button id="create-button" type="submit">Criar lista</button>
-          </div>
-        </form>
-      </section>
-      <p id="home-notice" class="notice" role="status" hidden></p>
-    </section>
-
-    <section id="list-view" hidden aria-labelledby="list-title">
-      <div class="list-header">
-        <h1 id="list-title" tabindex="-1">Lista de compras</h1>
-        <div id="list-actions" class="actions" hidden>
-          <button id="share-button" type="button" aria-haspopup="dialog">Convidar</button>
-          <details class="menu">
-            <summary class="icon-button" aria-label="Opções da lista"><span aria-hidden="true">⋯</span></summary>
-            <div class="menu-actions">
-              <button id="delete-list-button" class="danger" type="button">Excluir lista</button>
-            </div>
-          </details>
-        </div>
-      </div>
-
-      <div id="sync-panel" class="notice sync-panel" hidden>
-        <p id="sync-status" role="status"></p>
-        <button id="retry-button" class="secondary" type="button" hidden>Tentar novamente</button>
-      </div>
-
-      <div id="list-content" class="card list-card" hidden>
-        <form id="item-form">
-          <label id="item-form-title" for="item-name">Adicionar produto</label>
-          <div class="composer">
-            <input id="item-name" name="product" maxlength="120" required placeholder="Ex.: Tomate" enterkeyhint="done" autocomplete="off">
-            <button id="save-item" type="submit">Adicionar</button>
-          </div>
-          <details id="item-details" class="item-details">
-            <summary>Detalhes do item</summary>
-            <div class="detail-fields">
-              <div><label for="item-quantity">Quantidade</label><input id="item-quantity" type="number" min="0.01" step="any" value="1" required></div>
-              <div><label for="item-unit">Unidade</label><select id="item-unit"><option>un</option><option>kg</option><option>g</option><option>l</option><option>ml</option><option>pacote</option><option>caixa</option></select></div>
-              <div><label for="item-price">Preço por unidade</label><input id="item-price" type="number" min="0" step="0.01" placeholder="0,00"></div>
-              <div><label for="item-notes">Observações</label><input id="item-notes" maxlength="500" placeholder="Marca, detalhes…"></div>
-            </div>
-          </details>
-          <button id="cancel-edit" class="secondary" type="button" hidden>Cancelar edição</button>
-        </form>
-        <p id="list-notice" class="notice" role="status" hidden></p>
-
-        <section class="items-section" aria-labelledby="pending-title">
-          <header class="items-heading"><h2 id="pending-title">Para comprar</h2><span id="pending-count"></span></header>
-          <p id="items-state" class="empty-state"></p>
-          <ul id="items" class="rows"></ul>
-        </section>
-        <details id="purchased-section" class="purchased-section" hidden>
-          <summary><span>Comprados</span><span id="purchased-count" class="item-count"></span></summary>
-          <ul id="purchased-items" class="rows"></ul>
-        </details>
-        <div class="list-total"><span>Total estimado</span><strong id="list-total">—</strong></div>
-      </div>
-      <p id="install-panel" class="install-panel" hidden><a id="install-link" href="https://play.google.com/store/apps/details?id=com.lindomarso.listajunto" target="_blank" rel="noopener noreferrer">Instalar pelo Google Play</a></p>
-    </section>
-  </main>
-
-  <dialog id="invite-dialog" aria-labelledby="invite-title">
-    <div class="dialog-heading">
-      <h2 id="invite-title">Convidar para a lista</h2>
-      <form method="dialog"><button class="icon-button" type="submit" aria-label="Fechar convite">×</button></form>
-    </div>
-    <p class="helper">Quem tiver o link pode adicionar e marcar itens.</p>
-    <div class="dialog-actions">
-      <button id="send-invite-button" type="button" autofocus>Compartilhar convite</button>
-      <button id="copy-link-button" class="secondary" type="button">Copiar link</button>
-    </div>
-    <div id="manual-copy" hidden>
-      <label for="invite-link">Link da lista</label>
-      <input id="invite-link" type="text" readonly>
-    </div>
-    <p id="invite-notice" class="notice" role="status" hidden></p>
-  </dialog>
+  <lj-app></lj-app>
+  <noscript>Ative o JavaScript para usar o Lista Junto.</noscript>
 </body>
 </html>

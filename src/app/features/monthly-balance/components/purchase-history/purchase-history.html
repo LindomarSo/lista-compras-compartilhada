@@ -1,0 +1,13 @@
+@if (items().length) {
+  <mat-expansion-panel>
+    <mat-expansion-panel-header><mat-panel-title>Itens comprados no mês</mat-panel-title></mat-expansion-panel-header>
+    <ul class="clean-list">
+      @for (item of items(); track $index) {
+        <li>
+          <div><strong>{{ item.name }}</strong><small>{{ item.listName }} · {{ categories[item.category] }} · {{ item.purchased_quantity }} {{ item.purchased_unit || item.unit || 'un' }}</small></div>
+          <span>{{ item.subtotal === null ? 'Sem preço' : currency(item.subtotal) }}</span>
+        </li>
+      }
+    </ul>
+  </mat-expansion-panel>
+}

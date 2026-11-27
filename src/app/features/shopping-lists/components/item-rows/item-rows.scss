@@ -1,0 +1,8 @@
+li { display: flex; align-items: center; gap: .25rem; padding-block: .25rem; min-height: 56px; }
+li + li { border-top: 1px solid var(--lj-line); }
+mat-checkbox { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.item-name { display: block; font-weight: 720; }
+.purchased .item-name { text-decoration: line-through; color: var(--lj-muted); }
+small { display: block; color: var(--lj-muted); font-size: .76rem; }
+.price { text-align: end; font-variant-numeric: tabular-nums; font-size: .9rem; overflow-wrap: anywhere; }
+button { flex: none; }

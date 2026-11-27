@@ -1,0 +1,37 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="composer">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ editing() ? 'Editar produto' : 'Adicionar produto' }}</mat-label>
+      <input id="item-name" matInput formControlName="name" placeholder="Ex.: Tomate" maxlength="120" autocomplete="off" required>
+    </mat-form-field>
+    <button id="save-item" mat-flat-button type="submit" [disabled]="disabled() || !form.controls.name.value.trim()">{{ editing() ? 'Salvar' : 'Adicionar' }}</button>
+  </div>
+  <button mat-button id="item-details" type="button" [attr.aria-expanded]="details()" aria-controls="item-fields" (click)="details.set(!details())">Detalhes do item <span aria-hidden="true">{{ details() ? '▴' : '▾' }}</span></button>
+  <div class="details" id="item-fields" [hidden]="!details()">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Quantidade</mat-label><input matInput id="item-quantity" type="number" step="any" formControlName="quantity" required>
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Unidade</mat-label><mat-select formControlName="unit">
+        @for (unit of units; track unit) { <mat-option [value]="unit">{{ unit }}</mat-option> }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Preço por unidade</mat-label><input matInput id="item-price" type="number" step="0.01" inputmode="decimal" formControlName="estimated_price">
+    </mat-form-field>
+    @if (supportsCategory()) {
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Categoria</mat-label><mat-select id="item-category" formControlName="category">
+          <mat-option value="">Automática ({{ suggested() }})</mat-option>
+          @for (option of options; track option[0]) { <mat-option [value]="option[0]">{{ option[1] }}</mat-option> }
+        </mat-select>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="wide">
+      <mat-label>Observações</mat-label><input matInput formControlName="notes" maxlength="500">
+    </mat-form-field>
+    <button mat-stroked-button id="read-price" class="wide" type="button" [disabled]="disabled() || openingReader()" (click)="readPrice()">Ler preço da etiqueta</button>
+  </div>
+  @if (editing()) { <button mat-button type="button" (click)="reset(); cancelled.emit()">Cancelar edição</button> }
+  @if (feedback()) { <p class="notice" role="status">{{ feedback() }}</p> }
+</form>

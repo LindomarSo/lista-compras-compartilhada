@@ -1,0 +1,20 @@
+<ul class="clean-list">
+  @for (item of items(); track item.id) {
+    <li [class.purchased]="item.purchased">
+      <mat-checkbox [checked]="item.purchased === true" [disabled]="disabled()" (change)="toggle(item, $event)"
+        [aria-label]="(item.purchased ? 'Desmarcar ' : 'Marcar ') + item.name + ' como comprado'">
+        <span class="item-name">{{ item.name }}</span>
+        @if (details(item); as description) { <small>{{ description }}</small> }
+      </mat-checkbox>
+      @let cost = subtotal(item);
+      @if (cost !== null) {
+        <span class="price">{{ currency(cost) }}<small>{{ currency(unitPrice(item)) }} / {{ item.unit || 'un' }}</small></span>
+      }
+      <button mat-icon-button type="button" [matMenuTriggerFor]="options" [disabled]="disabled()" [attr.aria-label]="'Opções de ' + item.name">⋯</button>
+      <mat-menu #options="matMenu">
+        <button mat-menu-item type="button" (click)="edited.emit(item)">Editar</button>
+        <button mat-menu-item type="button" class="danger" (click)="removed.emit(item)">Excluir</button>
+      </mat-menu>
+    </li>
+  }
+</ul>

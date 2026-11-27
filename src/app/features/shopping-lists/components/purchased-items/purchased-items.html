@@ -1,0 +1,6 @@
+@if (items().length) {
+  <mat-expansion-panel class="purchased-panel">
+    <mat-expansion-panel-header><mat-panel-title>Comprados</mat-panel-title><mat-panel-description>{{ items().length }} itens</mat-panel-description></mat-expansion-panel-header>
+    <lj-item-rows [items]="items()" [disabled]="disabled()" (toggled)="toggled.emit($event)" (edited)="edited.emit($event)" (removed)="removed.emit($event)" />
+  </mat-expansion-panel>
+}

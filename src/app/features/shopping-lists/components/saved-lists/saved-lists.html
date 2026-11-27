@@ -1,0 +1,20 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <h2>Minhas listas</h2>
+    @if (rows().length) {
+      <ul class="clean-list saved-lists">
+        @for (row of rows(); track row.token) {
+          <li>
+            <a mat-button [routerLink]="['/listas', row.local ? 'local' : 'compartilhada', row.token]" class="saved-link">
+              <span class="saved-name">{{ row.list.name }}</span>
+              <span class="saved-kind">{{ row.local ? 'Neste aparelho' : 'Compartilhada' }}</span>
+            </a>
+            <button mat-button type="button" [attr.aria-label]="'Remover ' + row.list.name + ' deste aparelho'" (click)="removed.emit(row)">Remover</button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="muted empty">Listas novas e convites abertos aparecem aqui.</p>
+    }
+  </mat-card-content>
+</mat-card>

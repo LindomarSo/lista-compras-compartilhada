@@ -1,0 +1,8 @@
+<section class="page-stack" aria-labelledby="page-title">
+  <h1 id="page-title" tabindex="-1">Listas</h1>
+  @if (notice() || params()?.has('aviso')) {
+    <p class="notice" role="status">{{ notice() || (params()?.get('aviso') === 'convite' ? 'O link do convite é inválido. Peça um novo link.' : params()?.get('aviso') === 'excluida' ? 'Lista excluída.' : 'Esta lista local não está salva neste aparelho.') }}</p>
+  }
+  <lj-list-creator (created)="create($event)" />
+  <lj-saved-lists [rows]="rows()" (removed)="remove($event)" />
+</section>

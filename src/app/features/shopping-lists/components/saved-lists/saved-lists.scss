@@ -1,0 +1,7 @@
+li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 64px; }
+li + li { border-top: 1px solid var(--lj-line); }
+.saved-link { height: auto; padding: .6rem .7rem; text-align: start; min-width: 0; }
+.saved-name, .saved-kind { display: block; overflow-wrap: anywhere; }
+.saved-name { font-weight: 750; }
+.saved-kind { font-size: .78rem; color: var(--lj-muted); }
+.empty { margin-bottom: 0; }

@@ -1,0 +1,2 @@
+.summary { display: grid; grid-template-columns: minmax(0,4fr) minmax(0,5fr); gap: 1rem; }
+@media (max-width: 42rem) { .summary { grid-template-columns: 1fr; } }

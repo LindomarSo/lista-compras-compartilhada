@@ -1,0 +1,3 @@
+.create-card { background: var(--lj-soft); border-color: var(--lj-line); }
+form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; align-items: center; }
+@media (max-width: 29rem) { form { grid-template-columns: 1fr; } }

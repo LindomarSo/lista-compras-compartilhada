@@ -1,0 +1,46 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (primary: mat.$green-palette, tertiary: mat.$yellow-palette, theme-type: light),
+    typography: system-ui,
+    density: 0,
+  ));
+  @include mat.theme-overrides((
+    primary: #236348,
+    on-primary: #fff,
+    primary-container: #dcefe0,
+    on-primary-container: #103c2b,
+  ));
+  color-scheme: light;
+  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  --lj-ink: #192d22;
+  --lj-green: #236348;
+  --lj-muted: #4d6556;
+  --lj-line: #dce6dc;
+  --lj-outline: #8c9e90;
+  --lj-paper: #fff;
+  --lj-soft: #eaf2e8;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; min-height: 100vh; font-family: system-ui, sans-serif; color: var(--lj-ink); background: linear-gradient(#e7f0e4, #f5f7f1 27rem); }
+h1, h2 { margin: 0; overflow-wrap: anywhere; }
+h1 { font-size: clamp(1.8rem, 5.8vw, 2.85rem); letter-spacing: -.05em; line-height: 1.1; }
+h2 { font-size: 1.15rem; letter-spacing: -.025em; }
+p { line-height: 1.45; }
+a { color: var(--lj-green); }
+:focus-visible { outline: 3px solid var(--lj-green); outline-offset: 3px; }
+h1[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: 0; }
+button[mat-button], a[mat-button], button[mat-flat-button], button[mat-stroked-button] { min-height: 44px; }
+.page-stack { display: grid; gap: 1rem; }
+.clean-list { margin: 0; padding: 0; list-style: none; }
+.muted { color: var(--lj-muted); }
+.notice { margin: 0; padding: .6rem .8rem; background: var(--lj-soft); color: var(--lj-green); border-radius: .8rem; overflow-wrap: anywhere; }
+.notice p { margin: 0; }
+.notice.error { background: #fcece7; color: #842d25; }
+.danger { color: #842d25 !important; }
+mat-card.mat-mdc-card { --mat-card-outlined-container-color: var(--lj-paper); --mat-card-outlined-outline-color: var(--lj-line); }
+mat-card-content.mat-mdc-card-content { padding: 1rem; }
+mat-card-content.mat-mdc-card-content:first-child, mat-card-content.mat-mdc-card-content:last-child { padding-block: 1rem; }

@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Ler preço da etiqueta</h2>
+<mat-dialog-content>
+  <p class="muted">Centralize o preço por unidade na faixa da câmera.</p>
+  <lj-camera-preview (unavailable)="status.set('Câmera indisponível. Você pode informar o preço abaixo.')" />
+  <p role="status">{{ status() || (camera()?.ready() ? '' : 'Abrindo a câmera…') }}</p>
+  <button id="capture-price" mat-stroked-button type="button" [disabled]="!camera()?.ready() || reading()" (click)="capture()">Capturar preço</button>
+  <lj-price-confirmation [price]="price" (confirmed)="confirm($event)" />
+</mat-dialog-content>
+<mat-dialog-actions><button mat-button mat-dialog-close type="button">Fechar</button></mat-dialog-actions>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f1">
+  <title>Política de Privacidade — Lista Junto</title>
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./privacy.css">
+</head>
+<body>
+  <div class="layout">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Lista Junto, início">
+        <span class="brand-icon" aria-hidden="true">↗</span>
+        <span>lista<span class="brand-accent">junto</span></span>
+      </a>
+    </header>
+
+    <main class="card privacy-policy">
+      <h1>Política de Privacidade</h1>
+      <p>Esta política se aplica ao Lista Junto no Android e na web. O app permite criar e compartilhar listas de compras sem criar uma conta.</p>
+
+      <section aria-labelledby="privacy-data">
+        <h2 id="privacy-data">Dados usados pelo app</h2>
+        <p>Listas novas ficam no aparelho até você gerar um convite. Para sincronizar a lista compartilhada, o serviço recebe o nome da lista e o conteúdo dos itens, incluindo quantidade, unidade, categoria, preço, observações e registro da compra. Listas criadas em versões anteriores podem já estar no serviço.</p>
+        <p>Quando você escolhe ler uma etiqueta, o app solicita acesso à câmera. A imagem é processada em memória no aparelho. Ela não é guardada nem enviada ao serviço. Você escolhe se deseja usar o preço sugerido.</p>
+        <p>Cada lista tem um código de acesso incluído no link de convite. O app usa esse código nas solicitações ao serviço e guarda o código e a última versão da lista no seu dispositivo para reabertura e consulta sem conexão.</p>
+      </section>
+
+      <section aria-labelledby="privacy-sharing">
+        <h2 id="privacy-sharing">Hospedagem e compartilhamento</h2>
+        <p>O Lista Junto usa o Supabase para operar o serviço de listas e o GitHub Pages para hospedar a versão web. As solicitações ao serviço de listas usam HTTPS.</p>
+        <p>Ao compartilhar um convite, você escolhe para quem enviar o link. Qualquer pessoa com esse link pode abrir e editar a lista, inclusive alguém a quem ele tenha sido encaminhado. Se você usar outro aplicativo para enviar o convite, o envio também estará sujeito à política desse aplicativo.</p>
+      </section>
+
+      <section aria-labelledby="privacy-retention">
+        <h2 id="privacy-retention">Retenção e exclusão</h2>
+        <p>O serviço guarda as listas e seus itens para permitir a consulta e a sincronização. O banco e o serviço de listas não têm um prazo de exclusão automática configurado.</p>
+        <p>Você pode excluir produtos individualmente. Para excluir a lista inteira, abra o menu da lista, escolha <strong>Excluir lista</strong> e confirme. O serviço remove do banco ativo a lista, o registro usado para validar o convite e todos os produtos vinculados. O convite deixa de abrir a lista no serviço. Quando o servidor confirma a exclusão, o app tenta remover também a cópia salva no aparelho usado para excluir a lista.</p>
+        <p>Em <strong>Minhas listas</strong>, a opção <strong>Remover</strong> apaga a cópia salva naquele dispositivo. Quem recebeu o convite pode manter uma cópia em outro aparelho e consultá-la sem conexão até removê-la de <strong>Minhas listas</strong>.</p>
+        <p>Os logs operacionais de API e banco de dados têm retenção de até 24 horas no plano Free do Supabase. Remover uma lista do banco não apaga esses registros, que expiram conforme a retenção do serviço. O projeto não tem exportação contínua de logs configurada no Supabase.</p>
+        <p>O projeto não tem backups automáticos nem restauração para um ponto no tempo no Supabase.</p>
+      </section>
+
+      <section aria-labelledby="privacy-contact">
+        <h2 id="privacy-contact">Contato de privacidade</h2>
+        <p>Para dúvidas ou pedidos sobre seus dados no Lista Junto, escreva para <a href="mailto:lindomarsystems@gmail.com">lindomarsystems@gmail.com</a>. Evite incluir links privados de listas ou dados sensíveis no primeiro contato.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

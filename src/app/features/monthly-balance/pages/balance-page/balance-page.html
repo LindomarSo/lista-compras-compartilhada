@@ -1,0 +1,14 @@
+<section class="page-stack" aria-labelledby="page-title">
+  <h1 id="page-title" tabindex="-1">Balanço mensal</h1>
+  <lj-balance-filters [month]="store.month()" [rows]="store.rows()" [chosen]="store.chosen()"
+    [selected]="store.selected()" [refreshable]="store.refreshable()" [refreshing]="refreshing()"
+    (monthChanged)="setMonth($event)" (listChanged)="store.select($event.token, $event.checked)"
+    (refresh)="refresh()" />
+  @if (notice()) { <p class="notice" role="status">{{ notice() }}</p> }
+  @let summary = store.summary();
+  <div class="summary">
+    <lj-total-card [cents]="summary.cents" [count]="summary.items.length" [missing]="summary.missing" />
+    <lj-category-summary [groups]="summary.groups" [cents]="summary.cents" [selectedCount]="store.chosen().length" />
+  </div>
+  <lj-purchase-history [items]="summary.items" />
+</section>

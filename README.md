@@ -1,14 +1,32 @@
 # Lista Junto
 
-Frontend estático em HTML, CSS e JavaScript modular para GitHub Pages, incluindo o caminho `/lista-compras-compartilhada/`.
+Frontend estático em Angular e Angular Material para GitHub Pages e Android com Capacitor. A aplicação web também funciona no caminho `/lista-compras-compartilhada/`.
 
 ## Rodar e validar
 
-Use Node.js 22 ou superior. Instale as dependências com `npm ci`, rode `npm test` e gere os arquivos estáticos com `npm run build`. Sirva a pasta `dist/` em um servidor local para conferir o app web. O workflow do GitHub Pages também publica `dist/`.
+Use Node.js 24.15 ou superior da série 24. Instale as dependências com `npm ci` e rode `npm start` para desenvolver ou `npm test` para verificar as regras de negócio. O comando `npm run build` gera `dist/`, que o GitHub Pages publica e o Capacitor usa. Sirva essa pasta por HTTP local para verificar o service worker e o uso offline.
+
+O frontend fica em `src/app/`. Cada feature reúne suas páginas, componentes, modelos e serviços. `core/` contém a navegação e a integração da plataforma. `shared/` concentra utilitários usados por mais de uma feature.
 
 ## Contrato confirmado da Edge Function
 
-A função recebe `POST` JSON com `{ action, ...campos }`, responde JSON, e usa `create_list` sem token. As demais ações recebem `token` (64 caracteres hexadecimais). Os nomes de operações e propriedades já estão implementados em `src/app.js`: `get_list`, `add_item`, `update_item` e `delete_item`. A chave de serviço permanece exclusivamente no servidor da Edge Function.
+### Compartilhamento das listas novas
+
+Listas novas funcionam no aparelho, inclusive sem internet. **Convidar** envia a lista e os itens em uma única operação para `list-api-v2`, que devolve o token do convite depois de gravar os dados. Repetir uma tentativa reutiliza o mesmo token. A versão antiga continua em `list-api`, e os convites anteriores seguem funcionando com esse contrato. Listas antigas não registram dados para o balanço mensal.
+
+Para ativar o compartilhamento em um ambiente Supabase, confira as migrações remotas do projeto e aplique a migração em `supabase/migrations/` antes de publicar a nova função. A função usa o token do convite como autorização. Em produção, configure as origens da web e do Android com `LISTA_JUNTO_ORIGINS`. Acrescente a origem do servidor local quando estiver testando.
+
+```sh
+supabase db push
+supabase secrets set LISTA_JUNTO_ORIGINS=https://lindomarso.github.io,https://localhost
+supabase functions deploy list-api-v2 --no-verify-jwt
+```
+
+No Android, o modelo de OCR acompanha o app. Na web, o navegador baixa o modelo do próprio site na primeira leitura e pode reutilizá-lo offline pelo service worker. O quadro da câmera fica na memória do aparelho.
+
+### Contrato anterior
+
+A função anterior recebe `POST` JSON com `{ action, ...campos }` e responde JSON. O cliente Angular mantém as operações `get_list`, `add_item`, `update_item`, `delete_item` e `delete_list` para listas com token de 64 caracteres hexadecimais. A chave de serviço permanece exclusivamente no servidor da Edge Function.
 
 A chave pública anon/publishable do Supabase pode ser configurada no `meta[name="supabase-anon-key"]` em `index.html` se for exigida pela configuração do projeto. Nunca use a `service_role` nesse campo. Sem a chave pública, o cliente chama a função sem cabeçalho `apikey`/`Authorization`.
 

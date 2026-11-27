@@ -1,0 +1,17 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <h2>Por categoria</h2>
+    @if (groups().length) {
+      <ul id="balance-groups" class="clean-list">
+        @for (group of groups(); track group.category) {
+          <li>
+            <div class="category-line"><span>{{ categories[group.category] }} · {{ group.count }} {{ group.count === 1 ? 'item' : 'itens' }}</span><strong>{{ currency(group.cents / 100) }}</strong></div>
+            <div class="track" aria-hidden="true"><span [style.width.%]="cents() ? group.cents / cents() * 100 : 0"></span></div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="muted">{{ selectedCount() ? 'Os itens marcados como comprados neste mês aparecem aqui.' : 'Crie ou selecione uma lista para acompanhar os gastos.' }}</p>
+    }
+  </mat-card-content>
+</mat-card>

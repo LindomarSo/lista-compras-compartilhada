@@ -1,0 +1,19 @@
+<div class="filters">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Mês</mat-label>
+    <input #monthField matInput id="balance-month" type="month" [value]="month()" (change)="monthChanged.emit(monthField.value)" placeholder="AAAA-MM">
+  </mat-form-field>
+  <details class="selector">
+    <summary id="balance-selection">{{ title() }}</summary>
+    <fieldset id="balance-lists">
+      <legend>Listas no balanço</legend>
+      <mat-checkbox [checked]="selected() === null" [disabled]="!rows().length" (change)="listChanged.emit({ token: '', checked: $event.checked })">Todas as listas</mat-checkbox>
+      @for (row of rows(); track row.token) {
+        <mat-checkbox [checked]="selected() === null || !!selected()?.has(row.token)" (change)="listChanged.emit({ token: row.token, checked: $event.checked })">{{ row.list.name }}</mat-checkbox>
+      }
+    </fieldset>
+  </details>
+  @if (refreshable()) {
+    <button mat-stroked-button id="balance-refresh" type="button" [disabled]="refreshing()" (click)="refresh.emit()">Atualizar listas</button>
+  }
+</div>

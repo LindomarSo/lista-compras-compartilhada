@@ -1,0 +1,3 @@
+.camera-frame { position: relative; overflow: hidden; border-radius: 1rem; background: #173f30; }
+video { display: block; width: 100%; }
+.camera-frame::after { content: ''; position: absolute; inset: 32% 10%; border: 2px solid #fff; border-radius: .4rem; box-shadow: 0 0 0 100vw #061f1b68; pointer-events: none; }

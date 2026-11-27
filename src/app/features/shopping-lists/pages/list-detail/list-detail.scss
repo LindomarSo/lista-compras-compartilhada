@@ -1,0 +1,7 @@
+:host { display: block; max-width: 47rem; margin-inline: auto; }
+.back { justify-self: start; }
+.heading-row, .actions, .feedback, .estimate { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.heading-row, .feedback { flex-wrap: wrap; }
+.list-content { display: grid; gap: .9rem; }
+.pending, .estimate { padding-top: .75rem; border-top: 1px solid var(--lj-line); }
+.estimate strong { font-size: 1.25rem; }
