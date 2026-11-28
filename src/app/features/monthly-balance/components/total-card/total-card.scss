@@ -1,5 +1,5 @@
 :host { display: block; }
-.total { display: grid; align-content: center; gap: var(--lj-space-inline); height: 100%; border-radius: var(--lj-radius-total); padding: clamp(var(--lj-space-md), 4vw, var(--lj-space-xl)); background: var(--lj-color-total-surface); color: var(--lj-color-total-text); }
+.total { display: grid; align-content: center; gap: var(--lj-space-inline); height: 100%; border-radius: var(--lj-radius-default); padding: clamp(var(--lj-space-md), 4vw, var(--lj-space-xl)); background: var(--lj-color-total-surface); color: var(--lj-color-total-text); }
 strong { font-size: var(--lj-text-total); letter-spacing: var(--lj-tracking-total); line-height: var(--lj-leading-heading); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 p { margin: 0; }
 .item-count { color: var(--lj-color-total-highlight); font-size: var(--lj-text-total-detail); font-weight: var(--lj-weight-nav); }

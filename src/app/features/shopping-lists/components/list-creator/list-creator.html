@@ -1,12 +1,11 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
     <mat-label>Nome da lista</mat-label>
-    <input [id]="modal() ? 'new-list-name' : 'list-name'" matInput formControlName="name" maxlength="100"
+    <input id="list-name" matInput formControlName="name" [maxlength]="maxLength"
       placeholder="Ex.: Compras da semana" autocomplete="off" required>
   </mat-form-field>
   @if (error()) { <p class="notice error" role="alert">{{ error() }}</p> }
-  <div class="form-actions" [class.dialog-actions]="modal()">
-    @if (modal()) { <button mat-stroked-button mat-dialog-close type="button">Cancelar</button> }
-    <button [id]="modal() ? 'new-list-submit' : 'create-button'" mat-flat-button type="submit" [disabled]="name.invalid || !name.value.trim()">Criar lista</button>
+  <div class="form-actions">
+    <button id="create-button" mat-flat-button type="submit" [disabled]="name.invalid || !name.value.trim()">Criar lista</button>
   </div>
 </form>

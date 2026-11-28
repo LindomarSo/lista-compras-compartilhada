@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ItemRows } from '../item-rows/item-rows.ts';
+import { ItemRows, type ItemEditRequest } from '../item-rows/item-rows.ts';
 import type { ShoppingItem } from '../../models/shopping-list.ts';
 
 @Component({
@@ -13,6 +13,6 @@ export class PurchasedItems {
   readonly items = input.required<ShoppingItem[]>();
   readonly disabled = input(false);
   readonly toggled = output<{ item: ShoppingItem; purchased: boolean }>();
-  readonly edited = output<ShoppingItem>();
+  readonly edited = output<ItemEditRequest>();
   readonly removed = output<ShoppingItem>();
 }

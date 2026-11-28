@@ -1,25 +1,32 @@
-import { Component, DestroyRef, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
-import { MatMenuModule } from '@angular/material/menu';
-import { LucideChevronLeft, LucideEllipsis } from '@lucide/angular';
+import { MatDialog, MatDialogModule, type MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { LucideCalculator, LucideCheck, LucideChevronLeft, LucidePackage, LucidePencil, LucidePlus, LucideShare2, LucideShoppingBasket, LucideTrash, LucideX } from '@lucide/angular';
 import { ListSession } from '../../services/list-session.ts';
 import { sharedPrefix, makeShareLink, tokenPattern } from '../../models/links.ts';
 import { isNative, playUrl, shareBase } from '../../../../core/platform.ts';
 import { formatCurrency } from '../../../../shared/format-currency.ts';
 import { itemSubtotal, itemUnitPrice, listTotal } from '../../models/list-rules.ts';
 import { ItemEditor } from '../../components/item-editor/item-editor.ts';
-import { ItemRows } from '../../components/item-rows/item-rows.ts';
+import { ItemRows, type ItemEditRequest } from '../../components/item-rows/item-rows.ts';
 import { PurchasedItems } from '../../components/purchased-items/purchased-items.ts';
 import { InviteDialog } from '../../components/invite-dialog/invite-dialog.ts';
+import { listNameMaxLength } from '../../models/shopping-list.ts';
 import type { ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
 
 @Component({
   selector: 'lj-list-detail',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatMenuModule, ItemEditor, ItemRows, PurchasedItems, LucideChevronLeft, LucideEllipsis],
+  imports: [
+    RouterLink, ReactiveFormsModule, MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule,
+    MatInputModule, ItemEditor, ItemRows, PurchasedItems, LucideCalculator, LucideCheck, LucideChevronLeft,
+    LucidePackage, LucidePencil, LucidePlus, LucideShare2, LucideShoppingBasket, LucideTrash, LucideX,
+  ],
   providers: [ListSession],
   templateUrl: './list-detail.html',
   styleUrl: './list-detail.scss',
@@ -30,14 +37,19 @@ export class ListDetail {
   private readonly dialogs = inject(MatDialog);
   private readonly destroy = inject(DestroyRef);
   readonly session = inject(ListSession);
-  readonly editing = signal<ShoppingItem | null>(null);
-  readonly editor = viewChild(ItemEditor);
+  private readonly productForm = viewChild.required<TemplateRef<{ $implicit: ShoppingItem | null }>>('productForm');
+  private readonly renameForm = viewChild.required<TemplateRef<unknown>>('renameForm');
+  private itemSheet?: MatDialogRef<unknown>;
+  private renameDialog?: MatDialogRef<unknown>;
+  readonly nameMaxLength = listNameMaxLength;
+  readonly renameName = new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(listNameMaxLength)] });
+  readonly renameError = signal('');
   readonly pending = computed(() => this.session.snapshot()?.items.filter(item => !item.purchased) ?? []);
   readonly purchased = computed(() => this.session.snapshot()?.items.filter(item => item.purchased) ?? []);
   readonly currency = formatCurrency;
   readonly storeLink = !isNative && /Android/i.test(navigator.userAgent) ? playUrl() : '';
   readonly fromInvite = signal(false);
-  readonly supportsCategory = computed(() => {
+  readonly usesCurrentFormat = computed(() => {
     const ref = this.session.reference();
     return !!ref && (ref.kind === 'local' || ref.token.startsWith(sharedPrefix));
   });
@@ -47,6 +59,10 @@ export class ListDetail {
   });
 
   constructor() {
+    this.destroy.onDestroy(() => {
+      this.itemSheet?.close();
+      this.renameDialog?.close();
+    });
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
       const token = params.get('token') ?? '';
       const segment = params.get('kind');
@@ -55,20 +71,97 @@ export class ListDetail {
         return;
       }
       this.fromInvite.set(this.route.snapshot.queryParamMap.has('convite'));
-      this.editing.set(null);
-      this.editor()?.reset();
+      this.itemSheet?.close();
+      this.renameDialog?.close();
       this.session.open({ token, kind: segment === 'local' ? 'local' : 'shared' });
     });
   }
 
-  async save(fields: ItemFields): Promise<void> {
-    const item = this.editing();
-    const success = await this.session.change(item ? { action: 'update_item', id: item.id, fields }
-      : { action: 'add_item', fields }, item ? 'Produto atualizado.' : 'Produto adicionado.');
-    if (success && !this.destroy.destroyed) {
-      this.editing.set(null);
-      this.editor()?.reset();
-    }
+  rename(event: MouseEvent): void {
+    const list = this.session.snapshot()?.list;
+    if (!list || this.renameDialog || !this.usesCurrentFormat() || !this.session.canEdit()) return;
+    if (event.currentTarget instanceof HTMLButtonElement) event.currentTarget.focus({ preventScroll: true });
+    this.renameName.reset(list.name);
+    this.renameError.set('');
+    const dialog = this.dialogs.open(this.renameForm(), {
+      width: '27rem', maxWidth: 'calc(100vw - 2rem)', autoFocus: '#rename-list-name',
+    });
+    this.renameDialog = dialog;
+    dialog.afterClosed().subscribe(() => { this.renameDialog = undefined; });
+  }
+
+  canSaveName(): boolean {
+    const name = this.renameName.value.trim();
+    return this.session.canEdit() && this.renameName.valid && !!name && name !== this.session.snapshot()?.list.name;
+  }
+
+  async saveName(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    const dialog = this.renameDialog;
+    if (!dialog || !this.canSaveName()) return;
+    dialog.disableClose = true;
+    this.renameError.set('');
+    const saved = await this.session.rename(this.renameName.value.trim());
+    dialog.disableClose = false;
+    if (this.destroy.destroyed || this.renameDialog !== dialog) return;
+    if (saved) dialog.close();
+    else this.renameError.set(this.session.error());
+  }
+
+  add(event: MouseEvent): void {
+    if (event.currentTarget instanceof HTMLButtonElement) this.openItemSheet(event.currentTarget);
+  }
+
+  edit({ item, trigger }: ItemEditRequest): void {
+    this.openItemSheet(trigger, item);
+  }
+
+  private openItemSheet(trigger: HTMLButtonElement, item: ShoppingItem | null = null): void {
+    if (this.itemSheet || !this.session.canEdit()) return;
+    trigger.focus({ preventScroll: true });
+    const id = item ? 'edit-product' : 'add-product';
+    const dialog = this.dialogs.open(this.productForm(), {
+      data: item,
+      id: id + '-dialog',
+      ariaLabelledBy: id + '-title',
+      autoFocus: 'first-heading',
+      panelClass: 'lj-item-sheet',
+      position: { bottom: '0' },
+      width: '100%',
+      maxWidth: '100%',
+      maxHeight: 'calc(min(100dvh, var(--lj-sheet-viewport, 100dvh)) - var(--lj-space-sm))',
+    });
+    this.itemSheet = dialog;
+
+    const viewport = window.visualViewport;
+    const align = () => {
+      const pane = document.getElementById(dialog.id)?.closest<HTMLElement>('.lj-item-sheet');
+      if (!viewport || !pane) return;
+      pane.style.setProperty('--lj-sheet-viewport', viewport.height + 'px');
+      dialog.updatePosition({ bottom: Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) + 'px' });
+    };
+    dialog.afterOpened().subscribe(align);
+    viewport?.addEventListener('resize', align);
+    viewport?.addEventListener('scroll', align);
+    dialog.afterClosed().subscribe(() => {
+      viewport?.removeEventListener('resize', align);
+      viewport?.removeEventListener('scroll', align);
+      this.itemSheet = undefined;
+      if (!trigger.isConnected && !this.destroy.destroyed && document.activeElement === document.body) {
+        document.getElementById('add-product-button')?.focus({ preventScroll: true });
+      }
+    });
+  }
+
+  async saveItem(item: ShoppingItem | null, fields: ItemFields): Promise<void> {
+    const dialog = this.itemSheet;
+    if (!dialog || !this.session.canEdit()) return;
+    dialog.disableClose = true;
+    const saved = item
+      ? await this.session.change({ action: 'update_item', id: item.id, fields }, 'Produto atualizado.')
+      : await this.session.change({ action: 'add_item', fields }, 'Produto adicionado.');
+    dialog.disableClose = false;
+    if (saved && !this.destroy.destroyed && this.itemSheet === dialog) dialog.close();
   }
 
   async toggle({ item, purchased }: { item: ShoppingItem; purchased: boolean }): Promise<void> {
@@ -79,17 +172,14 @@ export class ListDetail {
       if (this.destroy.destroyed || document.activeElement !== document.body) return;
       const next = document.querySelector<HTMLElement>('.pending input[type="checkbox"]:enabled')
         ?? document.querySelector<HTMLElement>('lj-purchased-items mat-expansion-panel-header')
-        ?? document.getElementById('item-name');
+        ?? document.getElementById('add-product-button');
       next?.focus({ preventScroll: true });
     });
   }
 
   async remove(item: ShoppingItem): Promise<void> {
     if (!window.confirm('Excluir “' + item.name + '” da lista?')) return;
-    if (await this.session.change({ action: 'delete_item', id: item.id }, 'Produto excluído.') && this.editing()?.id === item.id) {
-      this.editing.set(null);
-      this.editor()?.reset();
-    }
+    await this.session.change({ action: 'delete_item', id: item.id }, 'Produto excluído.');
   }
 
   async deleteList(): Promise<void> {

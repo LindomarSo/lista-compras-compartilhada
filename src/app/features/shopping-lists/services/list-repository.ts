@@ -95,6 +95,19 @@ export class ListRepository implements ListCatalog {
     this.forget(ref.token);
   }
 
+  async rename(ref: ListReference, name: string): Promise<ListSnapshot> {
+    if (ref.kind === 'shared') {
+      const snapshot = parseSnapshot(await callApi({ action: 'rename_list', token: ref.token, name }));
+      this.rememberRemote(ref.token, snapshot);
+      return snapshot;
+    }
+    const row = this.cached(ref);
+    if (!row) throw new ApiError('Esta lista local não está salva neste aparelho.');
+    const next = { ...row, list: { ...row.list, name } };
+    this.put(next);
+    return next;
+  }
+
   async publish(ref: ListReference): Promise<SavedList> {
     if (!navigator.onLine) throw new ApiError('Conecte-se à internet para compartilhar esta lista.');
     const row = this.cached(ref);
@@ -104,7 +117,7 @@ export class ListRepository implements ListCatalog {
     const result = await callApi({ action: 'publish_list', publish_key: publishKey, list: row.list, items: row.items });
     const token = result['token'];
     const latest = this.cached(ref);
-    if (!latest || JSON.stringify(latest.items) !== JSON.stringify(row.items)) {
+    if (!latest || latest.list.name !== row.list.name || JSON.stringify(latest.items) !== JSON.stringify(row.items)) {
       throw new ApiError('A lista mudou durante o compartilhamento. Abra a versão mais recente e tente novamente.');
     }
     if (typeof token !== 'string' || !tokenPattern.test(token) || !token.startsWith(sharedPrefix)) {

@@ -16,7 +16,7 @@ O frontend fica em `src/app/`. Cada feature reúne suas páginas, componentes, m
 
 Listas novas funcionam no aparelho, inclusive sem internet. **Convidar** envia a lista e os itens em uma única operação para `list-api-v2`, que devolve o token do convite depois de gravar os dados. Repetir uma tentativa reutiliza o mesmo token. A versão antiga continua em `list-api`, e os convites anteriores seguem funcionando com esse contrato. Listas antigas não registram dados para o balanço mensal.
 
-Para ativar o compartilhamento em um ambiente Supabase, confira as migrações remotas do projeto e aplique a migração em `supabase/migrations/` antes de publicar a nova função. A função usa o token do convite como autorização. Em produção, configure as origens da web e do Android com `LISTA_JUNTO_ORIGINS`. Acrescente a origem do servidor local quando estiver testando.
+Para ativar o compartilhamento e a edição do nome em um ambiente Supabase, confira as migrações remotas do projeto e aplique as migrações em `supabase/migrations/` antes de publicar a função. A função usa o token do convite como autorização. Em produção, configure as origens da web e do Android com `LISTA_JUNTO_ORIGINS`. Acrescente a origem do servidor local quando estiver testando.
 
 ```sh
 supabase db push

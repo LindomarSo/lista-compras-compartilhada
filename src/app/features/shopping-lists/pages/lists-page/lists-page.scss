@@ -1,16 +1,45 @@
+@use '@angular/material' as mat;
+
 :host { display: block; max-width: 47rem; margin-inline: auto; }
-.lists-heading {
-  position: sticky;
-  top: env(safe-area-inset-top);
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--lj-space-xs);
-  margin-block: calc(-1 * var(--lj-space-xs));
-  padding-block: var(--lj-space-xs);
-  background: var(--lj-color-background);
+
+.welcome-card {
+  @include mat.card-overrides((outlined-container-color: var(--lj-color-surface-accent)));
 }
+.welcome-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--lj-space-sm);
+}
+.welcome-content h1 { font-size: var(--lj-text-estimate); font-weight: var(--lj-weight-emphasis); }
+.welcome-content p { margin: var(--lj-space-xs) 0 0; font-size: var(--lj-text-item-detail); }
+.welcome-art {
+  display: grid;
+  place-items: center;
+  position: relative;
+  inline-size: clamp(4.5rem, 25vw, 6.5rem);
+  aspect-ratio: 1;
+  background: var(--lj-color-selection);
+  color: var(--lj-color-action);
+  border-radius: var(--lj-radius-pill);
+}
+.welcome-clipboard {
+  inline-size: 62%;
+  block-size: auto;
+  transform: rotate(9deg);
+}
+.welcome-share {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  padding: var(--lj-space-xs);
+  border-radius: var(--lj-radius-pill);
+  color: var(--lj-color-on-action);
+  background: var(--lj-color-action);
+}
+
+.inline-creation h2 { display: flex; align-items: center; gap: var(--lj-space-xs); }
 .inline-creation { display: grid; gap: var(--lj-space-sm); }
 .inline-creation p { margin: 0; }

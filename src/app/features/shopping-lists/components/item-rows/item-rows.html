@@ -1,22 +1,25 @@
 <ul class="clean-list">
   @for (item of items(); track item.id) {
     <li [class.purchased]="item.purchased">
-      <mat-checkbox [checked]="item.purchased === true" [disabled]="disabled()" (change)="toggle(item, $event)"
-        [aria-label]="(item.purchased ? 'Desmarcar ' : 'Marcar ') + item.name + ' como comprado'">
-        <span class="item-name">{{ item.name }}</span>
-        @if (details(item); as description) { <small>{{ description }}</small> }
-      </mat-checkbox>
-      @let cost = subtotal(item);
-      @if (cost !== null) {
-        <span class="price">{{ currency(cost) }}<small>{{ currency(unitPrice(item)) }} / {{ item.unit || 'un' }}</small></span>
-      }
-      <button mat-icon-button type="button" [matMenuTriggerFor]="options" [disabled]="disabled()" [attr.aria-label]="'Opções de ' + item.name">
-        <svg lucideEllipsis class="lj-icon" aria-hidden="true"></svg>
-      </button>
-      <mat-menu #options="matMenu">
-        <button mat-menu-item type="button" (click)="edited.emit(item)">Editar</button>
-        <button mat-menu-item type="button" class="danger" (click)="removed.emit(item)">Excluir</button>
-      </mat-menu>
+      <div class="item-content">
+        <mat-checkbox [checked]="item.purchased === true" [disabled]="disabled()" (change)="toggle(item, $event)"
+          [aria-label]="(item.purchased ? 'Desmarcar ' : 'Marcar ') + item.name + ' como comprado'">
+          <span class="item-name">{{ item.name }}</span>
+          @if (details(item); as description) { <small>{{ description }}</small> }
+        </mat-checkbox>
+        @let cost = subtotal(item);
+        @if (cost !== null) {
+          <span class="price">{{ currency(cost) }}<small>{{ currency(unitPrice(item)) }} / {{ item.unit || 'un' }}</small></span>
+        }
+      </div>
+      <div class="item-actions">
+        <button mat-icon-button type="button" aria-haspopup="dialog" [disabled]="disabled()" [attr.aria-label]="'Editar ' + item.name" (click)="requestEdit(item, $event)">
+          <svg lucidePencil class="lj-icon" aria-hidden="true"></svg>
+        </button>
+        <button mat-icon-button class="delete-item" type="button" [disabled]="disabled()" [attr.aria-label]="'Excluir ' + item.name" (click)="removed.emit(item)">
+          <svg lucideTrash class="lj-icon" aria-hidden="true"></svg>
+        </button>
+      </div>
     </li>
   }
 </ul>

@@ -4,5 +4,5 @@ li { display: grid; gap: var(--lj-space-inline); padding-block: var(--lj-space-c
 li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }
 .category-line { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--lj-space-xxs) var(--lj-space-sm); font-size: var(--lj-text-meta); }
 .category-line strong { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.track { height: .36rem; border-radius: var(--lj-radius-inset); background: var(--lj-color-surface-accent); }
+.track { height: .36rem; border-radius: var(--lj-radius-pill); background: var(--lj-color-surface-accent); }
 .track span { display: block; height: 100%; border-radius: inherit; background: var(--lj-color-action); }

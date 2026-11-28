@@ -4,7 +4,7 @@ const uuidPattern = /^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
 const categories = new Set(["produce", "meat", "dairy", "pantry", "drinks", "cleaning", "hygiene", "other"]);
 const units = new Set(["un", "kg", "g", "l", "ml", "pacote", "caixa"]);
 type Fields = Record<string, unknown>;
-const actions = new Set(["publish_list", "get_list", "delete_list", "add_item", "update_item", "delete_item"]);
+const actions = new Set(["publish_list", "get_list", "rename_list", "delete_list", "add_item", "update_item", "delete_item"]);
 const configuredOrigins = Deno.env.get("LISTA_JUNTO_ORIGINS");
 const origins = new Set(configuredOrigins?.split(",").map(origin => origin.trim().replace(/\/$/, "")));
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -102,6 +102,7 @@ Deno.serve(async request => {
       token = id(body.token, tokenPattern);
       if (!token.startsWith(sharedPrefix)) return respond({ error: "Lista indisponível." }, 404);
       payload = { action };
+      if (action === "rename_list") payload.name = label(body.name, 100);
       if (action === "add_item") payload.fields = itemFields(body);
       if (action === "update_item" || action === "delete_item") payload.item_id = id(body.item_id, uuidPattern);
       if (action === "update_item") {
@@ -120,10 +121,13 @@ Deno.serve(async request => {
   try {
     if (!supabaseUrl || !serviceKey) throw new Error("Serviço indisponível.");
     const keyHash = await digest(token);
-    const response = await fetch(supabaseUrl + "/rest/v1/rpc/lista_junto_apply", {
+    const renaming = payload.action === "rename_list";
+    const operation = renaming ? "lista_junto_rename" : "lista_junto_apply";
+    const args = renaming ? { key_hash: keyHash, new_name: payload.name } : { key_hash: keyHash, payload };
+    const response = await fetch(supabaseUrl + "/rest/v1/rpc/" + operation, {
       method: "POST",
       headers: { "Content-Type": "application/json", apikey: serviceKey, Authorization: "Bearer " + serviceKey },
-      body: JSON.stringify({ key_hash: keyHash, payload }),
+      body: JSON.stringify(args),
     });
     if (!response.ok) throw new Error("Falha no banco de dados.");
     const { status, ...result } = record(await response.json());

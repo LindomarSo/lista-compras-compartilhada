@@ -1,6 +1,8 @@
 # Design system do Lista Junto
 
-Edite `src/design-system/tokens.css` para mudar os valores visuais compartilhados entre as telas, os componentes Angular Material e a página de privacidade. O prefixo `--lj-` identifica as variáveis do projeto. Por exemplo, `--lj-color-action` controla os botões principais e os links, `--lj-radius-card` controla o raio dos cartões do Material e `--lj-font-family` define a fonte da interface.
+Edite `src/design-system/tokens.css` para mudar os valores visuais compartilhados entre as telas, os componentes Angular Material e a página de privacidade. O prefixo `--lj-` identifica as variáveis do projeto. Use `--lj-color-action` para a cor dos botões principais e dos links e `--lj-font-family` para a fonte da interface.
+
+`--lj-control-height` define a altura dos campos, seletores e botões. Mantenha esse valor em pelo menos 44 px. `--lj-radius-default` define o arredondamento dos controles e superfícies, incluindo cartões e diálogos. Indicadores em formato de cápsula usam `--lj-radius-pill`.
 
 Reutilize um token quando os elementos tiverem a mesma função visual. Crie um token com nome semântico quando um elemento precisar variar de forma independente, como o destaque do total ou a máscara da câmera. Mantenha as regras de composição nos estilos dos componentes. Edite `src/design-system/_breakpoints.scss` para mudar os pontos de quebra compartilhados, que são resolvidos pelo Sass.
 

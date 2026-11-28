@@ -1,30 +1,28 @@
 <section class="page-stack" aria-labelledby="page-title">
-  <header class="lists-heading">
-    <h1 id="page-title" tabindex="-1">Listas</h1>
-    @if (rows().length) {
-      <button id="new-list-button" mat-flat-button type="button" aria-haspopup="dialog" (click)="openCreation($event)">
-        <svg lucidePlus class="lj-icon" aria-hidden="true"></svg> Nova lista
-      </button>
-    }
-  </header>
+  <mat-card appearance="outlined" class="welcome-card">
+    <mat-card-content class="welcome-content">
+      <div>
+        <h1 id="page-title" tabindex="-1">Organize suas listas em um só lugar</h1>
+        <p class="muted">Crie listas, adicione itens e compartilhe com quem você quiser.</p>
+      </div>
+      <div class="welcome-art" aria-hidden="true">
+        <svg lucideClipboardList class="welcome-clipboard"></svg>
+        <span class="welcome-share"><svg lucideUsersRound class="lj-icon"></svg></span>
+      </div>
+    </mat-card-content>
+  </mat-card>
   @if (notice() || params()?.has('aviso')) {
     <p class="notice" role="status">{{ notice() || (params()?.get('aviso') === 'convite' ? 'O link do convite é inválido. Peça um novo link.' : params()?.get('aviso') === 'excluida' ? 'Lista excluída.' : 'Esta lista local não está salva neste aparelho.') }}</p>
   }
-  @if (!rows().length) {
-    <mat-card appearance="outlined">
-      <mat-card-content class="inline-creation">
-        <h2>Nova lista</h2>
-        <p class="muted">A lista fica neste aparelho até você convidar alguém.</p>
-        <lj-list-creator [error]="creationError()" (created)="create($event)" />
-      </mat-card-content>
-    </mat-card>
-  }
+  <mat-card appearance="outlined">
+    <mat-card-content class="inline-creation">
+      <h2>
+        <svg lucideCirclePlus class="lj-icon" aria-hidden="true"></svg>
+        Nova lista
+      </h2>
+      <p class="muted">A lista fica neste aparelho até você convidar alguém.</p>
+      <lj-list-creator [error]="creationError()" (created)="create($event)" />
+    </mat-card-content>
+  </mat-card>
   <lj-saved-lists [rows]="rows()" (removed)="remove($event)" />
 </section>
-
-<ng-template #creationDialog>
-  <h2 mat-dialog-title id="new-list-title">Nova lista</h2>
-  <mat-dialog-content>
-    <lj-list-creator modal [error]="creationError()" (created)="create($event)" />
-  </mat-dialog-content>
-</ng-template>

@@ -1,9 +1,52 @@
+@use '@angular/material' as mat;
+
 :host { display: block; max-width: 47rem; margin-inline: auto; }
 .back { justify-self: start; margin-inline-start: calc(-1 * var(--lj-space-sm)); }
-.actions, .feedback, .section-heading, .estimate { display: flex; align-items: center; gap: var(--lj-space-xs); }
-.heading-row, .pending { display: grid; gap: var(--lj-space-sm); }
+.actions, .feedback, .section-heading, .estimate, .estimate span { display: flex; align-items: center; }
+.heading-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--lj-space-xs); }
+.list-heading { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--lj-space-sm); }
+.list-heading h1 { font-size: var(--lj-text-estimate); font-weight: var(--lj-weight-emphasis); }
+.list-meta { margin: var(--lj-space-xxs) 0 0; font-size: var(--lj-text-item-detail); }
+.list-badge {
+  display: grid;
+  place-items: center;
+  inline-size: var(--lj-touch-comfortable);
+  aspect-ratio: 1;
+  border-radius: var(--lj-radius-default);
+  background: var(--lj-color-selection);
+  color: var(--lj-color-action);
+}
+.list-badge .lj-icon { inline-size: var(--lj-space-lg); block-size: var(--lj-space-lg); }
+.actions .lj-icon {
+  inline-size: var(--lj-space-xl);
+  block-size: var(--lj-space-xl);
+  padding: var(--lj-space-inline);
+  border: var(--lj-border-width) solid var(--lj-color-border);
+  border-radius: var(--lj-radius-default);
+}
+.pending { display: grid; gap: var(--lj-space-sm); }
 .feedback { flex-wrap: wrap; }
-.list-options { padding-inline: var(--lj-space-xs); min-width: var(--lj-touch-min); }
+.delete-list:not(:disabled) { color: var(--lj-color-error); }
+.rename-content form { display: grid; gap: var(--lj-space-xs); padding-block-start: var(--lj-space-xs); }
 .pending-content p { margin: 0; }
-.estimate { justify-content: space-between; flex-wrap: wrap; padding: var(--lj-space-sm) var(--lj-space-md); border-radius: var(--lj-radius-card); background: var(--lj-color-selection); color: var(--lj-color-on-action-container); }
+.empty-card {
+  @include mat.card-overrides((
+    outlined-container-color: var(--lj-color-background),
+  ));
+}
+.empty-content { display: grid; justify-items: center; gap: var(--lj-space-xs); text-align: center; }
+.empty-basket { inline-size: var(--lj-touch-comfortable); block-size: auto; color: var(--lj-color-action); }
+.empty-content h2 { font-weight: var(--lj-weight-emphasis); }
+.empty-content p { max-inline-size: 28ch; margin: 0; font-size: var(--lj-text-meta); }
+.empty-add {
+  @include mat.button-overrides((
+    outlined-label-text-color: var(--lj-color-action),
+    outlined-outline-color: var(--lj-color-action),
+    outlined-state-layer-color: var(--lj-color-action),
+    outlined-ripple-color: var(--lj-color-action-container),
+  ));
+}
+.estimate { justify-content: space-between; flex-wrap: wrap; padding: var(--lj-space-sm) var(--lj-space-md); border-radius: var(--lj-radius-default); background: var(--lj-color-selection); color: var(--lj-color-on-action-container); }
+.estimate span { gap: var(--lj-space-sm); font-size: var(--lj-text-meta); }
+.estimate .lj-icon { color: var(--lj-color-action); }
 .estimate strong { font-size: var(--lj-text-estimate); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }

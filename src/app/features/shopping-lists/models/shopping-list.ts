@@ -1,3 +1,5 @@
+export const listNameMaxLength = 100;
+
 export const categories = {
   produce: 'Hortifruti', meat: 'Açougue', dairy: 'Laticínios', pantry: 'Mercearia',
   drinks: 'Bebidas', cleaning: 'Limpeza', hygiene: 'Higiene', other: 'Outros',

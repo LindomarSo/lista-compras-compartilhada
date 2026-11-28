@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use 'design-system/breakpoints' as bp;
 
 html {
   @include mat.theme((
@@ -28,15 +27,16 @@ html {
     error-container: var(--lj-color-control-error-surface),
     on-error-container: var(--lj-color-control-on-error-surface),
     body-large-size: var(--lj-text-control),
+    body-large-line-height: var(--lj-leading-control),
     body-medium-size: var(--lj-text-control-label),
     body-small-size: var(--lj-text-control-detail),
     label-large-size: var(--lj-text-control-label),
     label-medium-size: var(--lj-text-control-detail),
     title-large-size: var(--lj-text-dialog-title),
     label-large-weight: var(--lj-weight-action),
-    corner-extra-small: var(--lj-radius-field),
-    corner-medium: var(--lj-radius-card),
-    corner-extra-large: var(--lj-radius-dialog),
+    corner-extra-small: var(--lj-radius-default),
+    corner-medium: var(--lj-radius-default),
+    corner-extra-large: var(--lj-radius-default),
     corner-full: var(--lj-radius-pill),
   ));
   @include mat.card-overrides((
@@ -44,23 +44,32 @@ html {
     outlined-outline-color: var(--lj-color-border),
   ));
   @include mat.button-overrides((
-    filled-container-shape: var(--lj-radius-action),
-    outlined-container-shape: var(--lj-radius-action),
-    text-container-shape: var(--lj-radius-action),
+    filled-container-shape: var(--lj-radius-default),
+    outlined-container-shape: var(--lj-radius-default),
+    text-container-shape: var(--lj-radius-default),
+    filled-container-height: var(--lj-control-height),
+    outlined-container-height: var(--lj-control-height),
+    text-container-height: var(--lj-control-height),
+    outlined-label-text-color: var(--lj-color-action-secondary),
+    outlined-outline-color: var(--lj-color-action-secondary),
+    outlined-state-layer-color: var(--lj-color-action-secondary),
+    outlined-ripple-color: color-mix(in srgb, var(--lj-color-action-secondary) 12%, transparent),
     filled-disabled-container-color: var(--lj-color-disabled-surface),
     filled-disabled-label-text-color: var(--lj-color-disabled-text),
     outlined-disabled-label-text-color: var(--lj-color-disabled-text),
     outlined-disabled-outline-color: var(--lj-color-disabled-surface),
     text-disabled-label-text-color: var(--lj-color-disabled-text),
-    filled-touch-target-size: var(--lj-touch-comfortable),
-    outlined-touch-target-size: var(--lj-touch-comfortable),
-    text-touch-target-size: var(--lj-touch-comfortable),
+    filled-touch-target-size: var(--lj-control-height),
+    outlined-touch-target-size: var(--lj-control-height),
+    text-touch-target-size: var(--lj-control-height),
   ));
   @include mat.icon-button-overrides((
     icon-size: var(--lj-icon-size),
     icon-color: var(--lj-color-action),
     disabled-icon-color: var(--lj-color-disabled-text),
-    touch-target-size: var(--lj-touch-comfortable),
+    container-shape: var(--lj-radius-default),
+    state-layer-size: var(--lj-control-height),
+    touch-target-size: var(--lj-control-height),
   ));
   @include mat.checkbox-overrides((
     disabled-label-color: var(--lj-color-disabled-text),
@@ -69,6 +78,8 @@ html {
     touch-target-size: var(--lj-touch-comfortable),
   ));
   @include mat.form-field-overrides((
+    container-height: var(--lj-control-height),
+    container-vertical-padding: max(0px, calc((var(--lj-control-height) - var(--lj-leading-control)) / 2)),
     outlined-disabled-input-text-color: var(--lj-color-disabled-text),
     outlined-disabled-label-text-color: var(--lj-color-disabled-text),
     outlined-disabled-outline-color: var(--lj-color-disabled-surface),
@@ -84,7 +95,7 @@ html {
   ));
   @include mat.expansion-overrides((
     container-background-color: var(--lj-color-surface),
-    container-shape: var(--lj-radius-card),
+    container-shape: var(--lj-radius-default),
     container-elevation-shadow: none,
   ));
   color-scheme: light;
@@ -105,20 +116,96 @@ button[mat-button], a[mat-button], button[mat-flat-button], button[mat-stroked-b
   min-width: var(--lj-touch-min);
   min-height: var(--lj-touch-min);
 }
+.cdk-overlay-container .cdk-overlay-pane .mat-mdc-select-panel { border-radius: var(--lj-radius-default); }
 
-@media (max-width: bp.$full-width-navigation), (min-aspect-ratio: 1/1) and (max-height: 30rem) {
-  .cdk-overlay-pane.lj-list-dialog {
-    align-self: flex-start;
-    margin-top: max(var(--lj-space-md), env(safe-area-inset-top));
-    max-height: calc(min(100dvh, var(--lj-list-dialog-viewport, 100dvh)) - max(var(--lj-space-md), env(safe-area-inset-top)) - max(var(--lj-space-md), env(safe-area-inset-bottom)));
+.mat-mdc-dialog-container .mat-mdc-dialog-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--lj-space-xs);
+
+  > button.mat-mdc-button-base + button.mat-mdc-button-base { margin-inline: 0; }
+}
+
+.lj-item-sheet {
+  @include mat.dialog-overrides((
+    container-shape: var(--lj-radius-default) var(--lj-radius-default) 0 0,
+  ));
+  .item-sheet-header, .mat-mdc-dialog-container .mat-mdc-dialog-content, .mat-mdc-dialog-actions {
+    width: min(100%, 47rem);
+    margin-inline: auto;
+    padding-inline-start: max(var(--lj-space-md), env(safe-area-inset-left));
+    padding-inline-end: max(var(--lj-space-md), env(safe-area-inset-right));
+  }
+  .item-sheet-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) var(--lj-touch-min);
+    align-items: center;
+    gap: var(--lj-space-sm);
+    position: relative;
+    flex: none;
+    padding-block-start: var(--lj-space-lg);
+  }
+  .item-sheet-header::before {
+    content: '';
+    position: absolute;
+    inset-block-start: var(--lj-space-xs);
+    inset-inline: 0;
+    margin-inline: auto;
+    inline-size: var(--lj-space-xl);
+    block-size: var(--lj-space-xxs);
+    border-radius: var(--lj-radius-pill);
+    background: var(--lj-color-disabled-surface);
+  }
+  .item-sheet-header .mat-mdc-dialog-title {
+    padding: 0;
+    margin: 0;
+    font-size: var(--lj-text-estimate);
+    font-weight: var(--lj-weight-emphasis);
+    line-height: var(--lj-leading-heading);
+  }
+  .item-sheet-header .mat-mdc-dialog-title::before { display: none; }
+  .item-sheet-copy p { margin: var(--lj-space-xxs) 0 0; font-size: var(--lj-text-item-detail); }
+  .item-sheet-badge {
+    display: grid;
+    place-items: center;
+    inline-size: var(--lj-touch-min);
+    aspect-ratio: 1;
+    border-radius: var(--lj-radius-default);
+    color: var(--lj-color-action);
+    background: var(--lj-color-surface-accent);
+  }
+  .item-sheet-close {
+    position: absolute;
+    inset-block-start: var(--lj-space-xxs);
+    inset-inline-end: max(var(--lj-space-xxs), env(safe-area-inset-right));
+    z-index: 1;
+  }
+  .item-sheet-close .lj-icon {
+    inline-size: var(--lj-space-xl);
+    block-size: var(--lj-space-xl);
+    padding: var(--lj-space-xs);
+    color: var(--lj-color-text);
+    background: var(--lj-color-disabled-surface);
+    border-radius: var(--lj-radius-pill);
+  }
+  .mat-mdc-dialog-container .mat-mdc-dialog-content {
+    max-height: none;
+    padding-block: var(--lj-space-sm) var(--lj-space-xs);
+  }
+  .mat-mdc-dialog-content .notice { margin-block-end: var(--lj-space-sm); }
+  .mat-mdc-dialog-actions {
+    flex: none;
+    padding-bottom: max(var(--lj-space-sm), env(safe-area-inset-bottom));
   }
 }
+
 .page-stack { display: grid; gap: var(--lj-space-md); }
 .clean-list { margin: 0; padding: 0; list-style: none; }
 .lj-icon { inline-size: var(--lj-icon-size); block-size: var(--lj-icon-size); flex: none; vertical-align: middle; }
 .count { padding: var(--lj-space-xxs) var(--lj-space-xs); border-radius: var(--lj-radius-pill); background: var(--lj-color-selection); color: var(--lj-color-on-action-container); font-size: var(--lj-text-item-detail); }
 .muted { color: var(--lj-color-text-muted); }
-.notice { margin: 0; padding: .6rem .8rem; background: var(--lj-color-surface-accent); color: var(--lj-color-action); border-radius: var(--lj-radius-notice); overflow-wrap: anywhere; }
+.notice { margin: 0; padding: .6rem .8rem; background: var(--lj-color-surface-accent); color: var(--lj-color-action); border-radius: var(--lj-radius-default); overflow-wrap: anywhere; }
 .notice p { margin: 0; }
 .notice.error { background: var(--lj-color-error-surface); color: var(--lj-color-error); }
 .danger { color: var(--lj-color-error) !important; }

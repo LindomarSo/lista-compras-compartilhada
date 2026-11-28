@@ -1,3 +1,5 @@
+@use '../../../../../design-system/breakpoints' as bp;
+
 li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--lj-space-xxs); padding-block: var(--lj-space-xxs); min-height: var(--lj-item-row-height); }
 li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }
 mat-checkbox { min-width: 0; overflow-wrap: anywhere; }
@@ -6,4 +8,14 @@ mat-checkbox { min-width: 0; overflow-wrap: anywhere; }
 small { display: block; color: var(--lj-color-text-muted); font-size: var(--lj-text-item-detail); }
 .price { max-width: 11ch; text-align: end; font-weight: var(--lj-weight-action); font-variant-numeric: tabular-nums; font-size: var(--lj-text-meta); overflow-wrap: anywhere; }
 .price small { font-weight: normal; }
-button { grid-column: 3; }
+.item-content { display: contents; }
+.item-actions { display: flex; grid-column: 3; gap: var(--lj-space-xxs); }
+.delete-item:not(:disabled) { color: var(--lj-color-error); }
+
+@media (max-width: bp.$compact-form) {
+  li { grid-template-columns: minmax(0, 1fr) auto; }
+  .item-content { display: block; min-width: 0; }
+  .item-actions { grid-column: 2; }
+  .price { max-width: none; text-align: start; }
+  .price small { display: inline-block; max-inline-size: 100%; margin-inline-start: var(--lj-space-xxs); }
+}

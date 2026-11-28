@@ -1,8 +1,19 @@
-@use '../../../../../design-system/breakpoints' as bp;
-
-.composer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--lj-space-xs); }
-.composer mat-form-field { min-width: 0; }
-.details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--lj-space-sm); padding-bottom: var(--lj-space-dialog-content); }
+form { display: grid; gap: var(--lj-space-sm); }
+.composer { display: grid; gap: var(--lj-space-xxs); }
+.composer label { color: var(--lj-color-action); font-size: var(--lj-text-control-label); font-weight: var(--lj-weight-action); }
+.details-toggle.mat-mdc-button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-inline: var(--lj-space-sm);
+  background: var(--lj-color-surface-accent);
+}
+.details-label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--lj-space-xs);
+  text-align: start;
+}
+.details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--lj-space-sm); }
 .wide { grid-column: 1 / -1; }
-#item-details[aria-expanded="true"] .lj-icon { transform: rotate(180deg); }
-@media (max-width: bp.$compact-form) { .composer { grid-template-columns: 1fr; } }
+.details-toggle[aria-expanded="true"] .details-chevron { transform: rotate(180deg); }

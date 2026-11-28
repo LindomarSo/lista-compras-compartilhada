@@ -1,20 +1,18 @@
-import { Component, effect, inject, input, output, signal, DestroyRef } from '@angular/core';
+import { Component, effect, inject, input, output, signal, computed, DestroyRef, ElementRef, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { LucideChevronDown } from '@lucide/angular';
+import { LucideChevronDown, LucideTag } from '@lucide/angular';
 import { categories, units } from '../../models/shopping-list.ts';
 import { isCategory, itemUnitPrice, suggestCategory, validateItem } from '../../models/list-rules.ts';
 import { LabelReader } from '../../../label-reader/services/label-reader.ts';
 import type { Category, ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
 
-const defaults = { name: '', quantity: 1, unit: 'un', estimated_price: null, notes: '', category: '' as const };
-
 @Component({
   selector: 'lj-item-editor',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, LucideChevronDown],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, LucideChevronDown, LucideTag],
   templateUrl: './item-editor.html',
   styleUrl: './item-editor.scss',
 })
@@ -25,7 +23,9 @@ export class ItemEditor {
   readonly disabled = input(false);
   readonly supportsCategory = input(false);
   readonly saved = output<ItemFields>();
-  readonly cancelled = output<void>();
+  readonly idPrefix = computed(() => this.editing() ? 'edit-item' : 'item');
+  private readonly priceInput = viewChild.required('priceInput', { read: ElementRef });
+  private readonly readPriceButton = viewChild.required('readPriceButton', { read: ElementRef });
   readonly details = signal(false);
   readonly feedback = signal('');
   readonly openingReader = signal(false);
@@ -52,13 +52,16 @@ export class ItemEditor {
         notes: item.notes ?? '', category: isCategory(item.category) ? item.category : '',
       });
       this.details.set(true);
-      requestAnimationFrame(() => { if (!this.destroy.destroyed) document.getElementById('item-name')?.focus(); });
     });
     effect(() => this.disabled() ? this.form.disable() : this.form.enable());
   }
 
   suggested(): string {
     return categories[suggestCategory(this.form.controls.name.value)];
+  }
+
+  canSubmit(): boolean {
+    return !this.disabled() && !!this.form.controls.name.value.trim();
   }
 
   submit(): void {
@@ -78,13 +81,6 @@ export class ItemEditor {
     });
   }
 
-  reset(): void {
-    this.form.reset(defaults);
-    this.feedback.set('');
-    this.details.set(false);
-    requestAnimationFrame(() => { if (!this.destroy.destroyed) document.getElementById('item-name')?.focus(); });
-  }
-
   async readPrice(): Promise<void> {
     if (this.openingReader()) return;
     this.openingReader.set(true);
@@ -101,7 +97,7 @@ export class ItemEditor {
       if (!this.destroy.destroyed) {
         this.openingReader.set(false);
         requestAnimationFrame(() => {
-          if (!this.destroy.destroyed) document.getElementById(confirmed ? 'item-price' : 'read-price')?.focus();
+          if (!this.destroy.destroyed) (confirmed ? this.priceInput() : this.readPriceButton()).nativeElement.focus();
         });
       }
     }

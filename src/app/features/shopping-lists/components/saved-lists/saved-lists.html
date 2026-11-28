@@ -1,27 +1,33 @@
 <section aria-labelledby="saved-lists-title">
-  <h2 id="saved-lists-title">Minhas listas</h2>
+  <h2 #heading id="saved-lists-title" tabindex="-1">Minhas listas</h2>
   @if (rows().length) {
-    <mat-card appearance="outlined">
-      <ul class="clean-list saved-lists">
-        @for (row of rows(); track row.token) {
-          <li>
-            <a [routerLink]="['/listas', row.local ? 'local' : 'compartilhada', row.token]" class="saved-link">
+    <ul class="clean-list saved-lists">
+      @for (row of rows(); track row.token) {
+        @let open = openToken() === row.token;
+        <li [attr.data-saved-token]="row.token" [class.open]="open">
+          <div class="row-front" (pointerdown)="startSwipe($event, row.token)" (pointermove)="moveSwipe($event)"
+            (pointerup)="finishSwipe($event)" (pointercancel)="finishSwipe($event)" (lostpointercapture)="finishSwipe($event)"
+            (dragstart)="$event.preventDefault()">
+            <a #listLink [routerLink]="['/listas', row.local ? 'local' : 'compartilhada', row.token]" class="saved-link">
+              <span class="basket"><svg lucideShoppingBasket class="lj-icon" aria-hidden="true"></svg></span>
               <span>
                 <span class="saved-name">{{ row.list.name }}</span>
                 <span class="saved-kind">{{ row.local ? 'Neste aparelho' : 'Compartilhada' }}</span>
               </span>
               <svg lucideChevronRight class="lj-icon chevron" aria-hidden="true"></svg>
             </a>
-            <button mat-icon-button type="button" [matMenuTriggerFor]="options" [attr.aria-label]="'Opções de ' + row.list.name">
+            <button mat-icon-button class="reveal-toggle" type="button" [attr.aria-label]="'Opções de ' + row.list.name"
+              [attr.aria-expanded]="open" [attr.aria-controls]="'remove-list-' + row.token" (click)="toggle(row.token)">
               <svg lucideEllipsis class="lj-icon" aria-hidden="true"></svg>
             </button>
-            <mat-menu #options="matMenu">
-              <button mat-menu-item type="button" class="danger" (click)="removed.emit(row)">Remover deste aparelho</button>
-            </mat-menu>
-          </li>
-        }
-      </ul>
-    </mat-card>
+          </div>
+          <button type="button" class="remove-action" [id]="'remove-list-' + row.token" [inert]="!open"
+            [attr.aria-label]="'Remover deste aparelho: ' + row.list.name" (click)="removed.emit(row)">
+            Remover deste aparelho
+          </button>
+        </li>
+      }
+    </ul>
   } @else {
     <p class="muted">Listas novas e convites abertos aparecem aqui.</p>
   }

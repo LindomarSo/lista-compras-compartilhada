@@ -96,8 +96,16 @@ export class ListSession {
   async change(change: ItemChange, notice: string): Promise<boolean> {
     const snapshot = this.snapshot();
     if (!snapshot) return false;
+    return this.updateSnapshot(ref => this.repository.change(ref, snapshot, change), notice);
+  }
+
+  rename(name: string): Promise<boolean> {
+    return this.updateSnapshot(ref => this.repository.rename(ref, name), 'Nome da lista atualizado.');
+  }
+
+  private async updateSnapshot(operation: (ref: ListReference) => Promise<ListSnapshot>, notice: string): Promise<boolean> {
     return (await this.run(async (ref, current) => {
-      const next = await this.repository.change(ref, snapshot, change);
+      const next = await operation(ref);
       if (current()) {
         this.snapshot.set(next);
         this.notice.set(notice);
