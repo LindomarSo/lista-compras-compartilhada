@@ -1,18 +1,29 @@
 <div class="filters">
-  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
     <mat-label>Mês</mat-label>
-    <input #monthField matInput id="balance-month" type="month" [value]="month()" (change)="monthChanged.emit(monthField.value)" placeholder="AAAA-MM">
-  </mat-form-field>
-  <details class="selector">
-    <summary id="balance-selection">{{ title() }}</summary>
-    <fieldset id="balance-lists">
-      <legend>Listas no balanço</legend>
-      <mat-checkbox [checked]="selected() === null" [disabled]="!rows().length" (change)="listChanged.emit({ token: '', checked: $event.checked })">Todas as listas</mat-checkbox>
-      @for (row of rows(); track row.token) {
-        <mat-checkbox [checked]="selected() === null || !!selected()?.has(row.token)" (change)="listChanged.emit({ token: row.token, checked: $event.checked })">{{ row.list.name }}</mat-checkbox>
+    <svg matIconPrefix lucideCalendarDays class="lj-icon filter-icon" aria-hidden="true"></svg>
+    <mat-select id="balance-month" [value]="month()" [panelWidth]="null" (selectionChange)="monthChanged.emit($event.value)">
+      <mat-select-trigger>
+        <span class="full-month">{{ monthLabel()?.full }}</span>
+        <span class="short-month">{{ monthLabel()?.short }}</span>
+      </mat-select-trigger>
+      @for (option of monthOptions(); track option.value) {
+        <mat-option [value]="option.value">{{ option.full }}</mat-option>
       }
-    </fieldset>
-  </details>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
+    <mat-label>Lista</mat-label>
+    <svg matIconPrefix lucideLayers class="lj-icon filter-icon" aria-hidden="true"></svg>
+    <mat-select id="balance-selection" multiple [value]="selectionValue()" [placeholder]="title()" [panelWidth]="null"
+      (selectionChange)="changeLists($event)">
+      <mat-select-trigger>{{ title() }}</mat-select-trigger>
+      <mat-option value="" [disabled]="!rows().length">Todas as listas</mat-option>
+      @for (row of rows(); track row.token) {
+        <mat-option [value]="row.token">{{ row.list.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
   @if (refreshable()) {
     <button mat-stroked-button id="balance-refresh" type="button" [disabled]="refreshing()" (click)="refresh.emit()">Atualizar listas</button>
   }

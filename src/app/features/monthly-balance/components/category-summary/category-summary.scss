@@ -1,4 +1,64 @@
-:host, mat-card { display: block; height: 100%; min-width: 0; }
+:host, mat-card { display: block; min-width: 0; }
+.category-heading { display: flex; align-items: flex-start; gap: var(--lj-space-sm); }
+.category-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--lj-space-xl);
+  aspect-ratio: 1;
+  border-radius: var(--lj-radius-default);
+  color: var(--lj-color-action);
+  background: var(--lj-color-selection);
+}
+h2 { font-weight: var(--lj-weight-emphasis); }
+p { margin: var(--lj-space-xxs) 0 0; color: var(--lj-color-text-muted); font-size: var(--lj-text-control-label); }
+.empty-categories {
+  margin-block-start: var(--lj-space-sm);
+  padding: var(--lj-space-md);
+  border: var(--lj-border-width) solid var(--lj-color-border);
+  border-radius: var(--lj-radius-default);
+  background: color-mix(in srgb, var(--lj-color-background) 45%, var(--lj-color-surface));
+  text-align: center;
+}
+.empty-art {
+  display: grid;
+  place-items: center;
+  width: min(5rem, 100%);
+  height: 3.75rem;
+  margin-inline: auto;
+  position: relative;
+  isolation: isolate;
+  color: var(--lj-color-action);
+}
+.empty-art::before {
+  content: '';
+  position: absolute;
+  inset: 14% 0;
+  z-index: -1;
+  border-radius: var(--lj-radius-pill);
+  background: var(--lj-color-surface-accent);
+  transform: rotate(-23deg);
+}
+.empty-art::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto auto 4%;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  background:
+    linear-gradient(currentColor, currentColor) 0 85% / 34% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 68% 20% / 2px 36% no-repeat;
+  transform: rotate(12deg);
+}
+.empty-art svg {
+  inline-size: 3rem;
+  block-size: 3rem;
+  fill: var(--lj-color-selection);
+  stroke-width: 1.5;
+  transform: rotate(90deg);
+}
+.empty-categories h3 { margin: var(--lj-space-xxs) 0; font-size: var(--lj-text-control-label); font-weight: var(--lj-weight-emphasis); }
+.empty-categories p { max-inline-size: 32ch; margin-inline: auto; }
 ul { margin-top: var(--lj-space-xs); }
 li { display: grid; gap: var(--lj-space-inline); padding-block: var(--lj-space-compact); }
 li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }

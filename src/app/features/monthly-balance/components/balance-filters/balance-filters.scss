@@ -1,14 +1,31 @@
+@use '@angular/material' as mat;
 @use '../../../../../design-system/breakpoints' as bp;
 
-.filters { display: flex; gap: var(--lj-space-sm); flex-wrap: wrap; align-items: center; }
-.filters mat-form-field, input { min-width: 0; }
-input::-webkit-date-and-time-value { text-align: start; }
-.selector { position: relative; max-width: 100%; }
-summary { min-height: var(--lj-control-height); padding: var(--lj-space-xs) var(--lj-space-content); line-height: var(--lj-leading-control); border-radius: var(--lj-radius-default); border: var(--lj-border-width) solid var(--lj-color-outline); background: var(--lj-color-surface); cursor: pointer; overflow-wrap: anywhere; }
-fieldset { position: absolute; z-index: 2; min-inline-size: 0; width: min(20rem, calc(100vw - 2 * var(--lj-space-md))); max-height: 18rem; overflow-y: auto; padding: var(--lj-space-row); margin: var(--lj-space-xxs) 0; border: var(--lj-border-width) solid var(--lj-color-border); border-radius: var(--lj-radius-default); background: var(--lj-color-surface); box-shadow: var(--lj-shadow-popover); }
-legend { font-size: var(--lj-text-filter-label); border-radius: var(--lj-radius-default); background: var(--lj-color-surface-accent); }
-mat-checkbox { display: block; overflow-wrap: anywhere; }
-@media (max-width: bp.$stacked-balance) {
-  .filters { display: grid; grid-template-columns: minmax(0, 1fr); }
-  fieldset { position: static; width: 100%; }
+:host {
+  @include mat.form-field-overrides((
+    container-text-size: var(--lj-text-control-detail),
+    container-text-tracking: 0,
+    outlined-label-text-color: var(--lj-color-control-text-muted),
+  ));
+  @include mat.select-overrides((
+    trigger-text-size: var(--lj-text-control-detail),
+    trigger-text-tracking: 0,
+  ));
+}
+.filters { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: var(--lj-space-sm); }
+mat-form-field { min-width: 0; background: var(--lj-color-surface); border-radius: var(--lj-radius-default); }
+.short-month { display: none; }
+.filter-icon { inline-size: 1rem; block-size: 1rem; }
+mat-form-field .filter-icon { margin-inline: var(--lj-space-xs) var(--lj-space-xxs); }
+#balance-refresh { grid-column: 1 / -1; justify-self: start; }
+
+@media (max-width: bp.$compact-balance-filters) {
+  .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .full-month { display: none; }
+  .short-month { display: inline; }
+  mat-form-field .filter-icon {
+    inline-size: .875rem;
+    block-size: .875rem;
+    margin-inline-start: var(--lj-space-xxs);
+  }
 }

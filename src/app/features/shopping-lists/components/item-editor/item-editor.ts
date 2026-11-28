@@ -4,15 +4,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { LucideChevronDown, LucideTag } from '@lucide/angular';
+import { LucideChevronDown, LucideFolder, LucideLayers, LucideMessageSquare, LucideMinus, LucidePlus, LucideScanBarcode, LucideSlidersHorizontal, LucideTag } from '@lucide/angular';
 import { categories, units } from '../../models/shopping-list.ts';
 import { isCategory, itemUnitPrice, suggestCategory, validateItem } from '../../models/list-rules.ts';
 import { LabelReader } from '../../../label-reader/services/label-reader.ts';
 import type { Category, ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
 
+const minQuantity = .000001;
+const maxQuantity = 1000000;
+
 @Component({
   selector: 'lj-item-editor',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, LucideChevronDown, LucideTag],
+  imports: [
+    ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule,
+    LucideChevronDown, LucideFolder, LucideLayers, LucideMessageSquare, LucideMinus, LucidePlus,
+    LucideScanBarcode, LucideSlidersHorizontal, LucideTag,
+  ],
   templateUrl: './item-editor.html',
   styleUrl: './item-editor.scss',
 })
@@ -34,7 +41,7 @@ export class ItemEditor {
   readonly categories = categories;
   readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(120)] }),
-    quantity: new FormControl<number | null>(1, [Validators.required, Validators.min(.000001), Validators.max(1000000)]),
+    quantity: new FormControl<number | null>(1, [Validators.required, Validators.min(minQuantity), Validators.max(maxQuantity)]),
     unit: new FormControl('un', { nonNullable: true }),
     estimated_price: new FormControl<number | null>(null, [Validators.min(0), Validators.max(100000000)]),
     notes: new FormControl('', { nonNullable: true, validators: [Validators.maxLength(500)] }),
@@ -58,6 +65,18 @@ export class ItemEditor {
 
   suggested(): string {
     return categories[suggestCategory(this.form.controls.name.value)];
+  }
+
+  canAdjustQuantity(step: -1 | 1): boolean {
+    const quantity = (this.form.controls.quantity.value ?? 0) + step;
+    return !this.disabled() && quantity >= minQuantity && quantity <= maxQuantity;
+  }
+
+  adjustQuantity(step: -1 | 1): void {
+    if (!this.canAdjustQuantity(step)) return;
+    const control = this.form.controls.quantity;
+    control.setValue(Number(((control.value ?? 0) + step).toPrecision(15)));
+    control.markAsDirty();
   }
 
   canSubmit(): boolean {

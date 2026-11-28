@@ -1,6 +1,50 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.form-field-overrides((container-text-size: var(--lj-text-product-field)));
+  @include mat.select-overrides((trigger-text-size: var(--lj-text-product-field)));
+}
+
 form { display: grid; gap: var(--lj-space-sm); }
-.composer { display: grid; gap: var(--lj-space-xxs); }
-.composer label { color: var(--lj-color-action); font-size: var(--lj-text-control-label); font-weight: var(--lj-weight-action); }
+.composer, .field { display: grid; gap: var(--lj-space-xxs); min-width: 0; }
+label {
+  color: var(--lj-color-text-muted);
+  font-size: var(--lj-text-product-label);
+  font-weight: var(--lj-weight-nav);
+}
+.composer label { color: var(--lj-color-action); font-weight: var(--lj-weight-action); }
+.field label { padding-inline: var(--lj-space-xs); }
+.field-icon {
+  color: var(--lj-color-control-text-muted);
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-inline: var(--lj-space-xs) var(--lj-space-inline);
+}
+.currency-prefix {
+  display: inline-block;
+  padding: 0 var(--lj-space-xs);
+  margin-inline: var(--lj-space-xxs) var(--lj-space-inline);
+  border-radius: var(--lj-radius-pill);
+  color: var(--lj-color-text-muted);
+  background: var(--lj-color-surface-accent);
+  font-size: var(--lj-text-product-label);
+  font-weight: var(--lj-weight-nav);
+  line-height: var(--lj-leading-control);
+}
+.quantity-input {
+  appearance: textfield;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.quantity-step .lj-icon {
+  inline-size: var(--lj-space-lg);
+  block-size: var(--lj-space-lg);
+  padding: var(--lj-space-xxs);
+  border-radius: var(--lj-radius-pill);
+  background: var(--lj-color-surface-accent);
+}
 .details-toggle.mat-mdc-button {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -14,6 +58,18 @@ form { display: grid; gap: var(--lj-space-sm); }
   gap: var(--lj-space-xs);
   text-align: start;
 }
-.details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--lj-space-sm); }
+.details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--lj-space-sm); }
 .wide { grid-column: 1 / -1; }
 .details-toggle[aria-expanded="true"] .details-chevron { transform: rotate(180deg); }
+
+.price-reader.mat-mdc-outlined-button {
+  @include mat.button-overrides((
+    outlined-label-text-color: var(--lj-color-action),
+    outlined-outline-color: var(--lj-color-action),
+    outlined-state-layer-color: var(--lj-color-action),
+    outlined-ripple-color: color-mix(in srgb, var(--lj-color-action) 12%, transparent),
+  ));
+  background: var(--lj-color-surface-accent);
+
+  > .lj-icon { margin-inline-end: var(--lj-space-xs); }
+}

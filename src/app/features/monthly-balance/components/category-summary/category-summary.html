@@ -1,6 +1,12 @@
 <mat-card appearance="outlined">
   <mat-card-content>
-    <h2>Por categoria</h2>
+    <header class="category-heading">
+      <span class="category-icon" aria-hidden="true"><svg lucideTag class="lj-icon"></svg></span>
+      <div>
+        <h2>Por categoria</h2>
+        <p>Os itens marcados como comprados neste mês aparecem aqui.</p>
+      </div>
+    </header>
     @if (groups().length) {
       <ul id="balance-groups" class="clean-list">
         @for (group of groups(); track group.category) {
@@ -11,7 +17,11 @@
         }
       </ul>
     } @else {
-      <p class="muted">{{ selectedCount() ? 'Os itens marcados como comprados neste mês aparecem aqui.' : 'Crie ou selecione uma lista para acompanhar os gastos.' }}</p>
+      <div class="empty-categories">
+        <span class="empty-art" aria-hidden="true"><svg lucideTag></svg></span>
+        <h3>Nenhuma compra registrada</h3>
+        <p>Quando houver compras no mês, elas serão organizadas por categoria aqui.</p>
+      </div>
     }
   </mat-card-content>
 </mat-card>

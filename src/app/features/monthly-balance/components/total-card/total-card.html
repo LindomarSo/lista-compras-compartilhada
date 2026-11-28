@@ -1,6 +1,11 @@
 <section class="total" aria-label="Total do mês">
-  <p>Total registrado</p>
-  <strong id="balance-total">{{ count() > missing() ? currency(cents() / 100) : '—' }}</strong>
-  <p class="item-count">{{ count() }} {{ count() === 1 ? 'item comprado' : 'itens comprados' }}</p>
+  <div class="total-header">
+    <div class="amount">
+      <p>Total registrado</p>
+      <strong id="balance-total">{{ count() && count() === missing() ? '—' : currency(cents() / 100) }}</strong>
+    </div>
+    <span class="cart-art" aria-hidden="true"><svg lucideShoppingCart></svg></span>
+  </div>
+  <p class="item-count"><svg lucideShoppingBag class="lj-icon" aria-hidden="true"></svg>{{ count() }} {{ count() === 1 ? 'item comprado' : 'itens comprados' }}</p>
   @if (missing()) { <p class="missing">{{ missing() }} {{ missing() === 1 ? 'item sem preço registrado' : 'itens sem preço registrado' }}</p> }
 </section>

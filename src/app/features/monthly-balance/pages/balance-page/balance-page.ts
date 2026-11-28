@@ -1,4 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { LucideChartNoAxesColumnIncreasing } from '@lucide/angular';
 import { BalanceStore } from '../../services/balance-store.ts';
 import { BalanceFilters } from '../../components/balance-filters/balance-filters.ts';
 import { CategorySummary } from '../../components/category-summary/category-summary.ts';
@@ -7,7 +8,7 @@ import { TotalCard } from '../../components/total-card/total-card.ts';
 
 @Component({
   selector: 'lj-balance-page',
-  imports: [BalanceFilters, CategorySummary, PurchaseHistory, TotalCard],
+  imports: [BalanceFilters, CategorySummary, PurchaseHistory, TotalCard, LucideChartNoAxesColumnIncreasing],
   templateUrl: './balance-page.html',
   styleUrl: './balance-page.scss',
 })

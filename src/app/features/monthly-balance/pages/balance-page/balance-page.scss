@@ -1,4 +1,18 @@
 @use '../../../../../design-system/breakpoints' as bp;
 
-.summary { display: grid; grid-template-columns: minmax(0,4fr) minmax(0,5fr); gap: var(--lj-space-md); }
+.balance-heading { display: flex; align-items: center; gap: var(--lj-space-sm); }
+.heading-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--lj-touch-comfortable);
+  aspect-ratio: 1;
+  border-radius: var(--lj-radius-default);
+  color: var(--lj-color-action);
+  background: var(--lj-color-selection);
+}
+.heading-icon .lj-icon { inline-size: 1.625rem; block-size: 1.625rem; }
+h1 { font-size: var(--lj-text-estimate); font-weight: var(--lj-weight-emphasis); }
+p { margin: var(--lj-space-xxs) 0 0; color: var(--lj-color-text-muted); font-size: var(--lj-text-control-label); }
+.summary { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); gap: var(--lj-space-md); }
 @media (max-width: bp.$stacked-balance) { .summary { grid-template-columns: 1fr; } }

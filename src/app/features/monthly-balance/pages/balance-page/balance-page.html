@@ -1,5 +1,11 @@
 <section class="page-stack" aria-labelledby="page-title">
-  <h1 id="page-title" tabindex="-1">Balanço mensal</h1>
+  <header class="balance-heading">
+    <span class="heading-icon" aria-hidden="true"><svg lucideChartNoAxesColumnIncreasing class="lj-icon"></svg></span>
+    <div>
+      <h1 id="page-title" tabindex="-1">Balanço mensal</h1>
+      <p>Acompanhe seus gastos e compras do mês.</p>
+    </div>
+  </header>
   <lj-balance-filters [month]="store.month()" [rows]="store.rows()" [chosen]="store.chosen()"
     [selected]="store.selected()" [refreshable]="store.refreshable()" [refreshing]="refreshing()"
     (monthChanged)="setMonth($event)" (listChanged)="store.select($event.token, $event.checked)"
@@ -8,7 +14,7 @@
   @let summary = store.summary();
   <div class="summary">
     <lj-total-card [cents]="summary.cents" [count]="summary.items.length" [missing]="summary.missing" />
-    <lj-category-summary [groups]="summary.groups" [cents]="summary.cents" [selectedCount]="store.chosen().length" />
+    <lj-category-summary [groups]="summary.groups" [cents]="summary.cents" />
   </div>
   @if (summary.items.length) { <lj-purchase-history [items]="summary.items" /> }
 </section>

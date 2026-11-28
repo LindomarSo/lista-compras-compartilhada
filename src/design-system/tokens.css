@@ -50,6 +50,9 @@
 
   /* Status and utility surfaces */
   --lj-color-total-surface: #123d2c;
+  --lj-color-balance-total-start: #096344;
+  --lj-color-balance-total-end: #045035;
+  --lj-color-balance-total-art: #9edcb9;
   --lj-color-total-highlight: #d8f581;
   --lj-color-total-text: var(--lj-color-surface);
   --lj-color-total-text-muted: var(--lj-color-selection);
@@ -69,6 +72,8 @@
   --lj-text-control: 1rem;
   --lj-text-control-label: .875rem;
   --lj-text-control-detail: .75rem;
+  --lj-text-product-field: calc(var(--lj-text-control) - 1px);
+  --lj-text-product-label: calc(var(--lj-text-control-label) - 1px);
   --lj-text-dialog-title: 1.375rem;
   --lj-text-page-title: clamp(1.8rem, 5.8vw, 2.85rem);
   --lj-text-section-title: 1rem;
