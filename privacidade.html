@@ -24,7 +24,7 @@
 
       <section aria-labelledby="privacy-data">
         <h2 id="privacy-data">Dados usados pelo app</h2>
-        <p>Listas novas ficam no aparelho até você gerar um convite. Para sincronizar a lista compartilhada, o serviço recebe o nome da lista e o conteúdo dos itens, incluindo quantidade, unidade, categoria, preço, observações e registro da compra. Listas criadas em versões anteriores podem já estar no serviço.</p>
+        <p>Listas novas ficam no aparelho até você gerar um convite. Para permitir abrir, editar, sincronizar e excluir listas compartilhadas, o serviço recebe o nome da lista e o conteúdo dos itens, incluindo nome do produto, quantidade, unidade, categoria, preço, observações e registro da compra. Listas criadas em versões anteriores podem já estar no serviço.</p>
         <p>Quando você escolhe ler uma etiqueta, o app solicita acesso à câmera. A imagem é processada em memória no aparelho. Ela não é guardada nem enviada ao serviço. Você escolhe se deseja usar o preço sugerido.</p>
         <p>Cada lista tem um código de acesso incluído no link de convite. O app usa esse código nas solicitações ao serviço e guarda o código e a última versão da lista no seu dispositivo para reabertura e consulta sem conexão.</p>
       </section>
@@ -38,8 +38,8 @@
       <section aria-labelledby="privacy-retention">
         <h2 id="privacy-retention">Retenção e exclusão</h2>
         <p>O serviço guarda as listas e seus itens para permitir a consulta e a sincronização. O banco e o serviço de listas não têm um prazo de exclusão automática configurado.</p>
-        <p>Você pode excluir produtos individualmente. Para excluir a lista inteira, abra o menu da lista, escolha <strong>Excluir lista</strong> e confirme. O serviço remove do banco ativo a lista, o registro usado para validar o convite e todos os produtos vinculados. O convite deixa de abrir a lista no serviço. Quando o servidor confirma a exclusão, o app tenta remover também a cópia salva no aparelho usado para excluir a lista.</p>
-        <p>Em <strong>Minhas listas</strong>, a opção <strong>Remover</strong> apaga a cópia salva naquele dispositivo. Quem recebeu o convite pode manter uma cópia em outro aparelho e consultá-la sem conexão até removê-la de <strong>Minhas listas</strong>.</p>
+        <p>Você pode excluir produtos individualmente. Para excluir a lista inteira, abra a lista, toque na lixeira <strong>Excluir lista</strong> e confirme. O serviço remove do banco ativo a lista compartilhada, o registro usado para validar o convite e todos os produtos vinculados. O convite deixa de abrir a lista no serviço. Quando o servidor confirma a exclusão, o app tenta remover também a cópia salva no aparelho usado para excluir a lista.</p>
+        <p>Em <strong>Minhas listas</strong>, a opção <strong>Remover deste aparelho</strong> apaga a cópia salva naquele dispositivo. Quem recebeu o convite pode manter uma cópia em outro aparelho e consultá-la sem conexão até removê-la de <strong>Minhas listas</strong>.</p>
         <p>Os logs operacionais de API e banco de dados têm retenção de até 24 horas no plano Free do Supabase. Remover uma lista do banco não apaga esses registros, que expiram conforme a retenção do serviço. O projeto não tem exportação contínua de logs configurada no Supabase.</p>
         <p>O projeto não tem backups automáticos nem restauração para um ponto no tempo no Supabase.</p>
       </section>
