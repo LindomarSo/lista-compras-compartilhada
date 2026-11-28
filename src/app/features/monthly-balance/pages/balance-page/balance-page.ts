@@ -23,7 +23,7 @@ export class BalancePage {
   }
 
   setMonth(value: string): void {
-    if (!value || /^\d{4}-(0[1-9]|1[0-2])$/.test(value)) this.store.month.set(value);
+    if (this.store.availableMonths().values.includes(value)) this.store.month.set(value);
   }
 
   async refresh(): Promise<void> {

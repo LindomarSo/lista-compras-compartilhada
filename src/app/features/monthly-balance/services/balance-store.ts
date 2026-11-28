@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, linkedSignal, signal } from '@angular/core';
 import { LIST_CATALOG } from '../../shopping-lists/interfaces/list-catalog.ts';
 import { monthlyBalance, purchaseMonth } from '../models/monthly-balance.ts';
 
@@ -6,8 +6,24 @@ import { monthlyBalance, purchaseMonth } from '../models/monthly-balance.ts';
 export class BalanceStore {
   private readonly catalog = inject(LIST_CATALOG);
   private readonly selection = signal<ReadonlySet<string> | null>(null);
-  readonly month = signal(purchaseMonth());
   readonly rows = this.catalog.rows;
+  readonly availableMonths = computed(() => {
+    const current = purchaseMonth();
+    const months = new Set([current]);
+    for (const row of this.rows()) {
+      for (const item of row.items) {
+        if (!item.purchased || !item.purchased_at) continue;
+        const month = purchaseMonth(item.purchased_at);
+        if (/^\d{4}-\d{2}$/.test(month)) months.add(month);
+      }
+    }
+    return { current, values: [...months].sort().reverse() };
+  });
+  readonly month = linkedSignal<{ current: string; values: string[] }, string>({
+    source: this.availableMonths,
+    computation: ({ current, values }, previous) =>
+      previous && values.includes(previous.value) ? previous.value : current,
+  });
   readonly selected = computed(() => {
     const selection = this.selection();
     const replacements = this.catalog.replacements();
@@ -17,7 +33,7 @@ export class BalanceStore {
     const selection = this.selected();
     return selection === null ? this.rows() : this.rows().filter(row => selection.has(row.token));
   });
-  readonly summary = computed(() => monthlyBalance(this.chosen(), this.month() || purchaseMonth()));
+  readonly summary = computed(() => monthlyBalance(this.chosen(), this.month()));
   readonly refreshable = computed(() => this.chosen().some(row => !row.local));
 
   select(token: string, checked: boolean): void {

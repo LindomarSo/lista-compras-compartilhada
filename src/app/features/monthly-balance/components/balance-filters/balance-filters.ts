@@ -4,7 +4,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule, type MatSelectChange } from '@angular/material/select';
 import { LucideCalendarDays, LucideLayers } from '@lucide/angular';
 import type { SavedList } from '../../../shopping-lists/models/shopping-list.ts';
-import { purchaseMonth } from '../../models/monthly-balance.ts';
 
 const fullMonth = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 const shortMonth = new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -17,24 +16,12 @@ const shortMonth = new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'num
 })
 export class BalanceFilters {
   readonly month = input.required<string>();
+  readonly months = input.required<readonly string[]>();
   readonly rows = input.required<readonly SavedList[]>();
-  readonly monthOptions = computed(() => {
-    const years = new Set([purchaseMonth().slice(0, 4), this.month().slice(0, 4)]);
-    for (const row of this.rows()) {
-      for (const item of row.items) {
-        if (!item.purchased || !item.purchased_at) continue;
-        const month = purchaseMonth(item.purchased_at);
-        if (/^\d{4}-\d{2}$/.test(month)) years.add(month.slice(0, 4));
-      }
-    }
-    return [...years].filter(Boolean).sort().reverse().flatMap(year =>
-      Array.from({ length: 12 }, (_, index) => {
-        const value = year + '-' + String(12 - index).padStart(2, '0');
-        const date = new Date(value + '-01T00:00:00Z');
-        return { value, full: fullMonth.format(date), short: shortMonth.format(date) };
-      }),
-    );
-  });
+  readonly monthOptions = computed(() => this.months().map(value => {
+    const date = new Date(value + '-01T00:00:00Z');
+    return { value, full: fullMonth.format(date), short: shortMonth.format(date) };
+  }));
   readonly monthLabel = computed(() => this.monthOptions().find(option => option.value === this.month()));
   readonly chosen = input.required<readonly SavedList[]>();
   readonly selected = input.required<ReadonlySet<string> | null>();

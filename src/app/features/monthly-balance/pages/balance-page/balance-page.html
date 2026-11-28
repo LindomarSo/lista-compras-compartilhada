@@ -6,7 +6,7 @@
       <p>Acompanhe seus gastos e compras do mês.</p>
     </div>
   </header>
-  <lj-balance-filters [month]="store.month()" [rows]="store.rows()" [chosen]="store.chosen()"
+  <lj-balance-filters [month]="store.month()" [months]="store.availableMonths().values" [rows]="store.rows()" [chosen]="store.chosen()"
     [selected]="store.selected()" [refreshable]="store.refreshable()" [refreshing]="refreshing()"
     (monthChanged)="setMonth($event)" (listChanged)="store.select($event.token, $event.checked)"
     (refresh)="refresh()" />
