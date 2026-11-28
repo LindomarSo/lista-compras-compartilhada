@@ -1,6 +1,6 @@
 <section class="total" aria-label="Total do mês">
   <p>Total registrado</p>
   <strong id="balance-total">{{ count() > missing() ? currency(cents() / 100) : '—' }}</strong>
-  <p>{{ count() }} {{ count() === 1 ? 'item comprado' : 'itens comprados' }}</p>
+  <p class="item-count">{{ count() }} {{ count() === 1 ? 'item comprado' : 'itens comprados' }}</p>
   @if (missing()) { <p class="missing">{{ missing() }} {{ missing() === 1 ? 'item sem preço registrado' : 'itens sem preço registrado' }}</p> }
 </section>

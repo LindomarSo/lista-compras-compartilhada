@@ -6,6 +6,8 @@ Frontend estático em Angular e Angular Material para GitHub Pages e Android com
 
 Use Node.js 24.15 ou superior da série 24. Instale as dependências com `npm ci` e rode `npm start` para desenvolver ou `npm test` para verificar as regras de negócio. O comando `npm run build` gera `dist/`, que o GitHub Pages publica e o Capacitor usa. Sirva essa pasta por HTTP local para verificar o service worker e o uso offline.
 
+Consulte o [design system](docs/design-system.md) para ajustar os estilos compartilhados e as cores do PWA.
+
 O frontend fica em `src/app/`. Cada feature reúne suas páginas, componentes, modelos e serviços. `core/` contém a navegação e a integração da plataforma. `shared/` concentra utilitários usados por mais de uma feature.
 
 ## Contrato confirmado da Edge Function

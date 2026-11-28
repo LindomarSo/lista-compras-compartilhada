@@ -22,6 +22,8 @@
               { "glob": "manifest.webmanifest", "input": ".", "output": "." },
               { "glob": "privacidade.html", "input": ".", "output": "." },
               { "glob": "privacy.css", "input": "src", "output": "." },
+              { "glob": "tokens.css", "input": "src/design-system", "output": "design-system" },
+              { "glob": "*", "input": "src/design-system/fonts", "output": "design-system/fonts" },
               { "glob": "worker.min.js", "input": "node_modules/tesseract.js/dist", "output": "ocr" },
               { "glob": "*-lstm.wasm.js", "input": "node_modules/tesseract.js-core", "output": "ocr" },
               { "glob": "por.traineddata.gz", "input": "node_modules/@tesseract.js-data/por/4.0.0_best_int", "output": "ocr" },
@@ -47,5 +49,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

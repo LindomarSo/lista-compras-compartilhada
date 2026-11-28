@@ -1,3 +1,8 @@
-.composer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; }
-.details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; padding-bottom: .85rem; }
+@use '../../../../../design-system/breakpoints' as bp;
+
+.composer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--lj-space-xs); }
+.composer mat-form-field { min-width: 0; }
+.details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--lj-space-sm); padding-bottom: var(--lj-space-dialog-content); }
 .wide { grid-column: 1 / -1; }
+#item-details[aria-expanded="true"] .lj-icon { transform: rotate(180deg); }
+@media (max-width: bp.$compact-form) { .composer { grid-template-columns: 1fr; } }

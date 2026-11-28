@@ -6,7 +6,9 @@
     </mat-form-field>
     <button id="save-item" mat-flat-button type="submit" [disabled]="disabled() || !form.controls.name.value.trim()">{{ editing() ? 'Salvar' : 'Adicionar' }}</button>
   </div>
-  <button mat-button id="item-details" type="button" [attr.aria-expanded]="details()" aria-controls="item-fields" (click)="details.set(!details())">Detalhes do item <span aria-hidden="true">{{ details() ? '▴' : '▾' }}</span></button>
+  <button mat-button id="item-details" type="button" [attr.aria-expanded]="details()" aria-controls="item-fields" (click)="details.set(!details())">
+    Detalhes do item <svg lucideChevronDown class="lj-icon" aria-hidden="true"></svg>
+  </button>
   <div class="details" id="item-fields" [hidden]="!details()">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Quantidade</mat-label><input matInput id="item-quantity" type="number" step="any" formControlName="quantity" required>

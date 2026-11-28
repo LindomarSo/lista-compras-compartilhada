@@ -1,7 +1,9 @@
 :host { display: block; max-width: 47rem; margin-inline: auto; }
-.back { justify-self: start; }
-.heading-row, .actions, .feedback, .estimate { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.heading-row, .feedback { flex-wrap: wrap; }
-.list-content { display: grid; gap: .9rem; }
-.pending, .estimate { padding-top: .75rem; border-top: 1px solid var(--lj-line); }
-.estimate strong { font-size: 1.25rem; }
+.back { justify-self: start; margin-inline-start: calc(-1 * var(--lj-space-sm)); }
+.actions, .feedback, .section-heading, .estimate { display: flex; align-items: center; gap: var(--lj-space-xs); }
+.heading-row, .pending { display: grid; gap: var(--lj-space-sm); }
+.feedback { flex-wrap: wrap; }
+.list-options { padding-inline: var(--lj-space-xs); min-width: var(--lj-touch-min); }
+.pending-content p { margin: 0; }
+.estimate { justify-content: space-between; flex-wrap: wrap; padding: var(--lj-space-sm) var(--lj-space-md); border-radius: var(--lj-radius-card); background: var(--lj-color-selection); color: var(--lj-color-on-action-container); }
+.estimate strong { font-size: var(--lj-text-estimate); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }

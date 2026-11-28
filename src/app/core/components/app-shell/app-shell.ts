@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
+import { LucideArrowUpRight } from '@lucide/angular';
 import { filter } from 'rxjs';
 import { AppNavigation } from '../app-navigation/app-navigation.ts';
 import { NativeLinks } from '../../services/native-links.ts';
 
 @Component({
   selector: 'lj-app',
-  imports: [RouterOutlet, RouterLink, MatDialogModule, AppNavigation],
+  imports: [RouterOutlet, RouterLink, MatDialogModule, AppNavigation, LucideArrowUpRight],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })

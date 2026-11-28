@@ -1,20 +1,28 @@
-<mat-card appearance="outlined">
-  <mat-card-content>
-    <h2>Minhas listas</h2>
-    @if (rows().length) {
+<section aria-labelledby="saved-lists-title">
+  <h2 id="saved-lists-title">Minhas listas</h2>
+  @if (rows().length) {
+    <mat-card appearance="outlined">
       <ul class="clean-list saved-lists">
         @for (row of rows(); track row.token) {
           <li>
-            <a mat-button [routerLink]="['/listas', row.local ? 'local' : 'compartilhada', row.token]" class="saved-link">
-              <span class="saved-name">{{ row.list.name }}</span>
-              <span class="saved-kind">{{ row.local ? 'Neste aparelho' : 'Compartilhada' }}</span>
+            <a [routerLink]="['/listas', row.local ? 'local' : 'compartilhada', row.token]" class="saved-link">
+              <span>
+                <span class="saved-name">{{ row.list.name }}</span>
+                <span class="saved-kind">{{ row.local ? 'Neste aparelho' : 'Compartilhada' }}</span>
+              </span>
+              <svg lucideChevronRight class="lj-icon chevron" aria-hidden="true"></svg>
             </a>
-            <button mat-button type="button" [attr.aria-label]="'Remover ' + row.list.name + ' deste aparelho'" (click)="removed.emit(row)">Remover</button>
+            <button mat-icon-button type="button" [matMenuTriggerFor]="options" [attr.aria-label]="'Opções de ' + row.list.name">
+              <svg lucideEllipsis class="lj-icon" aria-hidden="true"></svg>
+            </button>
+            <mat-menu #options="matMenu">
+              <button mat-menu-item type="button" class="danger" (click)="removed.emit(row)">Remover deste aparelho</button>
+            </mat-menu>
           </li>
         }
       </ul>
-    } @else {
-      <p class="muted empty">Listas novas e convites abertos aparecem aqui.</p>
-    }
-  </mat-card-content>
-</mat-card>
+    </mat-card>
+  } @else {
+    <p class="muted">Listas novas e convites abertos aparecem aqui.</p>
+  }
+</section>

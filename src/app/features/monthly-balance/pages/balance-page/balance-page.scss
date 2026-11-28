@@ -1,2 +1,4 @@
-.summary { display: grid; grid-template-columns: minmax(0,4fr) minmax(0,5fr); gap: 1rem; }
-@media (max-width: 42rem) { .summary { grid-template-columns: 1fr; } }
+@use '../../../../../design-system/breakpoints' as bp;
+
+.summary { display: grid; grid-template-columns: minmax(0,4fr) minmax(0,5fr); gap: var(--lj-space-md); }
+@media (max-width: bp.$stacked-balance) { .summary { grid-template-columns: 1fr; } }

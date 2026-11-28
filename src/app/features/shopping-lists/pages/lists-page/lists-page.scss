@@ -1,1 +1,16 @@
 :host { display: block; max-width: 47rem; margin-inline: auto; }
+.lists-heading {
+  position: sticky;
+  top: env(safe-area-inset-top);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lj-space-xs);
+  margin-block: calc(-1 * var(--lj-space-xs));
+  padding-block: var(--lj-space-xs);
+  background: var(--lj-color-background);
+}
+.inline-creation { display: grid; gap: var(--lj-space-sm); }
+.inline-creation p { margin: 0; }

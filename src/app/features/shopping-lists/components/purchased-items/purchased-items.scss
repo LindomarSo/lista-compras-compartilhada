@@ -1,1 +1,2 @@
-.purchased-panel { box-shadow: none; border: 1px solid var(--lj-line); }
+.purchased-panel { border: var(--lj-border-width) solid var(--lj-color-border); }
+mat-panel-title { gap: var(--lj-space-xs); font-weight: var(--lj-weight-list-name); }

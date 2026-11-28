@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { LucideChevronDown } from '@lucide/angular';
 import { categories, units } from '../../models/shopping-list.ts';
 import { isCategory, itemUnitPrice, suggestCategory, validateItem } from '../../models/list-rules.ts';
 import { LabelReader } from '../../../label-reader/services/label-reader.ts';
@@ -13,7 +14,7 @@ const defaults = { name: '', quantity: 1, unit: 'un', estimated_price: null, not
 
 @Component({
   selector: 'lj-item-editor',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, LucideChevronDown],
   templateUrl: './item-editor.html',
   styleUrl: './item-editor.scss',
 })

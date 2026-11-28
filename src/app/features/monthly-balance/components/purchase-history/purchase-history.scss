@@ -1,4 +1,6 @@
-mat-expansion-panel { box-shadow: none; border: 1px solid var(--lj-line); }
-li { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; padding-block: .65rem; overflow-wrap: anywhere; }
-li + li { border-top: 1px solid var(--lj-line); }
-small { display: block; color: var(--lj-muted); }
+mat-expansion-panel { border: var(--lj-border-width) solid var(--lj-color-border); }
+mat-panel-title { font-weight: var(--lj-weight-list-name); }
+li { display: flex; align-items: baseline; justify-content: space-between; gap: var(--lj-space-sm); padding-block: var(--lj-space-row); overflow-wrap: anywhere; }
+li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }
+small { display: block; color: var(--lj-color-text-muted); }
+li > span { flex: none; max-width: 55%; text-align: end; font-variant-numeric: tabular-nums; font-weight: var(--lj-weight-action); }

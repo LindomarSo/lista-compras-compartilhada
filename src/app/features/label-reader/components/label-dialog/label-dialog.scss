@@ -1,2 +1,2 @@
-mat-dialog-content > * { margin-block: 0 .85rem; }
+mat-dialog-content > * { margin-block: 0 var(--lj-space-dialog-content); }
 lj-camera-preview, lj-price-confirmation { display: block; }

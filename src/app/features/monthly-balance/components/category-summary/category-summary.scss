@@ -1,6 +1,8 @@
-:host, mat-card { display: block; height: 100%; }
-li { display: grid; gap: .35rem; padding-block: .55rem; }
-li + li { border-top: 1px solid var(--lj-line); }
-.category-line { display: flex; justify-content: space-between; gap: .75rem; font-size: .9rem; }
-.track { height: .36rem; border-radius: 1rem; background: var(--lj-soft); }
-.track span { display: block; height: 100%; border-radius: inherit; background: var(--lj-green); }
+:host, mat-card { display: block; height: 100%; min-width: 0; }
+ul { margin-top: var(--lj-space-xs); }
+li { display: grid; gap: var(--lj-space-inline); padding-block: var(--lj-space-compact); }
+li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }
+.category-line { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--lj-space-xxs) var(--lj-space-sm); font-size: var(--lj-text-meta); }
+.category-line strong { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.track { height: .36rem; border-radius: var(--lj-radius-inset); background: var(--lj-color-surface-accent); }
+.track span { display: block; height: 100%; border-radius: inherit; background: var(--lj-color-action); }

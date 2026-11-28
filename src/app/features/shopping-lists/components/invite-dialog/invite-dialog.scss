@@ -1,2 +1,2 @@
-.actions { display: grid; gap: .5rem; margin-block: .75rem; }
+.actions { display: grid; gap: var(--lj-space-xs); margin-block: var(--lj-space-sm); }
 input { display: block; width: 100%; }

@@ -1,46 +1,126 @@
 @use '@angular/material' as mat;
+@use 'design-system/breakpoints' as bp;
 
 html {
   @include mat.theme((
     color: (primary: mat.$green-palette, tertiary: mat.$yellow-palette, theme-type: light),
-    typography: system-ui,
+    typography: (plain-family: var(--lj-font-family), brand-family: var(--lj-font-family)),
     density: 0,
   ));
   @include mat.theme-overrides((
-    primary: #236348,
-    on-primary: #fff,
-    primary-container: #dcefe0,
-    on-primary-container: #103c2b,
+    primary: var(--lj-color-action),
+    on-primary: var(--lj-color-on-action),
+    primary-container: var(--lj-color-action-container),
+    on-primary-container: var(--lj-color-on-action-container),
+    surface: var(--lj-color-control-surface),
+    surface-container: var(--lj-color-control-surface-raised),
+    surface-container-high: var(--lj-color-control-surface-high),
+    surface-container-highest: var(--lj-color-control-surface-highest),
+    surface-container-low: var(--lj-color-control-surface-low),
+    surface-container-lowest: var(--lj-color-surface),
+    surface-variant: var(--lj-color-control-surface-variant),
+    on-surface: var(--lj-color-control-text),
+    on-surface-variant: var(--lj-color-control-text-muted),
+    outline: var(--lj-color-control-outline),
+    outline-variant: var(--lj-color-control-border),
+    error: var(--lj-color-control-error),
+    on-error: var(--lj-color-control-on-error),
+    error-container: var(--lj-color-control-error-surface),
+    on-error-container: var(--lj-color-control-on-error-surface),
+    body-large-size: var(--lj-text-control),
+    body-medium-size: var(--lj-text-control-label),
+    body-small-size: var(--lj-text-control-detail),
+    label-large-size: var(--lj-text-control-label),
+    label-medium-size: var(--lj-text-control-detail),
+    title-large-size: var(--lj-text-dialog-title),
+    label-large-weight: var(--lj-weight-action),
+    corner-extra-small: var(--lj-radius-field),
+    corner-medium: var(--lj-radius-card),
+    corner-extra-large: var(--lj-radius-dialog),
+    corner-full: var(--lj-radius-pill),
+  ));
+  @include mat.card-overrides((
+    outlined-container-color: var(--lj-color-surface),
+    outlined-outline-color: var(--lj-color-border),
+  ));
+  @include mat.button-overrides((
+    filled-container-shape: var(--lj-radius-action),
+    outlined-container-shape: var(--lj-radius-action),
+    text-container-shape: var(--lj-radius-action),
+    filled-disabled-container-color: var(--lj-color-disabled-surface),
+    filled-disabled-label-text-color: var(--lj-color-disabled-text),
+    outlined-disabled-label-text-color: var(--lj-color-disabled-text),
+    outlined-disabled-outline-color: var(--lj-color-disabled-surface),
+    text-disabled-label-text-color: var(--lj-color-disabled-text),
+    filled-touch-target-size: var(--lj-touch-comfortable),
+    outlined-touch-target-size: var(--lj-touch-comfortable),
+    text-touch-target-size: var(--lj-touch-comfortable),
+  ));
+  @include mat.icon-button-overrides((
+    icon-size: var(--lj-icon-size),
+    icon-color: var(--lj-color-action),
+    disabled-icon-color: var(--lj-color-disabled-text),
+    touch-target-size: var(--lj-touch-comfortable),
+  ));
+  @include mat.checkbox-overrides((
+    disabled-label-color: var(--lj-color-disabled-text),
+    disabled-selected-icon-color: var(--lj-color-disabled-text),
+    disabled-unselected-icon-color: var(--lj-color-disabled-text),
+    touch-target-size: var(--lj-touch-comfortable),
+  ));
+  @include mat.form-field-overrides((
+    outlined-disabled-input-text-color: var(--lj-color-disabled-text),
+    outlined-disabled-label-text-color: var(--lj-color-disabled-text),
+    outlined-disabled-outline-color: var(--lj-color-disabled-surface),
+    outlined-focus-label-text-color: var(--lj-color-focus),
+    outlined-focus-outline-color: var(--lj-color-focus),
+  ));
+  @include mat.select-overrides((
+    disabled-trigger-text-color: var(--lj-color-disabled-text),
+    disabled-arrow-color: var(--lj-color-disabled-text),
+  ));
+  @include mat.dialog-overrides((
+    container-color: var(--lj-color-surface),
+  ));
+  @include mat.expansion-overrides((
+    container-background-color: var(--lj-color-surface),
+    container-shape: var(--lj-radius-card),
+    container-elevation-shadow: none,
   ));
   color-scheme: light;
-  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
-  --lj-ink: #192d22;
-  --lj-green: #236348;
-  --lj-muted: #4d6556;
-  --lj-line: #dce6dc;
-  --lj-outline: #8c9e90;
-  --lj-paper: #fff;
-  --lj-soft: #eaf2e8;
+  scroll-padding-bottom: calc(var(--lj-nav-scroll-clearance) + env(safe-area-inset-bottom));
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; min-height: 100vh; font-family: system-ui, sans-serif; color: var(--lj-ink); background: linear-gradient(#e7f0e4, #f5f7f1 27rem); }
+body { margin: 0; min-height: 100vh; font-family: var(--lj-font-family); color: var(--lj-color-text); background: var(--lj-color-background); }
 h1, h2 { margin: 0; overflow-wrap: anywhere; }
-h1 { font-size: clamp(1.8rem, 5.8vw, 2.85rem); letter-spacing: -.05em; line-height: 1.1; }
-h2 { font-size: 1.15rem; letter-spacing: -.025em; }
-p { line-height: 1.45; }
-a { color: var(--lj-green); }
-:focus-visible { outline: 3px solid var(--lj-green); outline-offset: 3px; }
+h1 { font-size: var(--lj-text-page-title); letter-spacing: var(--lj-tracking-heading); line-height: var(--lj-leading-heading); }
+h2 { font-size: var(--lj-text-section-title); letter-spacing: var(--lj-tracking-section); }
+p { line-height: var(--lj-leading-body); }
+a { color: var(--lj-color-action); }
+:focus-visible { outline: var(--lj-focus-width) solid var(--lj-color-focus); outline-offset: var(--lj-focus-offset); }
 h1[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: 0; }
-button[mat-button], a[mat-button], button[mat-flat-button], button[mat-stroked-button] { min-height: 44px; }
-.page-stack { display: grid; gap: 1rem; }
+button[mat-button], a[mat-button], button[mat-flat-button], button[mat-stroked-button], button[mat-icon-button] {
+  min-width: var(--lj-touch-min);
+  min-height: var(--lj-touch-min);
+}
+
+@media (max-width: bp.$full-width-navigation), (min-aspect-ratio: 1/1) and (max-height: 30rem) {
+  .cdk-overlay-pane.lj-list-dialog {
+    align-self: flex-start;
+    margin-top: max(var(--lj-space-md), env(safe-area-inset-top));
+    max-height: calc(min(100dvh, var(--lj-list-dialog-viewport, 100dvh)) - max(var(--lj-space-md), env(safe-area-inset-top)) - max(var(--lj-space-md), env(safe-area-inset-bottom)));
+  }
+}
+.page-stack { display: grid; gap: var(--lj-space-md); }
 .clean-list { margin: 0; padding: 0; list-style: none; }
-.muted { color: var(--lj-muted); }
-.notice { margin: 0; padding: .6rem .8rem; background: var(--lj-soft); color: var(--lj-green); border-radius: .8rem; overflow-wrap: anywhere; }
+.lj-icon { inline-size: var(--lj-icon-size); block-size: var(--lj-icon-size); flex: none; vertical-align: middle; }
+.count { padding: var(--lj-space-xxs) var(--lj-space-xs); border-radius: var(--lj-radius-pill); background: var(--lj-color-selection); color: var(--lj-color-on-action-container); font-size: var(--lj-text-item-detail); }
+.muted { color: var(--lj-color-text-muted); }
+.notice { margin: 0; padding: .6rem .8rem; background: var(--lj-color-surface-accent); color: var(--lj-color-action); border-radius: var(--lj-radius-notice); overflow-wrap: anywhere; }
 .notice p { margin: 0; }
-.notice.error { background: #fcece7; color: #842d25; }
-.danger { color: #842d25 !important; }
-mat-card.mat-mdc-card { --mat-card-outlined-container-color: var(--lj-paper); --mat-card-outlined-outline-color: var(--lj-line); }
-mat-card-content.mat-mdc-card-content { padding: 1rem; }
-mat-card-content.mat-mdc-card-content:first-child, mat-card-content.mat-mdc-card-content:last-child { padding-block: 1rem; }
+.notice.error { background: var(--lj-color-error-surface); color: var(--lj-color-error); }
+.danger { color: var(--lj-color-error) !important; }
+mat-card-content.mat-mdc-card-content { padding: var(--lj-space-md); }
+mat-card-content.mat-mdc-card-content:first-child, mat-card-content.mat-mdc-card-content:last-child { padding-block: var(--lj-space-md); }

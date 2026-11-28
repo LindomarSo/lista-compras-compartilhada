@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import type { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
+import { LucideEllipsis } from '@lucide/angular';
 import { categories } from '../../models/shopping-list.ts';
 import type { ShoppingItem } from '../../models/shopping-list.ts';
 import { isCategory, itemSubtotal, itemUnitPrice } from '../../models/list-rules.ts';
@@ -10,7 +11,7 @@ import { formatCurrency } from '../../../../shared/format-currency.ts';
 
 @Component({
   selector: 'lj-item-rows',
-  imports: [MatButtonModule, MatCheckboxModule, MatMenuModule],
+  imports: [MatButtonModule, MatCheckboxModule, MatMenuModule, LucideEllipsis],
   templateUrl: './item-rows.html',
   styleUrl: './item-rows.scss',
 })

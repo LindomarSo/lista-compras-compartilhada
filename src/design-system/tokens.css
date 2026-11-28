@@ -1,0 +1,135 @@
+@font-face {
+  font-family: Inter;
+  src: url("./fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  /* Interface and interaction colors */
+  --lj-color-background: #f5f9f4;
+  --lj-color-surface: #fff;
+  --lj-color-surface-accent: #eef6ee;
+  --lj-color-text: #172c23;
+  --lj-color-text-muted: #496255;
+  --lj-color-border: #dce9de;
+  --lj-color-outline: #758a7d;
+  --lj-color-action: #087548;
+  --lj-color-on-action: #fff;
+  --lj-color-focus: var(--lj-color-action);
+  --lj-color-selection: #dbf4e4;
+  --lj-color-action-container: var(--lj-color-selection);
+  --lj-color-on-action-container: var(--lj-color-total-surface);
+  --lj-color-error: #842d25;
+  --lj-color-error-surface: #fcece7;
+
+  /* Control and overlay roles */
+  --lj-color-control-surface: var(--lj-color-surface);
+  --lj-color-control-surface-raised: var(--lj-color-surface);
+  --lj-color-control-surface-high: var(--lj-color-surface);
+  --lj-color-control-surface-highest: var(--lj-color-selection);
+  --lj-color-control-surface-low: var(--lj-color-background);
+  --lj-color-control-surface-variant: var(--lj-color-surface-accent);
+  --lj-color-control-text: var(--lj-color-text);
+  --lj-color-control-text-muted: var(--lj-color-text-muted);
+  --lj-color-control-outline: var(--lj-color-outline);
+  --lj-color-control-border: var(--lj-color-border);
+  --lj-color-control-error: #ba1a1a;
+  --lj-color-control-on-error: #fff;
+  --lj-color-control-error-surface: #ffdad6;
+  --lj-color-control-on-error-surface: #93000a;
+  --lj-color-disabled: var(--lj-color-control-text);
+  --lj-opacity-disabled-surface: 12%;
+  --lj-opacity-disabled-text: 38%;
+  --lj-color-disabled-surface: color-mix(in srgb, var(--lj-color-disabled) var(--lj-opacity-disabled-surface), transparent);
+  --lj-color-disabled-text: color-mix(in srgb, var(--lj-color-disabled) var(--lj-opacity-disabled-text), transparent);
+
+  /* Status and utility surfaces */
+  --lj-color-total-surface: #123d2c;
+  --lj-color-total-highlight: #d8f581;
+  --lj-color-total-text: var(--lj-color-surface);
+  --lj-color-total-text-muted: var(--lj-color-selection);
+  --lj-color-camera-surface: #173f30;
+  --lj-color-camera-frame: #fff;
+  --lj-color-camera-scrim: #061f1b68;
+  --lj-shadow-navigation: 0 -7px 25px #183d2a16;
+  --lj-shadow-popover: 0 12px 32px #163d2826;
+
+  /* Literal hex colors mirrored into static metadata by tokens:sync. */
+  --lj-color-browser-theme: #f5f9f4;
+  --lj-color-pwa-background: #f5f9f4;
+  --lj-color-pwa-theme: #087548;
+
+  /* Typography */
+  --lj-font-family: Inter, system-ui, sans-serif;
+  --lj-text-control: 1rem;
+  --lj-text-control-label: .875rem;
+  --lj-text-control-detail: .75rem;
+  --lj-text-dialog-title: 1.375rem;
+  --lj-text-page-title: clamp(1.8rem, 5.8vw, 2.85rem);
+  --lj-text-section-title: 1rem;
+  --lj-text-brand: 1.23rem;
+  --lj-text-nav: .81rem;
+  --lj-text-footer: .85rem;
+  --lj-text-item-detail: .8125rem;
+  --lj-text-list-status: .875rem;
+  --lj-text-filter-label: .82rem;
+  --lj-text-meta: .9rem;
+  --lj-text-estimate: 1.25rem;
+  --lj-text-total: clamp(2.3rem, 6vw, 3.7rem);
+  --lj-text-total-detail: .88rem;
+  --lj-weight-nav: 650;
+  --lj-weight-action: 700;
+  --lj-weight-emphasis: 800;
+  --lj-weight-brand: 830;
+  --lj-weight-item-name: 720;
+  --lj-weight-list-name: 750;
+  --lj-leading-heading: 1.1;
+  --lj-leading-body: 1.45;
+  --lj-leading-document: 1.6;
+  --lj-tracking-heading: -.05em;
+  --lj-tracking-section: -.025em;
+  --lj-tracking-total: -.06em;
+
+  /* Spacing, shape and touch sizing */
+  --lj-space-xxs: .25rem;
+  --lj-space-xs: .5rem;
+  --lj-space-sm: .75rem;
+  --lj-space-md: 1rem;
+  --lj-space-lg: 1.5rem;
+  --lj-space-xl: 2rem;
+  --lj-space-brand: .65rem;
+  --lj-space-row: .65rem;
+  --lj-space-inline: .35rem;
+  --lj-space-compact: .55rem;
+  --lj-space-content: .9rem;
+  --lj-space-dialog-content: .85rem;
+  --lj-radius-field: .625rem;
+  --lj-radius-card: 1rem;
+  --lj-radius-action: .75rem;
+  --lj-radius-dialog: 1.25rem;
+  --lj-radius-pill: 9999px;
+  --lj-radius-brand: .75rem;
+  --lj-radius-notice: .8rem;
+  --lj-radius-navigation: 1.3rem;
+  --lj-radius-navigation-item: .75rem;
+  --lj-radius-popover: .85rem;
+  --lj-radius-filter-label: .35rem;
+  --lj-radius-total: 1.125rem;
+  --lj-radius-inset: 1rem;
+  --lj-radius-document: 1.2rem;
+  --lj-radius-document-brand: .65rem;
+  --lj-border-width: 1px;
+  --lj-focus-width: 3px;
+  --lj-focus-offset: 3px;
+  --lj-touch-min: 44px;
+  --lj-touch-comfortable: 48px;
+  --lj-icon-size: 1.25rem;
+  --lj-nav-item-height: 52px;
+  --lj-item-row-height: 56px;
+  --lj-list-row-height: 64px;
+  --lj-topbar-height: 65px;
+  --lj-nav-scroll-clearance: 5rem;
+  --lj-nav-footer-clearance: 5.25rem;
+}

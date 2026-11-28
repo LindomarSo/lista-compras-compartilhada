@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { LucideChevronLeft, LucideEllipsis } from '@lucide/angular';
 import { ListSession } from '../../services/list-session.ts';
 import { sharedPrefix, makeShareLink, tokenPattern } from '../../models/links.ts';
 import { isNative, playUrl, shareBase } from '../../../../core/platform.ts';
@@ -18,7 +19,7 @@ import type { ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
 
 @Component({
   selector: 'lj-list-detail',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatMenuModule, ItemEditor, ItemRows, PurchasedItems],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatMenuModule, ItemEditor, ItemRows, PurchasedItems, LucideChevronLeft, LucideEllipsis],
   providers: [ListSession],
   templateUrl: './list-detail.html',
   styleUrl: './list-detail.scss',

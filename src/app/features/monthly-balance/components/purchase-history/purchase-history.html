@@ -1,6 +1,6 @@
 @if (items().length) {
-  <mat-expansion-panel>
-    <mat-expansion-panel-header><mat-panel-title>Itens comprados no mês</mat-panel-title></mat-expansion-panel-header>
+  <mat-expansion-panel expanded>
+    <mat-expansion-panel-header><mat-panel-title>Histórico de compras</mat-panel-title></mat-expansion-panel-header>
     <ul class="clean-list">
       @for (item of items(); track $index) {
         <li>

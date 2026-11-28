@@ -1,8 +1,9 @@
-li { display: flex; align-items: center; gap: .25rem; padding-block: .25rem; min-height: 56px; }
-li + li { border-top: 1px solid var(--lj-line); }
-mat-checkbox { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.item-name { display: block; font-weight: 720; }
-.purchased .item-name { text-decoration: line-through; color: var(--lj-muted); }
-small { display: block; color: var(--lj-muted); font-size: .76rem; }
-.price { text-align: end; font-variant-numeric: tabular-nums; font-size: .9rem; overflow-wrap: anywhere; }
-button { flex: none; }
+li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--lj-space-xxs); padding-block: var(--lj-space-xxs); min-height: var(--lj-item-row-height); }
+li + li { border-top: var(--lj-border-width) solid var(--lj-color-border); }
+mat-checkbox { min-width: 0; overflow-wrap: anywhere; }
+.item-name { display: block; font-weight: var(--lj-weight-item-name); }
+.purchased .item-name { text-decoration: line-through; color: var(--lj-color-text-muted); }
+small { display: block; color: var(--lj-color-text-muted); font-size: var(--lj-text-item-detail); }
+.price { max-width: 11ch; text-align: end; font-weight: var(--lj-weight-action); font-variant-numeric: tabular-nums; font-size: var(--lj-text-meta); overflow-wrap: anywhere; }
+.price small { font-weight: normal; }
+button { grid-column: 3; }

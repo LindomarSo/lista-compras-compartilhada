@@ -10,7 +10,9 @@
       @if (cost !== null) {
         <span class="price">{{ currency(cost) }}<small>{{ currency(unitPrice(item)) }} / {{ item.unit || 'un' }}</small></span>
       }
-      <button mat-icon-button type="button" [matMenuTriggerFor]="options" [disabled]="disabled()" [attr.aria-label]="'Opções de ' + item.name">⋯</button>
+      <button mat-icon-button type="button" [matMenuTriggerFor]="options" [disabled]="disabled()" [attr.aria-label]="'Opções de ' + item.name">
+        <svg lucideEllipsis class="lj-icon" aria-hidden="true"></svg>
+      </button>
       <mat-menu #options="matMenu">
         <button mat-menu-item type="button" (click)="edited.emit(item)">Editar</button>
         <button mat-menu-item type="button" class="danger" (click)="removed.emit(item)">Excluir</button>

@@ -10,5 +10,5 @@
     <lj-total-card [cents]="summary.cents" [count]="summary.items.length" [missing]="summary.missing" />
     <lj-category-summary [groups]="summary.groups" [cents]="summary.cents" [selectedCount]="store.chosen().length" />
   </div>
-  <lj-purchase-history [items]="summary.items" />
+  @if (summary.items.length) { <lj-purchase-history [items]="summary.items" /> }
 </section>

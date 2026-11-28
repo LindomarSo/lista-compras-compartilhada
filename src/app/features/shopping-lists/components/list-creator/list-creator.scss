@@ -1,3 +1,8 @@
-.create-card { background: var(--lj-soft); border-color: var(--lj-line); }
-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; align-items: center; }
-@media (max-width: 29rem) { form { grid-template-columns: 1fr; } }
+form { display: grid; gap: var(--lj-space-sm); padding-block: var(--lj-space-xs) var(--lj-space-xxs); }
+mat-form-field:focus-within:not(.mat-focused) {
+  border-radius: var(--lj-radius-field);
+  outline: var(--lj-focus-width) solid var(--lj-color-focus);
+  outline-offset: var(--lj-focus-offset);
+}
+.form-actions { display: grid; }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--lj-space-xs); }
