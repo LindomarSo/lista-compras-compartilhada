@@ -1,10 +1,12 @@
+import { t } from '../../../../core/locale.ts';
 import { Component, inject, signal } from '@angular/core';
 import { Clipboard as WebClipboard } from '@angular/cdk/clipboard';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { isNative } from '../../../../core/platform.ts';
+import type { Currency } from '../../../../shared/locale-preferences.ts';
 
-export interface InviteData { title: string; url: string }
+export interface InviteData { title: string; url: string; currency: Currency }
 
 @Component({
   selector: 'lj-invite-dialog',
@@ -13,6 +15,7 @@ export interface InviteData { title: string; url: string }
   styleUrl: './invite-dialog.scss',
 })
 export class InviteDialog {
+  readonly t = t;
   readonly data = inject<InviteData>(MAT_DIALOG_DATA);
   private readonly clipboard = inject(WebClipboard);
   readonly feedback = signal('');
@@ -20,11 +23,16 @@ export class InviteDialog {
   readonly canShare = isNative || Boolean(navigator.share);
 
   async send(): Promise<void> {
-    const options = { title: this.data.title, url: this.data.url, text: 'Vem montar a lista de compras comigo.' };
+    const message = t('Vem montar a lista de compras comigo.');
+    const options = {
+      title: this.data.title, url: this.data.url,
+      text: this.data.currency === 'BRL' ? message
+        : message + ' ' + t('Se o convite não abrir, atualize o Lista Junto ou abra o link no navegador.'),
+    };
     try {
       if (isNative) {
         const { Share } = await import('@capacitor/share');
-        await Share.share({ ...options, dialogTitle: 'Convidar para a lista' });
+        await Share.share({ ...options, dialogTitle: t('Convidar para a lista') });
       } else {
         await navigator.share(options);
       }

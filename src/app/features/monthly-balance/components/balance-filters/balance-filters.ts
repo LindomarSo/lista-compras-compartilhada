@@ -1,12 +1,10 @@
+import { numberLabel, preferences, t } from '../../../../core/locale.ts';
 import { Component, computed, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule, type MatSelectChange } from '@angular/material/select';
 import { LucideCalendarDays, LucideLayers } from '@lucide/angular';
 import type { SavedList } from '../../../shopping-lists/models/shopping-list.ts';
-
-const fullMonth = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-const shortMonth = new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 @Component({
   selector: 'lj-balance-filters',
@@ -15,13 +13,19 @@ const shortMonth = new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'num
   styleUrl: './balance-filters.scss',
 })
 export class BalanceFilters {
+  readonly t = t;
   readonly month = input.required<string>();
   readonly months = input.required<readonly string[]>();
   readonly rows = input.required<readonly SavedList[]>();
-  readonly monthOptions = computed(() => this.months().map(value => {
-    const date = new Date(value + '-01T00:00:00Z');
-    return { value, full: fullMonth.format(date), short: shortMonth.format(date) };
-  }));
+  readonly monthOptions = computed(() => {
+    const locale = preferences().locale;
+    const full = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const short = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric', timeZone: 'UTC' });
+    return this.months().map(value => {
+      const date = new Date(value + '-01T00:00:00Z');
+      return { value, full: full.format(date), short: short.format(date) };
+    });
+  });
   readonly monthLabel = computed(() => this.monthOptions().find(option => option.value === this.month()));
   readonly chosen = input.required<readonly SavedList[]>();
   readonly selected = input.required<ReadonlySet<string> | null>();
@@ -47,8 +51,8 @@ export class BalanceFilters {
   }
 
   title(): string {
-    if (this.selected() === null) return 'Todas as listas';
+    if (this.selected() === null) return t('Todas as listas');
     const chosen = this.chosen();
-    return chosen.length === 1 ? chosen[0]!.list.name : chosen.length + ' listas selecionadas';
+    return chosen.length === 1 ? chosen[0]!.list.name : t('{count} listas selecionadas', { count: numberLabel(chosen.length) });
   }
 }

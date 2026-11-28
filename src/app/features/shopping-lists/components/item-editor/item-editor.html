@@ -1,70 +1,70 @@
 <form [id]="idPrefix() + '-form'" [formGroup]="form" (ngSubmit)="submit()">
   <div class="composer">
-    <label [for]="idPrefix() + '-name'">Nome do produto <span aria-hidden="true">*</span></label>
+    <label [for]="idPrefix() + '-name'">{{ t('Nome do produto') }} <span aria-hidden="true">*</span></label>
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <svg matIconPrefix lucideTag class="lj-icon field-icon" aria-hidden="true"></svg>
-      <input [id]="idPrefix() + '-name'" matInput formControlName="name" placeholder="Ex.: Arroz, Leite, Café…" maxlength="120" autocomplete="off" required>
+      <input [id]="idPrefix() + '-name'" matInput formControlName="name" [placeholder]="t('Ex.: Arroz, Leite, Café…')" maxlength="120" autocomplete="off" required>
     </mat-form-field>
   </div>
   <button mat-button class="details-toggle" [id]="idPrefix() + '-details'" type="button" [attr.aria-expanded]="details()" [attr.aria-controls]="idPrefix() + '-fields'" (click)="details.set(!details())">
     <span class="details-label">
       <svg lucideSlidersHorizontal class="lj-icon" aria-hidden="true"></svg>
-      Detalhes do item
+      {{ t('Detalhes do item') }}
       <svg lucideChevronDown class="lj-icon details-chevron" aria-hidden="true"></svg>
     </span>
   </button>
   <div class="details" [id]="idPrefix() + '-fields'" [hidden]="!details()">
     <div class="field">
-      <label [for]="idPrefix() + '-quantity'">Quantidade <span aria-hidden="true">*</span></label>
+      <label [for]="idPrefix() + '-quantity'">{{ t('Quantidade') }} <span aria-hidden="true">*</span></label>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <button matIconPrefix mat-icon-button class="quantity-step" type="button" aria-label="Diminuir quantidade" [disabled]="!canAdjustQuantity(-1)" (click)="adjustQuantity(-1)">
+        <button matIconPrefix mat-icon-button class="quantity-step" type="button" [attr.aria-label]="t('Diminuir quantidade')" [disabled]="!canAdjustQuantity(-1)" (click)="adjustQuantity(-1)">
           <svg lucideMinus class="lj-icon" aria-hidden="true"></svg>
         </button>
-        <input matInput class="quantity-input" [id]="idPrefix() + '-quantity'" type="number" step="any" inputmode="decimal" formControlName="quantity" required>
-        <button matIconSuffix mat-icon-button class="quantity-step" type="button" aria-label="Aumentar quantidade" [disabled]="!canAdjustQuantity(1)" (click)="adjustQuantity(1)">
+        <input matInput class="quantity-input" [id]="idPrefix() + '-quantity'" [ljDecimal]="20" type="text" inputmode="decimal" formControlName="quantity" required>
+        <button matIconSuffix mat-icon-button class="quantity-step" type="button" [attr.aria-label]="t('Aumentar quantidade')" [disabled]="!canAdjustQuantity(1)" (click)="adjustQuantity(1)">
           <svg lucidePlus class="lj-icon" aria-hidden="true"></svg>
         </button>
       </mat-form-field>
     </div>
     <div class="field">
-      <label [id]="idPrefix() + '-unit-label'">Unidade</label>
+      <label [id]="idPrefix() + '-unit-label'">{{ t('Unidade') }}</label>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <svg matIconPrefix lucideLayers class="lj-icon field-icon" aria-hidden="true"></svg>
         <mat-select [aria-labelledby]="idPrefix() + '-unit-label'" formControlName="unit">
-          @for (unit of units; track unit) { <mat-option [value]="unit">{{ unit }}</mat-option> }
+          @for (unit of units; track unit) { <mat-option [value]="unit">{{ unitLabel(unit) }}</mat-option> }
         </mat-select>
       </mat-form-field>
     </div>
     <div class="field">
-      <label [for]="idPrefix() + '-price'">Preço por unidade</label>
+      <label [for]="idPrefix() + '-price'">{{ t('Preço por unidade') }}</label>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <span matIconPrefix class="currency-prefix" aria-hidden="true">R$</span>
-        <input matInput #priceInput [id]="idPrefix() + '-price'" type="number" step="0.01" inputmode="decimal" formControlName="estimated_price" placeholder="Ex.: 5,90">
+        <span matIconPrefix class="currency-prefix" aria-hidden="true">{{ currency() }}</span>
+        <input matInput #priceInput [id]="idPrefix() + '-price'" [ljDecimal]="2" type="text" inputmode="decimal" formControlName="estimated_price" [attr.aria-label]="t('Preço por unidade') + ' (' + currency() + ')'" [placeholder]="t('Ex.: {price}', { price: examplePrice() })">
       </mat-form-field>
     </div>
     @if (supportsCategory()) {
       <div class="field">
-        <label [id]="idPrefix() + '-category-label'">Categoria</label>
+        <label [id]="idPrefix() + '-category-label'">{{ t('Categoria') }}</label>
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <svg matIconPrefix lucideFolder class="lj-icon field-icon" aria-hidden="true"></svg>
           <mat-select [id]="idPrefix() + '-category'" [aria-labelledby]="idPrefix() + '-category-label'" formControlName="category">
-            <mat-option value="">Automática ({{ suggested() }})</mat-option>
-            @for (option of options; track option[0]) { <mat-option [value]="option[0]">{{ option[1] }}</mat-option> }
+            <mat-option value="">{{ t('Automática ({category})', { category: suggested() }) }}</mat-option>
+            @for (option of options; track option[0]) { <mat-option [value]="option[0]">{{ t(option[1]) }}</mat-option> }
           </mat-select>
         </mat-form-field>
       </div>
     }
     <div class="field wide">
-      <label [for]="idPrefix() + '-notes'">Observações</label>
+      <label [for]="idPrefix() + '-notes'">{{ t('Observações') }}</label>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <svg matIconPrefix lucideMessageSquare class="lj-icon field-icon" aria-hidden="true"></svg>
-        <input matInput [id]="idPrefix() + '-notes'" formControlName="notes" maxlength="500" placeholder="Ex.: Marca, tamanho, promoção…">
+        <input matInput [id]="idPrefix() + '-notes'" formControlName="notes" maxlength="500" [placeholder]="t('Ex.: Marca, tamanho, promoção…')">
       </mat-form-field>
     </div>
     <button mat-stroked-button #readPriceButton [id]="editing() ? 'read-edited-item-price' : 'read-price'" class="price-reader wide" type="button" [disabled]="disabled() || openingReader()" (click)="readPrice()">
       <svg lucideScanBarcode class="lj-icon" aria-hidden="true"></svg>
-      Ler preço da etiqueta
+      {{ t('Ler preço da etiqueta') }}
     </button>
   </div>
-  @if (feedback()) { <p class="notice" role="status">{{ feedback() }}</p> }
+  @if (feedback()) { <p class="notice" role="status">{{ t(feedback(), { max: numberLabel(1000000) }) }}</p> }
 </form>

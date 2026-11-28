@@ -1,11 +1,11 @@
-<section class="total" aria-label="Total do mês">
+<section class="total" [attr.aria-label]="t('Total do mês')">
   <div class="total-header">
     <div class="amount">
-      <p>Total registrado</p>
-      <strong id="balance-total">{{ count() && count() === missing() ? '—' : currency(cents() / 100) }}</strong>
+      <p>{{ t('Total registrado') }} @if (showCode() && count() === missing() && count()) { · {{ currency() }} }</p>
+      <strong [attr.data-currency]="currency()">{{ count() && count() === missing() ? '—' : formatCurrency(cents() / 100, currency(), showCode()) }}</strong>
     </div>
     <span class="cart-art" aria-hidden="true"><svg lucideShoppingCart></svg></span>
   </div>
-  <p class="item-count"><svg lucideShoppingBag class="lj-icon" aria-hidden="true"></svg>{{ count() }} {{ count() === 1 ? 'item comprado' : 'itens comprados' }}</p>
-  @if (missing()) { <p class="missing">{{ missing() }} {{ missing() === 1 ? 'item sem preço registrado' : 'itens sem preço registrado' }}</p> }
+  <p class="item-count"><svg lucideShoppingBag class="lj-icon" aria-hidden="true"></svg>{{ t(count() === 1 ? '{count} item comprado' : '{count} itens comprados', { count: numberLabel(count()) }) }}</p>
+  @if (missing()) { <p class="missing">{{ t(missing() === 1 ? '{count} item sem preço registrado' : '{count} itens sem preço registrado', { count: numberLabel(missing()) }) }}</p> }
 </section>

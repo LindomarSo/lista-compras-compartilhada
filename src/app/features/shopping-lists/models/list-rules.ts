@@ -9,7 +9,7 @@ export function validateItem(item: { name?: unknown; quantity?: Numeric; unitPri
   else if (item.name.trim().length > 120) errors.name = 'Use até 120 caracteres no nome.';
   if (item?.quantity != null && item.quantity !== '') {
     const quantity = Number(item.quantity);
-    if (!Number.isFinite(quantity) || quantity <= 0 || quantity > 1000000) errors.quantity = 'Informe uma quantidade entre 0 e 1.000.000.';
+    if (!Number.isFinite(quantity) || quantity <= 0 || quantity > 1000000) errors.quantity = 'Informe uma quantidade maior que zero e de até {max}.';
   }
   if (item?.unitPrice != null && item.unitPrice !== '') {
     const price = Number(item.unitPrice);

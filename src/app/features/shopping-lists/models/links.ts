@@ -1,5 +1,7 @@
 export const tokenPattern = /^[a-f0-9]{64}$/;
 export const sharedPrefix = 'a112da7a';
+export const currencySharedPrefix = 'f4d39a6c';
+export const isCurrentShare = (token: string) => token.startsWith(sharedPrefix) || token.startsWith(currencySharedPrefix);
 
 export function readShareToken(locationLike: { hash: string } = globalThis.location): string | null {
   const token = new URLSearchParams(locationLike.hash.replace(/^#/, '')).get('token');

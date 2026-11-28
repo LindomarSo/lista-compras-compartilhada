@@ -11,6 +11,10 @@ on:
         description: Versão exibida aos usuários (ex. 1.0.1)
         type: string
         required: true
+      test_only:
+        description: Gerar AAB e APK de teste em um pacote separado, com assinatura de debug
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -60,12 +64,14 @@ jobs:
         run: npm run android:sync
 
       - name: Gerar Android App Bundle
+        if: ${{ !inputs.test_only }}
         working-directory: android
         run: |
           bash ./gradlew --no-daemon :app:bundleRelease \
             "-PlistaJuntoVersionCode=$VERSION_CODE" "-PlistaJuntoVersionName=$VERSION_NAME"
 
       - name: Assinar o bundle com a chave de upload
+        if: ${{ !inputs.test_only }}
         id: sign
         env:
           ANDROID_UPLOAD_KEYSTORE_BASE64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
@@ -95,9 +101,40 @@ jobs:
           echo "bundle=$bundle" >> "$GITHUB_OUTPUT"
 
       - name: Disponibilizar o AAB para download
+        if: ${{ !inputs.test_only }}
         uses: actions/upload-artifact@v7
         with:
           path: ${{ steps.sign.outputs.bundle }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Gerar AAB e APK de teste
+        if: inputs.test_only
+        working-directory: android
+        run: |
+          bash ./gradlew --no-daemon :app:bundleDebug :app:assembleDebug \
+            -PlistaJuntoTestPackage \
+            "-PlistaJuntoVersionCode=$VERSION_CODE" "-PlistaJuntoVersionName=$VERSION_NAME"
+          bundle="app/build/outputs/bundle/debug/app-debug.aab"
+          jarsigner -verify "$bundle"
+          cp "$bundle" "$RUNNER_TEMP/lista-junto-teste-$VERSION_CODE.aab"
+          cp app/build/outputs/apk/debug/app-debug.apk "$RUNNER_TEMP/lista-junto-teste-$VERSION_CODE.apk"
+
+      - name: Disponibilizar o AAB de teste
+        if: inputs.test_only
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ runner.temp }}/lista-junto-teste-${{ inputs.version_code }}.aab
+          archive: false
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Disponibilizar o APK de teste
+        if: inputs.test_only
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ runner.temp }}/lista-junto-teste-${{ inputs.version_code }}.apk
           archive: false
           if-no-files-found: error
           retention-days: 14

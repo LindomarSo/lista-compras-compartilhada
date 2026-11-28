@@ -1,3 +1,5 @@
+import type { Currency } from '../../../shared/locale-preferences.ts';
+
 export const listNameMaxLength = 100;
 
 export const categories = {
@@ -34,7 +36,7 @@ export interface ShoppingItem {
 }
 
 export interface ListSnapshot {
-  list: { name: string };
+  list: { name: string; currency?: Currency };
   items: ShoppingItem[];
 }
 

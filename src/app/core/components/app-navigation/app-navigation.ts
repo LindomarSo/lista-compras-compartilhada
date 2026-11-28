@@ -1,3 +1,4 @@
+import { t } from '../../locale.ts';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideChartColumn, LucideListChecks } from '@lucide/angular';
@@ -8,4 +9,5 @@ import { LucideChartColumn, LucideListChecks } from '@lucide/angular';
   templateUrl: './app-navigation.html',
   styleUrl: './app-navigation.scss',
 })
-export class AppNavigation {}
+export class AppNavigation {
+  readonly t = t;}

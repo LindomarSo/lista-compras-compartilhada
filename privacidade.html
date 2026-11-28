@@ -18,13 +18,13 @@
       </a>
     </header>
 
-    <main class="card privacy-policy">
+    <main class="card privacy-policy" lang="pt-BR">
       <h1>Política de Privacidade</h1>
       <p>Esta política se aplica ao Lista Junto no Android e na web. O app permite criar e compartilhar listas de compras sem criar uma conta.</p>
 
       <section aria-labelledby="privacy-data">
         <h2 id="privacy-data">Dados usados pelo app</h2>
-        <p>Listas novas ficam no aparelho até você gerar um convite. Para permitir abrir, editar, sincronizar e excluir listas compartilhadas, o serviço recebe o nome da lista e o conteúdo dos itens, incluindo nome do produto, quantidade, unidade, categoria, preço, observações e registro da compra. Listas criadas em versões anteriores podem já estar no serviço.</p>
+        <p>Listas novas ficam no aparelho até você gerar um convite. Para permitir abrir, editar, sincronizar e excluir listas compartilhadas, o serviço recebe o nome da lista e o conteúdo dos itens, incluindo nome do produto, quantidade, unidade, categoria, preço, moeda da lista, observações e registro da compra. Listas criadas em versões anteriores podem já estar no serviço.</p>
         <p>Quando você escolhe ler uma etiqueta, o app solicita acesso à câmera. A imagem é processada em memória no aparelho. Ela não é guardada nem enviada ao serviço. Você escolhe se deseja usar o preço sugerido.</p>
         <p>Cada lista tem um código de acesso incluído no link de convite. O app usa esse código nas solicitações ao serviço e guarda o código e a última versão da lista no seu dispositivo para reabertura e consulta sem conexão.</p>
       </section>
@@ -49,6 +49,84 @@
         <p>Para dúvidas ou pedidos sobre seus dados no Lista Junto, escreva para <a href="mailto:lindomarsystems@gmail.com">lindomarsystems@gmail.com</a>. Evite incluir links privados de listas ou dados sensíveis no primeiro contato.</p>
       </section>
     </main>
+
+    <main class="card privacy-policy" lang="en" hidden>
+      <h1>Privacy Policy</h1>
+      <p>This policy applies to Lista Junto on Android and the web. The app lets you create and share shopping lists without creating an account.</p>
+
+      <section aria-labelledby="privacy-data-en">
+        <h2 id="privacy-data-en">Data used by the app</h2>
+        <p>New lists stay on your device until you create an invitation. To let people open, edit, sync and delete shared lists, the service receives the list name and item details, including product name, quantity, unit, category, price, list currency, notes and purchase records. Lists created with an earlier version may already be stored by the service.</p>
+        <p>When you choose to scan a price tag, the app requests camera access. The image is processed in memory on your device. It is neither stored nor sent to the service. You decide whether to use the suggested price.</p>
+        <p>Each list has an access code included in the invitation link. The app uses this code when making requests to the service. It stores the code and the last saved version of the list on your device so you can reopen and view it offline.</p>
+      </section>
+
+      <section aria-labelledby="privacy-sharing-en">
+        <h2 id="privacy-sharing-en">Hosting and sharing</h2>
+        <p>Lista Junto uses Supabase to operate the list service and GitHub Pages to host the web version. Requests to the list service use HTTPS.</p>
+        <p>When you share an invitation, you choose who gets the link. Anyone with the link can open and edit the list, including people it was forwarded to. If you share the link using another app, sending it is also subject to that app’s policies.</p>
+      </section>
+
+      <section aria-labelledby="privacy-retention-en">
+        <h2 id="privacy-retention-en">Retention and deletion</h2>
+        <p>The service stores lists and their items so they can be viewed and synced. The database and list service have no automatic deletion schedule configured.</p>
+        <p>You can delete products individually. To delete a list, open it, tap the <strong>Delete list</strong> trash button and confirm. The service removes the shared list, the record used to validate the invitation and all linked products from the active database. The invitation stops opening the list on the service. Once the server confirms the deletion, the app also tries to remove the copy saved on the device that deleted the list.</p>
+        <p>In <strong>My lists</strong>, <strong>Remove from this device</strong> deletes the copy stored on that device. People who received an invitation may keep an offline copy on another device until they remove it from <strong>My lists</strong>.</p>
+        <p>Operational API and database logs are retained for up to 24 hours on the Supabase Free plan. Removing a list from the database does not delete these logs. They expire according to the service’s retention settings. The project has no continuous log export configured in Supabase.</p>
+        <p>The project has no automatic backups or point-in-time recovery in Supabase.</p>
+      </section>
+
+      <section aria-labelledby="privacy-contact-en">
+        <h2 id="privacy-contact-en">Privacy contact</h2>
+        <p>For questions or requests about your Lista Junto data, email <a href="mailto:lindomarsystems@gmail.com">lindomarsystems@gmail.com</a>. Avoid including private list links or sensitive data in your first message.</p>
+      </section>
+    </main>
+
+    <main class="card privacy-policy" lang="es" hidden>
+      <h1>Política de privacidad</h1>
+      <p>Esta política se aplica a Lista Junto en Android y en la web. La aplicación permite crear y compartir listas de compras sin crear una cuenta.</p>
+
+      <section aria-labelledby="privacy-data-es">
+        <h2 id="privacy-data-es">Datos que usa la aplicación</h2>
+        <p>Las listas nuevas se guardan en el dispositivo hasta que creas una invitación. Para que se puedan abrir, editar, sincronizar y eliminar las listas compartidas, el servicio recibe el nombre de la lista y los datos de los artículos, incluidos el nombre del producto, la cantidad, la unidad, la categoría, el precio, la moneda de la lista, las notas y el registro de compra. Es posible que el servicio ya guarde las listas creadas con versiones anteriores.</p>
+        <p>Cuando eliges escanear una etiqueta, la aplicación solicita acceso a la cámara. La imagen se procesa en la memoria del dispositivo. No se guarda ni se envía al servicio. Tú decides si quieres usar el precio sugerido.</p>
+        <p>Cada lista tiene un código de acceso incluido en el enlace de invitación. La aplicación usa el código en las solicitudes al servicio y guarda el código y la última versión de la lista en tu dispositivo para que puedas volver a abrirla y consultarla sin conexión.</p>
+      </section>
+
+      <section aria-labelledby="privacy-sharing-es">
+        <h2 id="privacy-sharing-es">Alojamiento y uso compartido</h2>
+        <p>Lista Junto usa Supabase para operar el servicio de listas y GitHub Pages para alojar la versión web. Las solicitudes al servicio de listas usan HTTPS.</p>
+        <p>Al compartir una invitación, tú eliges a quién enviar el enlace. Cualquier persona con el enlace puede abrir y editar la lista, incluso alguien que lo haya recibido de otra persona. Si usas otra aplicación para enviar el enlace, el envío también está sujeto a la política de esa aplicación.</p>
+      </section>
+
+      <section aria-labelledby="privacy-retention-es">
+        <h2 id="privacy-retention-es">Conservación y eliminación</h2>
+        <p>El servicio guarda las listas y sus artículos para que puedan consultarse y sincronizarse. La base de datos y el servicio de listas no tienen configurado un plazo de eliminación automática.</p>
+        <p>Puedes eliminar productos individualmente. Para eliminar la lista completa, ábrela, toca el icono de papelera <strong>Eliminar lista</strong> y confirma. El servicio elimina de la base de datos activa la lista compartida, el registro que valida la invitación y todos los productos vinculados. El enlace deja de abrir la lista en el servicio. Cuando el servidor confirma la eliminación, la aplicación también intenta borrar la copia guardada en el dispositivo que eliminó la lista.</p>
+        <p>En <strong>Mis listas</strong>, la opción <strong>Quitar de este dispositivo</strong> borra la copia guardada en ese dispositivo. Quien haya recibido la invitación puede conservar una copia en otro dispositivo y consultarla sin conexión hasta que la quite de <strong>Mis listas</strong>.</p>
+        <p>Los registros operativos de la API y la base de datos se conservan hasta 24 horas en el plan Free de Supabase. Eliminar una lista de la base de datos no borra estos registros, que caducan según la política de conservación del servicio. El proyecto no tiene configurada la exportación continua de registros en Supabase.</p>
+        <p>El proyecto no tiene copias de seguridad automáticas ni restauración a un punto en el tiempo en Supabase.</p>
+      </section>
+
+      <section aria-labelledby="privacy-contact-es">
+        <h2 id="privacy-contact-es">Contacto de privacidad</h2>
+        <p>Para hacer preguntas o solicitudes sobre tus datos en Lista Junto, escribe a <a href="mailto:lindomarsystems@gmail.com">lindomarsystems@gmail.com</a>. Evita incluir enlaces privados de listas o datos sensibles en el primer mensaje.</p>
+      </section>
+    </main>
   </div>
+  <script>
+    const fromApp = new URLSearchParams(location.search).get('lang');
+    const supported = ['pt', 'en', 'es'];
+    const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
+    const browserLanguage = browserLanguages.map(tag => tag.split('-')[0].toLowerCase()).find(tag => supported.includes(tag));
+    const language = ['pt-BR', 'en', 'es'].includes(fromApp) ? fromApp : browserLanguage === 'en' || browserLanguage === 'es' ? browserLanguage : 'pt-BR';
+    document.documentElement.lang = language;
+    for (const article of document.querySelectorAll('main[lang]')) {
+      article.hidden = article.lang !== language;
+      if (!article.hidden) document.title = article.querySelector('h1').textContent + ' — Lista Junto';
+    }
+    const brandLabels = { 'pt-BR': 'Lista Junto, início', en: 'Lista Junto, home', es: 'Lista Junto, inicio' };
+    document.querySelector('.brand').setAttribute('aria-label', brandLabels[language]);
+  </script>
 </body>
 </html>

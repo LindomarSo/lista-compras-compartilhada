@@ -1,5 +1,7 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { preferences, t } from '../../../../core/locale.ts';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { LucideChartNoAxesColumnIncreasing } from '@lucide/angular';
+import { listCurrency } from '../../../../shared/locale-preferences.ts';
 import { BalanceStore } from '../../services/balance-store.ts';
 import { BalanceFilters } from '../../components/balance-filters/balance-filters.ts';
 import { CategorySummary } from '../../components/category-summary/category-summary.ts';
@@ -13,7 +15,12 @@ import { TotalCard } from '../../components/total-card/total-card.ts';
   styleUrl: './balance-page.scss',
 })
 export class BalancePage {
+  readonly t = t;
   readonly store = inject(BalanceStore);
+  readonly emptyCurrency = computed(() => {
+    const currencies = new Set(this.store.chosen().map(row => listCurrency(row.list)));
+    return currencies.size === 1 ? [...currencies][0]! : preferences().currency;
+  });
   private readonly controller = new AbortController();
   readonly refreshing = signal(false);
   readonly notice = signal('');

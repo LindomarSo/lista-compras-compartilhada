@@ -1,6 +1,7 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
-import { sharedPrefix, tokenPattern } from '../models/links.ts';
+import { currencySharedPrefix, sharedPrefix, tokenPattern } from '../models/links.ts';
 import { localResult, newLocalToken } from '../models/list-rules.ts';
+import { listCurrency, type Currency } from '../../../shared/locale-preferences.ts';
 import type { ItemChange, ListReference, ListSnapshot, SavedList } from '../models/shopping-list.ts';
 import type { ListCatalog } from '../interfaces/list-catalog.ts';
 import { ApiError, callApi, isItem, isRecord, isSnapshot, parseSnapshot } from './list-api.ts';
@@ -37,8 +38,8 @@ export class ListRepository implements ListCatalog {
     return readRows().find(row => row.token === token && Boolean(row.local) === (kind === 'local'));
   }
 
-  create(name: string): SavedList {
-    const row = { list: { name }, items: [], token: newLocalToken(), local: true, publishKey: newLocalToken(), savedAt: new Date().toISOString() };
+  create(name: string, currency: Currency): SavedList {
+    const row = { list: { name, currency }, items: [], token: newLocalToken(), local: true, publishKey: newLocalToken(), savedAt: new Date().toISOString() };
     this.put(row);
     return row;
   }
@@ -54,7 +55,7 @@ export class ListRepository implements ListCatalog {
       return row;
     }
     if (!navigator.onLine) throw new ApiError('Sem conexão para atualizar a lista.', { code: 'NETWORK_ERROR' });
-    const snapshot = parseSnapshot(await callApi({ action: 'get_list', token: ref.token }, { signal }));
+    const snapshot = parseSnapshot(await callApi({ action: 'get_list', token: ref.token }, { signal }), ref.token);
     if (!signal.aborted) this.rememberRemote(ref.token, snapshot);
     return snapshot;
   }
@@ -97,7 +98,7 @@ export class ListRepository implements ListCatalog {
 
   async rename(ref: ListReference, name: string): Promise<ListSnapshot> {
     if (ref.kind === 'shared') {
-      const snapshot = parseSnapshot(await callApi({ action: 'rename_list', token: ref.token, name }));
+      const snapshot = parseSnapshot(await callApi({ action: 'rename_list', token: ref.token, name }), ref.token);
       this.rememberRemote(ref.token, snapshot);
       return snapshot;
     }
@@ -120,10 +121,12 @@ export class ListRepository implements ListCatalog {
     if (!latest || latest.list.name !== row.list.name || JSON.stringify(latest.items) !== JSON.stringify(row.items)) {
       throw new ApiError('A lista mudou durante o compartilhamento. Abra a versão mais recente e tente novamente.');
     }
-    if (typeof token !== 'string' || !tokenPattern.test(token) || !token.startsWith(sharedPrefix)) {
+    if (typeof token !== 'string' || !tokenPattern.test(token) || !token.startsWith(listCurrency(row.list) === 'BRL' ? sharedPrefix : currencySharedPrefix)) {
       throw new ApiError('O serviço não confirmou a sincronização da lista.');
     }
-    const promoted = { ...parseSnapshot(result), token, savedAt: row.savedAt };
+    const snapshot = parseSnapshot(result, token);
+    if (snapshot.list.currency !== listCurrency(row.list)) throw new ApiError('O serviço não confirmou a sincronização da lista.');
+    const promoted = { ...snapshot, token, savedAt: row.savedAt };
     this.put(promoted, row.token);
     this.promotedTokens.update(entries => new Map(entries).set(row.token, token));
     return promoted;
@@ -137,7 +140,7 @@ export class ListRepository implements ListCatalog {
         const row = queue.shift()!;
         try {
           const data = await callApi({ action: 'get_list', token: row.token }, { signal });
-          if (!signal.aborted && this.isUnchanged(row)) this.rememberRemote(row.token, parseSnapshot(data));
+          if (!signal.aborted && this.isUnchanged(row)) this.rememberRemote(row.token, parseSnapshot(data, row.token));
         } catch (error) {
           if (!signal.aborted && this.isUnchanged(row) && error instanceof ApiError && [404, 410].includes(error.status ?? 0)) this.forget(row.token);
           else complete = false;

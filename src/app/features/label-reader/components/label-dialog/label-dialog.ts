@@ -1,7 +1,9 @@
+import { t } from '../../../../core/locale.ts';
 import { Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import type { Currency } from '../../../../shared/locale-preferences.ts';
 import { LabelOcr } from '../../services/label-ocr.ts';
 import { CameraPreview } from '../camera-preview/camera-preview.ts';
 import { PriceConfirmation } from '../price-confirmation/price-confirmation.ts';
@@ -13,6 +15,8 @@ import { PriceConfirmation } from '../price-confirmation/price-confirmation.ts';
   styleUrl: './label-dialog.scss',
 })
 export class LabelDialog {
+  readonly t = t;
+  readonly currency = inject<Currency>(MAT_DIALOG_DATA);
   private readonly dialog = inject<MatDialogRef<LabelDialog, number>>(MatDialogRef);
   private readonly ocr = inject(LabelOcr);
   private readonly controller = new AbortController();

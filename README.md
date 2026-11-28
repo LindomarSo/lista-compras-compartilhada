@@ -14,14 +14,17 @@ O frontend fica em `src/app/`. Cada feature reúne suas páginas, componentes, m
 
 ### Compartilhamento das listas novas
 
-Listas novas funcionam no aparelho, inclusive sem internet. **Convidar** envia a lista e os itens em uma única operação para `list-api-v2`, que devolve o token do convite depois de gravar os dados. Repetir uma tentativa reutiliza o mesmo token. A versão antiga continua em `list-api`, e os convites anteriores seguem funcionando com esse contrato. Listas antigas não registram dados para o balanço mensal.
+Listas novas funcionam no aparelho, inclusive sem internet. O idioma segue a preferência do dispositivo em português do Brasil, inglês ou espanhol. As traduções acompanham o app e ficam no cache do PWA. A região define a moeda quando a lista é criada. BRL é a moeda padrão e também é usada pelas listas existentes. USD, EUR e MXN são definidos nas regiões compatíveis. O Balanço apresenta os valores por moeda e preserva o mês de compra no fuso de São Paulo.
 
-Para ativar o compartilhamento e a edição do nome em um ambiente Supabase, confira as migrações remotas do projeto e aplique as migrações em `supabase/migrations/` antes de publicar a função. A função usa o token do convite como autorização. Em produção, configure as origens da web e do Android com `LISTA_JUNTO_ORIGINS`. Acrescente a origem do servidor local quando estiver testando.
+**Convidar** publica a lista e seus itens numa operação e recebe o token após a gravação. A mesma tentativa reutiliza o token. BRL usa `list-api-v2`. USD, EUR e MXN usam `list-api-v3` com prefixo próprio, que impede acesso pelas APIs de versões que tratavam todos os preços como reais. O convite orienta quem usa uma versão anterior a atualizar o app ou abrir a versão web. A função `list-api` continua atendendo aos convites legados.
+
+Valide primeiro em um projeto Supabase de teste com um convite antigo em BRL e um novo em cada moeda. Confira as migrações já aplicadas no projeto de destino para evitar reaplicar as anteriores. Aplique a migração de moeda antes das funções e publique a versão web antes da distribuição do Android. Configure `LISTA_JUNTO_ORIGINS` com as origens da web e do Android e inclua a origem do servidor local no ambiente de teste.
 
 ```sh
 supabase db push
 supabase secrets set LISTA_JUNTO_ORIGINS=https://lindomarso.github.io,https://localhost
 supabase functions deploy list-api-v2 --no-verify-jwt
+supabase functions deploy list-api-v3 --no-verify-jwt
 ```
 
 No Android, o modelo de OCR acompanha o app. Na web, o navegador baixa o modelo do próprio site na primeira leitura e pode reutilizá-lo offline pelo service worker. O quadro da câmera fica na memória do aparelho.
@@ -70,6 +73,8 @@ No PowerShell, com o GitHub CLI autenticado e a partir do repositório, envie a 
 1. Com o workflow na `main`, abra **Actions → Gerar AAB para Google Play → Run workflow** e selecione `main`.
 2. Preencha `version_code` com um inteiro maior que o maior código já enviado à Play Console. Preencha `version_name` com a versão exibida aos usuários, por exemplo `1.0.1`.
 3. Abra a execução concluída e baixe `lista-junto-<version_code>-r<tentativa>.aab` em **Artifacts**. O download fica disponível por 14 dias. Envie o AAB pela Play Console à faixa desejada.
+
+Para testar diretamente no Android, marque `test_only` ao iniciar o workflow. Baixe e instale o APK de teste. Esse build usa assinatura de debug e o pacote separado `com.lindomarso.listajunto.teste`, que pode coexistir com o app de produção. O AAB gerado nessa opção também usa o pacote e a assinatura de teste.
 
 O fluxo Android funciona em repositório privado com GitHub Actions habilitado e é independente do GitHub Pages, que hospeda a página de privacidade e a web dos convites.
 

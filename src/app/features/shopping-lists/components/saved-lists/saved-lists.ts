@@ -1,3 +1,4 @@
+import { t } from '../../../../core/locale.ts';
 import { Component, DestroyRef, ElementRef, Renderer2, inject, input, output, signal, viewChild, viewChildren } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +28,7 @@ interface Swipe {
   },
 })
 export class SavedLists {
+  readonly t = t;
   readonly rows = input.required<readonly SavedList[]>();
   readonly removed = output<SavedList>();
   readonly openToken = signal<string | null>(null);

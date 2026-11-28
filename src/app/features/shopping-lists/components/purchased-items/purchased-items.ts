@@ -1,3 +1,5 @@
+import type { Currency } from '../../../../shared/locale-preferences.ts';
+import { numberLabel, t } from '../../../../core/locale.ts';
 import { Component, input, output } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ItemRows, type ItemEditRequest } from '../item-rows/item-rows.ts';
@@ -10,6 +12,9 @@ import type { ShoppingItem } from '../../models/shopping-list.ts';
   styleUrl: './purchased-items.scss',
 })
 export class PurchasedItems {
+  readonly t = t;
+  readonly numberLabel = numberLabel;
+  readonly currency = input.required<Currency>();
   readonly items = input.required<ShoppingItem[]>();
   readonly disabled = input(false);
   readonly toggled = output<{ item: ShoppingItem; purchased: boolean }>();

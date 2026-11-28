@@ -1,11 +1,11 @@
 @if (items().length) {
   <mat-expansion-panel expanded>
-    <mat-expansion-panel-header><mat-panel-title>Histórico de compras</mat-panel-title></mat-expansion-panel-header>
+    <mat-expansion-panel-header><mat-panel-title>{{ t('Histórico de compras') }}</mat-panel-title></mat-expansion-panel-header>
     <ul class="clean-list">
       @for (item of items(); track $index) {
         <li>
-          <div><strong>{{ item.name }}</strong><small>{{ item.listName }} · {{ categories[item.category] }} · {{ item.purchased_quantity }} {{ item.purchased_unit || item.unit || 'un' }}</small></div>
-          <span>{{ item.subtotal === null ? 'Sem preço' : currency(item.subtotal) }}</span>
+          <div><strong>{{ item.name }}</strong><small>{{ item.listName }} · {{ t(categories[item.category]) }} @if (item.purchased_quantity != null) { · {{ numberLabel(+item.purchased_quantity) }} {{ unitLabel(item.purchased_unit || item.unit || 'un') }} } · <time [attr.datetime]="item.purchased_at">{{ date(item.purchased_at) }}</time></small></div>
+          <span>{{ item.subtotal === null ? t('Sem preço') : formatCurrency(item.subtotal, item.currency, showCodes() || item.currency !== 'BRL') }}@if (item.subtotal === null && showCodes()) { · {{ item.currency }} }</span>
         </li>
       }
     </ul>

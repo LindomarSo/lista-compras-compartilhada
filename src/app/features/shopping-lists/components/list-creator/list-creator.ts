@@ -1,3 +1,4 @@
+import { t } from '../../../../core/locale.ts';
 import { Component, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +13,7 @@ import { listNameMaxLength } from '../../models/shopping-list.ts';
   styleUrl: './list-creator.scss',
 })
 export class ListCreator {
+  readonly t = t;
   readonly error = input('');
   readonly maxLength = listNameMaxLength;
   readonly name = new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(listNameMaxLength)] });

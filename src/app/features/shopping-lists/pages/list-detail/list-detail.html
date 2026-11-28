@@ -1,29 +1,29 @@
 <section class="page-stack" aria-labelledby="page-title">
   @let snapshot = session.snapshot();
-  <a mat-button routerLink="/listas" class="back"><svg lucideChevronLeft class="lj-icon" aria-hidden="true"></svg> Voltar para listas</a>
+  <a mat-button routerLink="/listas" class="back"><svg lucideChevronLeft class="lj-icon" aria-hidden="true"></svg> {{ t('Voltar para listas') }}</a>
   <header class="heading-row">
     <div class="list-heading">
       <span class="list-badge" aria-hidden="true"><svg lucideShoppingBasket class="lj-icon"></svg></span>
       <div>
-        <h1 id="page-title" tabindex="-1">{{ snapshot?.list?.name || (session.status() === 'loading' ? 'Lista de compras' : 'Lista indisponível') }}</h1>
+        <h1 id="page-title" tabindex="-1">{{ snapshot?.list?.name || (session.status() === 'loading' ? t('Lista de compras') : t('Lista indisponível')) }}</h1>
         @if (snapshot) {
-          <p class="list-meta muted">Lista de compras · {{ snapshot.items.length }} {{ snapshot.items.length === 1 ? 'item' : 'itens' }}</p>
+          <p class="list-meta muted">{{ t('Lista de compras') }} · {{ t(snapshot.items.length === 1 ? '{count} item' : '{count} itens', { count: numberLabel(snapshot.items.length) }) }} · <span [attr.aria-label]="t('Moeda da lista: {currency}', { currency: currency() })">{{ currency() }}</span></p>
         }
       </div>
     </div>
     @if (snapshot) {
       <div class="actions">
         @if (usesCurrentFormat()) {
-          <button id="rename-list-button" mat-icon-button type="button" aria-label="Editar nome da lista" aria-haspopup="dialog"
+          <button id="rename-list-button" mat-icon-button type="button" [attr.aria-label]="t('Editar nome da lista')" aria-haspopup="dialog"
             (click)="rename($event)" [disabled]="!session.canEdit()">
             <svg lucidePencil class="lj-icon" aria-hidden="true"></svg>
           </button>
         }
-        <button id="share-button" mat-icon-button type="button" aria-label="Compartilhar lista" aria-haspopup="dialog"
+        <button id="share-button" mat-icon-button type="button" [attr.aria-label]="t('Compartilhar lista')" aria-haspopup="dialog"
           (click)="invite()" [disabled]="!session.canEdit()">
           <svg lucideShare2 class="lj-icon" aria-hidden="true"></svg>
         </button>
-        <button mat-icon-button class="delete-list" type="button" aria-label="Excluir lista"
+        <button mat-icon-button class="delete-list" type="button" [attr.aria-label]="t('Excluir lista')"
           (click)="deleteList()" [disabled]="!session.canEdit()">
           <svg lucideTrash class="lj-icon" aria-hidden="true"></svg>
         </button>
@@ -32,66 +32,66 @@
   </header>
   @if (session.busy() || session.status() === 'loading' || session.error() || session.notice()) {
     <div class="notice feedback" [class.error]="session.error()">
-      <p role="status">{{ session.error() || (session.status() === 'loading' ? 'Carregando lista…' : session.busy() ? 'Salvando alterações…' : session.notice()) }}</p>
-      @if (session.canRetry()) { <button mat-stroked-button type="button" (click)="session.refresh()">Tentar novamente</button> }
+      <p role="status">{{ t(session.error()) || (session.status() === 'loading' ? t('Carregando lista…') : session.busy() ? t('Salvando alterações…') : t(session.notice())) }}</p>
+      @if (session.canRetry()) { <button mat-stroked-button type="button" (click)="session.refresh()">{{ t('Tentar novamente') }}</button> }
     </div>
   }
   @if (snapshot) {
     <button id="add-product-button" mat-flat-button type="button" aria-haspopup="dialog"
       [disabled]="!session.canEdit()" (click)="add($event)">
-      <svg lucidePlus class="lj-icon" aria-hidden="true"></svg> Adicionar item
+      <svg lucidePlus class="lj-icon" aria-hidden="true"></svg> {{ t('Adicionar item') }}
     </button>
-    @if (!usesCurrentFormat()) { <p class="muted">Esta lista usa o compartilhamento anterior. A edição do nome e o balanço mensal estão disponíveis nas listas novas.</p> }
+    @if (!usesCurrentFormat()) { <p class="muted">{{ t('Esta lista usa o compartilhamento anterior. A edição do nome e o balanço mensal estão disponíveis nas listas novas.') }}</p> }
     @if (!snapshot.items.length) {
       <mat-card appearance="outlined" class="empty-card">
         <mat-card-content class="empty-content">
           <svg lucideShoppingBasket class="empty-basket" aria-hidden="true"></svg>
-          <h2>Sua lista está vazia</h2>
-          <p class="muted">Adicione o primeiro produto para começar a organizar suas compras.</p>
+          <h2>{{ t('Sua lista está vazia') }}</h2>
+          <p class="muted">{{ t('Adicione o primeiro produto para começar a organizar suas compras.') }}</p>
           <button mat-stroked-button type="button" aria-haspopup="dialog" class="empty-add"
             [disabled]="!session.canEdit()" (click)="add($event)">
-            <svg lucidePlus class="lj-icon" aria-hidden="true"></svg> Adicionar primeiro item
+            <svg lucidePlus class="lj-icon" aria-hidden="true"></svg> {{ t('Adicionar primeiro item') }}
           </button>
         </mat-card-content>
       </mat-card>
     } @else {
       <section aria-labelledby="pending-title" class="pending">
-        <header class="section-heading"><h2 id="pending-title">Para comprar</h2><span class="count">{{ pending().length }}</span></header>
+        <header class="section-heading"><h2 id="pending-title">{{ t('Para comprar') }}</h2><span class="count">{{ numberLabel(pending().length) }}</span></header>
         <mat-card appearance="outlined">
           <mat-card-content class="pending-content">
-            @if (!pending().length) { <p class="muted">Tudo comprado.</p> }
-            <lj-item-rows [items]="pending()" [disabled]="!session.canEdit()" (toggled)="toggle($event)" (edited)="edit($event)" (removed)="remove($event)" />
+            @if (!pending().length) { <p class="muted">{{ t('Tudo comprado.') }}</p> }
+            <lj-item-rows [items]="pending()" [currency]="currency()" [disabled]="!session.canEdit()" (toggled)="toggle($event)" (edited)="edit($event)" (removed)="remove($event)" />
           </mat-card-content>
         </mat-card>
       </section>
       @if (purchased().length) {
-        <lj-purchased-items [items]="purchased()" [disabled]="!session.canEdit()" (toggled)="toggle($event)" (edited)="edit($event)" (removed)="remove($event)" />
+        <lj-purchased-items [items]="purchased()" [currency]="currency()" [disabled]="!session.canEdit()" (toggled)="toggle($event)" (edited)="edit($event)" (removed)="remove($event)" />
       }
     }
     @let estimate = total();
     <div class="estimate">
-      <span><svg lucideCalculator class="lj-icon" aria-hidden="true"></svg> Total estimado</span>
-      <strong>{{ estimate === null ? '—' : currency(estimate) }}</strong>
+      <span><svg lucideCalculator class="lj-icon" aria-hidden="true"></svg> {{ t('Total estimado') }}</span>
+      <strong>{{ estimate === null ? '—' : formatCurrency(estimate, currency()) }}</strong>
     </div>
-    @if (fromInvite() && storeLink) { <a mat-button [href]="storeLink" target="_blank" rel="noopener noreferrer">Instalar pelo Google Play</a> }
+    @if (fromInvite() && storeLink) { <a mat-button [href]="storeLink" target="_blank" rel="noopener noreferrer">{{ t('Instalar pelo Google Play') }}</a> }
   }
 </section>
 
 <ng-template #renameForm>
-  <h2 mat-dialog-title>Editar nome da lista</h2>
+  <h2 mat-dialog-title>{{ t('Editar nome da lista') }}</h2>
   <mat-dialog-content class="rename-content">
     <form id="rename-list-form" (submit)="saveName($event)">
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Nome da lista</mat-label>
+        <mat-label>{{ t('Nome da lista') }}</mat-label>
         <input id="rename-list-name" matInput [formControl]="renameName" [maxlength]="nameMaxLength"
           [readonly]="session.busy()" autocomplete="off" required>
       </mat-form-field>
-      @if (renameError()) { <p class="notice error" role="alert">{{ renameError() }}</p> }
+      @if (renameError()) { <p class="notice error" role="alert">{{ t(renameError()) }}</p> }
     </form>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close type="button" [disabled]="session.busy()">Cancelar</button>
-    <button mat-flat-button type="submit" form="rename-list-form" [disabled]="!canSaveName()">Salvar</button>
+    <button mat-stroked-button mat-dialog-close type="button" [disabled]="session.busy()">{{ t('Cancelar') }}</button>
+    <button mat-flat-button type="submit" form="rename-list-form" [disabled]="!canSaveName()">{{ t('Salvar') }}</button>
   </mat-dialog-actions>
 </ng-template>
 
@@ -99,23 +99,23 @@
   <header class="item-sheet-header">
     <span class="item-sheet-badge" aria-hidden="true"><svg lucidePackage class="lj-icon"></svg></span>
     <div class="item-sheet-copy">
-      <h2 mat-dialog-title [id]="item ? 'edit-product-title' : 'add-product-title'">{{ item ? 'Editar produto' : 'Novo produto' }}</h2>
-      <p class="muted">{{ item ? 'Atualize os dados do produto.' : 'Adicione um item à sua lista.' }}</p>
+      <h2 mat-dialog-title [id]="item ? 'edit-product-title' : 'add-product-title'">{{ item ? t('Editar produto') : t('Novo produto') }}</h2>
+      <p class="muted">{{ item ? t('Atualize os dados do produto.') : t('Adicione um item à sua lista.') }}</p>
     </div>
   </header>
-  <button mat-icon-button mat-dialog-close class="item-sheet-close" type="button" aria-label="Fechar formulário de produto" [disabled]="session.busy()">
+  <button mat-icon-button mat-dialog-close class="item-sheet-close" type="button" [attr.aria-label]="t('Fechar formulário de produto')" [disabled]="session.busy()">
     <svg lucideX class="lj-icon" aria-hidden="true"></svg>
   </button>
   <mat-dialog-content>
-    @if (session.error()) { <p class="notice error" role="alert">{{ session.error() }}</p> }
-    <lj-item-editor #editor [editing]="item" [disabled]="!session.canEdit()" [supportsCategory]="usesCurrentFormat()"
+    @if (session.error()) { <p class="notice error" role="alert">{{ t(session.error()) }}</p> }
+    <lj-item-editor #editor [editing]="item" [disabled]="!session.canEdit()" [supportsCategory]="usesCurrentFormat()" [currency]="currency()"
       (saved)="saveItem(item, $event)" />
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close type="button" [disabled]="session.busy()">Cancelar</button>
+    <button mat-stroked-button mat-dialog-close type="button" [disabled]="session.busy()">{{ t('Cancelar') }}</button>
     <button [id]="item ? 'save-edited-item' : 'save-item'" mat-flat-button type="submit"
       [attr.form]="editor.idPrefix() + '-form'" [disabled]="!editor.canSubmit()">
-      <svg lucideCheck class="lj-icon" aria-hidden="true"></svg> Salvar
+      <svg lucideCheck class="lj-icon" aria-hidden="true"></svg> {{ t('Salvar') }}
     </button>
   </mat-dialog-actions>
 </ng-template>

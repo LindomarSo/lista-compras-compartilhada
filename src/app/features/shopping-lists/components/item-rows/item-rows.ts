@@ -1,3 +1,5 @@
+import { numberLabel, t, unitLabel } from '../../../../core/locale.ts';
+import type { Currency } from '../../../../shared/locale-preferences.ts';
 import { Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -20,20 +22,23 @@ export interface ItemEditRequest {
   styleUrl: './item-rows.scss',
 })
 export class ItemRows {
+  readonly t = t;
+  readonly unitLabel = unitLabel;
+  readonly currency = input.required<Currency>();
   readonly items = input.required<ShoppingItem[]>();
   readonly disabled = input(false);
   readonly toggled = output<{ item: ShoppingItem; purchased: boolean }>();
   readonly edited = output<ItemEditRequest>();
   readonly removed = output<ShoppingItem>();
-  readonly currency = formatCurrency;
+  readonly formatCurrency = formatCurrency;
 
   requestEdit(item: ShoppingItem, event: MouseEvent): void {
     if (event.currentTarget instanceof HTMLButtonElement) this.edited.emit({ item, trigger: event.currentTarget });
   }
 
   details(item: ShoppingItem): string {
-    return [item.quantity != null ? item.quantity + ' ' + (item.unit || 'un') : '',
-      isCategory(item.category) ? categories[item.category] : '', item.notes].filter(Boolean).join(' · ');
+    return [item.quantity != null ? numberLabel(Number(item.quantity)) + ' ' + unitLabel(item.unit || 'un') : '',
+      isCategory(item.category) ? t(categories[item.category]) : '', item.notes].filter(Boolean).join(' · ');
   }
 
   subtotal(item: ShoppingItem): number | null {

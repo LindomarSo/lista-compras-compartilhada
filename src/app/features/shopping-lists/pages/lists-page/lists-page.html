@@ -2,8 +2,8 @@
   <mat-card appearance="outlined" class="welcome-card">
     <mat-card-content class="welcome-content">
       <div>
-        <h1 id="page-title" tabindex="-1">Organize suas listas em um só lugar</h1>
-        <p class="muted">Crie listas, adicione itens e compartilhe com quem você quiser.</p>
+        <h1 id="page-title" tabindex="-1">{{ t('Organize suas listas em um só lugar') }}</h1>
+        <p class="muted">{{ t('Crie listas, adicione itens e compartilhe com quem você quiser.') }}</p>
       </div>
       <div class="welcome-art" aria-hidden="true">
         <svg lucideClipboardList class="welcome-clipboard"></svg>
@@ -12,15 +12,15 @@
     </mat-card-content>
   </mat-card>
   @if (notice() || params()?.has('aviso')) {
-    <p class="notice" role="status">{{ notice() || (params()?.get('aviso') === 'convite' ? 'O link do convite é inválido. Peça um novo link.' : params()?.get('aviso') === 'excluida' ? 'Lista excluída.' : 'Esta lista local não está salva neste aparelho.') }}</p>
+    <p class="notice" role="status">{{ t(notice()) || (params()?.get('aviso') === 'convite' ? t('O link do convite é inválido. Peça um novo link.') : params()?.get('aviso') === 'excluida' ? t('Lista excluída.') : t('Esta lista local não está salva neste aparelho.')) }}</p>
   }
   <mat-card appearance="outlined">
     <mat-card-content class="inline-creation">
       <h2>
         <svg lucideCirclePlus class="lj-icon" aria-hidden="true"></svg>
-        Nova lista
+        {{ t('Nova lista') }}
       </h2>
-      <p class="muted">A lista fica neste aparelho até você convidar alguém.</p>
+      <p class="muted">{{ t('A lista fica neste aparelho até você convidar alguém.') }}</p>
       <lj-list-creator [error]="creationError()" (created)="create($event)" />
     </mat-card-content>
   </mat-card>

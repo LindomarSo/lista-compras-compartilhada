@@ -1,10 +1,10 @@
-<a class="skip-link" href="#conteudo" (click)="$event.preventDefault(); content.focus()">Pular para o conteúdo</a>
+<a class="skip-link" href="#conteudo" (click)="$event.preventDefault(); content.focus()">{{ t('Pular para o conteúdo') }}</a>
 <header class="topbar">
-  <a routerLink="/listas" class="brand" aria-label="Lista Junto, início">
+  <a routerLink="/listas" class="brand" [attr.aria-label]="t('Lista Junto, início')">
     <span class="brand-icon"><svg lucideArrowUpRight class="lj-icon" aria-hidden="true"></svg></span>
     <span>Lista Junto</span>
   </a>
 </header>
 <main #content id="conteudo" tabindex="-1" class="layout"><router-outlet /></main>
-<footer><a href="./privacidade.html">Política de Privacidade</a></footer>
+<footer><a [href]="privacyLink()">{{ t('Política de Privacidade') }}</a></footer>
 <lj-app-navigation />

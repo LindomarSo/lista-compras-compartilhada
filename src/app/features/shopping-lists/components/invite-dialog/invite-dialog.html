@@ -1,11 +1,14 @@
-<h2 mat-dialog-title>Convidar para a lista</h2>
+<h2 mat-dialog-title>{{ t('Convidar para a lista') }}</h2>
 <mat-dialog-content>
-  <p>Quem tiver o link pode adicionar e marcar itens.</p>
+  <p>{{ t('Quem tiver o link pode adicionar e marcar itens.') }}</p>
+  @if (data.currency !== 'BRL') {
+    <p>{{ t('Se o convite não abrir, atualize o Lista Junto ou abra o link no navegador.') }}</p>
+  }
   <div class="actions">
-    @if (canShare) { <button mat-flat-button type="button" (click)="send()">Compartilhar convite</button> }
-    <button mat-stroked-button type="button" (click)="copy()">Copiar link</button>
+    @if (canShare) { <button mat-flat-button type="button" (click)="send()">{{ t('Compartilhar convite') }}</button> }
+    <button mat-stroked-button type="button" (click)="copy()">{{ t('Copiar link') }}</button>
   </div>
-  @if (manual()) { <label for="invite-link">Link da lista</label><input id="invite-link" readonly [value]="data.url"> }
-  @if (feedback()) { <p class="notice" role="status">{{ feedback() }}</p> }
+  @if (manual()) { <label for="invite-link">{{ t('Link da lista') }}</label><input id="invite-link" readonly [value]="data.url"> }
+  @if (feedback()) { <p class="notice" role="status">{{ t(feedback()) }}</p> }
 </mat-dialog-content>
-<mat-dialog-actions><button mat-button mat-dialog-close type="button">Fechar</button></mat-dialog-actions>
+<mat-dialog-actions><button mat-button mat-dialog-close type="button">{{ t('Fechar') }}</button></mat-dialog-actions>

@@ -1,3 +1,4 @@
+import { examplePrice, numberLabel, t, unitLabel } from '../../../../core/locale.ts';
 import { Component, effect, inject, input, output, signal, computed, DestroyRef, ElementRef, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { LucideChevronDown, LucideFolder, LucideLayers, LucideMessageSquare, LucideMinus, LucidePlus, LucideScanBarcode, LucideSlidersHorizontal, LucideTag } from '@lucide/angular';
 import { categories, units } from '../../models/shopping-list.ts';
 import { isCategory, itemUnitPrice, suggestCategory, validateItem } from '../../models/list-rules.ts';
+import { LocalizedDecimal } from '../../../../shared/localized-decimal.ts';
+import type { Currency } from '../../../../shared/locale-preferences.ts';
 import { LabelReader } from '../../../label-reader/services/label-reader.ts';
 import type { Category, ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
 
@@ -16,7 +19,7 @@ const maxQuantity = 1000000;
 @Component({
   selector: 'lj-item-editor',
   imports: [
-    ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule,
+    ReactiveFormsModule, LocalizedDecimal, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule,
     LucideChevronDown, LucideFolder, LucideLayers, LucideMessageSquare, LucideMinus, LucidePlus,
     LucideScanBarcode, LucideSlidersHorizontal, LucideTag,
   ],
@@ -24,6 +27,11 @@ const maxQuantity = 1000000;
   styleUrl: './item-editor.scss',
 })
 export class ItemEditor {
+  readonly t = t;
+  readonly unitLabel = unitLabel;
+  readonly numberLabel = numberLabel;
+  readonly examplePrice = examplePrice;
+  readonly currency = input.required<Currency>();
   private readonly reader = inject(LabelReader);
   private readonly destroy = inject(DestroyRef);
   readonly editing = input<ShoppingItem | null>(null);
@@ -64,7 +72,7 @@ export class ItemEditor {
   }
 
   suggested(): string {
-    return categories[suggestCategory(this.form.controls.name.value)];
+    return t(categories[suggestCategory(this.form.controls.name.value)]);
   }
 
   canAdjustQuantity(step: -1 | 1): boolean {
@@ -105,7 +113,7 @@ export class ItemEditor {
     this.openingReader.set(true);
     let confirmed = false;
     try {
-      const result = await this.reader.open(this.destroy);
+      const result = await this.reader.open(this.destroy, this.currency());
       if (!this.destroy.destroyed && result !== undefined) {
         this.form.controls.estimated_price.setValue(result);
         confirmed = true;

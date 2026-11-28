@@ -1,3 +1,6 @@
+import type { Currency } from '../../../../shared/locale-preferences.ts';
+import { LocalizedDecimal } from '../../../../shared/localized-decimal.ts';
+import { t } from '../../../../core/locale.ts';
 import { Component, input, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,11 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lj-price-confirmation',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [ReactiveFormsModule, LocalizedDecimal, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './price-confirmation.html',
   styleUrl: './price-confirmation.scss',
 })
 export class PriceConfirmation {
+  readonly t = t;
+  readonly currency = input.required<Currency>();
   readonly price = input.required<FormControl<number | null>>();
   readonly confirmed = output<number>();
 

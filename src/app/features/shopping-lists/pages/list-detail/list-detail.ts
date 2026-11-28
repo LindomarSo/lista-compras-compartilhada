@@ -1,3 +1,4 @@
+import { numberLabel, t } from '../../../../core/locale.ts';
 import { Component, DestroyRef, computed, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -9,8 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LucideCalculator, LucideCheck, LucideChevronLeft, LucidePackage, LucidePencil, LucidePlus, LucideShare2, LucideShoppingBasket, LucideTrash, LucideX } from '@lucide/angular';
 import { ListSession } from '../../services/list-session.ts';
-import { sharedPrefix, makeShareLink, tokenPattern } from '../../models/links.ts';
+import { isCurrentShare, makeShareLink, tokenPattern } from '../../models/links.ts';
 import { isNative, playUrl, shareBase } from '../../../../core/platform.ts';
+import { listCurrency } from '../../../../shared/locale-preferences.ts';
 import { formatCurrency } from '../../../../shared/format-currency.ts';
 import { itemSubtotal, itemUnitPrice, listTotal } from '../../models/list-rules.ts';
 import { ItemEditor } from '../../components/item-editor/item-editor.ts';
@@ -32,6 +34,7 @@ import type { ItemFields, ShoppingItem } from '../../models/shopping-list.ts';
   styleUrl: './list-detail.scss',
 })
 export class ListDetail {
+  readonly t = t;
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly dialogs = inject(MatDialog);
@@ -46,12 +49,14 @@ export class ListDetail {
   readonly renameError = signal('');
   readonly pending = computed(() => this.session.snapshot()?.items.filter(item => !item.purchased) ?? []);
   readonly purchased = computed(() => this.session.snapshot()?.items.filter(item => item.purchased) ?? []);
-  readonly currency = formatCurrency;
+  readonly currency = computed(() => listCurrency(this.session.snapshot()?.list));
+  readonly numberLabel = numberLabel;
+  readonly formatCurrency = formatCurrency;
   readonly storeLink = !isNative && /Android/i.test(navigator.userAgent) ? playUrl() : '';
   readonly fromInvite = signal(false);
   readonly usesCurrentFormat = computed(() => {
     const ref = this.session.reference();
-    return !!ref && (ref.kind === 'local' || ref.token.startsWith(sharedPrefix));
+    return !!ref && (ref.kind === 'local' || isCurrentShare(ref.token));
   });
   readonly total = computed(() => {
     const items = this.session.snapshot()?.items ?? [];
@@ -182,15 +187,15 @@ export class ListDetail {
   }
 
   async remove(item: ShoppingItem): Promise<void> {
-    if (!window.confirm('Excluir “' + item.name + '” da lista?')) return;
+    if (!window.confirm(t('Excluir “{name}” da lista?', { name: item.name }))) return;
     await this.session.change({ action: 'delete_item', id: item.id }, 'Produto excluído.');
   }
 
   async deleteList(): Promise<void> {
     const snapshot = this.session.snapshot();
     if (!snapshot) return;
-    const scope = this.session.reference()?.kind === 'local' ? 'deste aparelho' : 'para todos';
-    if (!window.confirm('Excluir a lista “' + snapshot.list.name + '” ' + scope + '?')) return;
+    const message = this.session.reference()?.kind === 'local' ? 'Excluir a lista “{name}” deste aparelho?' : 'Excluir a lista “{name}” para todos?';
+    if (!window.confirm(t(message, { name: snapshot.list.name }))) return;
     if (await this.session.delete()) void this.router.navigate(['/listas'], { queryParams: { aviso: 'excluida' }, replaceUrl: true });
   }
 
@@ -206,7 +211,7 @@ export class ListDetail {
       await this.router.navigate(['/listas', 'compartilhada', token], { replaceUrl: true });
     }
     const dialog = this.dialogs.open(InviteDialog, {
-      data: { title: snapshot.list.name, url: makeShareLink(shareBase(), token) },
+      data: { title: snapshot.list.name, url: makeShareLink(shareBase(), token), currency: listCurrency(snapshot.list) },
       width: '27rem', maxWidth: 'calc(100vw - 2rem)', autoFocus: 'first-heading',
     });
     const unregister = this.destroy.onDestroy(() => dialog.close());

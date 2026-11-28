@@ -1,8 +1,8 @@
 <form (submit)="$event.preventDefault(); submit()">
   <mat-form-field appearance="outline">
-    <mat-label>Confirme o preço por unidade</mat-label>
-    <input matInput id="price-result" type="number" inputmode="decimal" min="0" max="100000000" step="0.01" [formControl]="price()" required>
-    <mat-error>Informe um preço válido.</mat-error>
+    <mat-label>{{ t('Confirme o preço por unidade ({currency})', { currency: currency() }) }}</mat-label>
+    <input matInput id="price-result" [ljDecimal]="2" type="text" inputmode="decimal" [formControl]="price()" required>
+    <mat-error>{{ t('Informe um preço válido.') }}</mat-error>
   </mat-form-field>
-  <button mat-flat-button type="submit">Usar este preço</button>
+  <button mat-flat-button type="submit">{{ t('Usar este preço') }}</button>
 </form>

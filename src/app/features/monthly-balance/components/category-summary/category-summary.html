@@ -3,15 +3,15 @@
     <header class="category-heading">
       <span class="category-icon" aria-hidden="true"><svg lucideTag class="lj-icon"></svg></span>
       <div>
-        <h2>Por categoria</h2>
-        <p>Os itens marcados como comprados neste mês aparecem aqui.</p>
+        <h2>{{ t('Por categoria') }} @if (showCode()) { · {{ currency() }} }</h2>
+        <p>{{ t('Os itens marcados como comprados neste mês aparecem aqui.') }}</p>
       </div>
     </header>
     @if (groups().length) {
-      <ul id="balance-groups" class="clean-list">
+      <ul [attr.data-currency]="currency()" class="clean-list">
         @for (group of groups(); track group.category) {
           <li>
-            <div class="category-line"><span>{{ categories[group.category] }} · {{ group.count }} {{ group.count === 1 ? 'item' : 'itens' }}</span><strong>{{ currency(group.cents / 100) }}</strong></div>
+            <div class="category-line"><span>{{ t(categories[group.category]) }} · {{ t(group.count === 1 ? '{count} item' : '{count} itens', { count: numberLabel(group.count) }) }}</span><strong>{{ formatCurrency(group.cents / 100, currency(), showCode()) }}</strong></div>
             <div class="track" aria-hidden="true"><span [style.width.%]="cents() ? group.cents / cents() * 100 : 0"></span></div>
           </li>
         }
@@ -19,8 +19,8 @@
     } @else {
       <div class="empty-categories">
         <span class="empty-art" aria-hidden="true"><svg lucideTag></svg></span>
-        <h3>Nenhuma compra registrada</h3>
-        <p>Quando houver compras no mês, elas serão organizadas por categoria aqui.</p>
+        <h3>{{ t('Nenhuma compra registrada') }}</h3>
+        <p>{{ t('Quando houver compras no mês, elas serão organizadas por categoria aqui.') }}</p>
       </div>
     }
   </mat-card-content>

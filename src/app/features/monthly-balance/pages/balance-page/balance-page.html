@@ -2,19 +2,29 @@
   <header class="balance-heading">
     <span class="heading-icon" aria-hidden="true"><svg lucideChartNoAxesColumnIncreasing class="lj-icon"></svg></span>
     <div>
-      <h1 id="page-title" tabindex="-1">Balanço mensal</h1>
-      <p>Acompanhe seus gastos e compras do mês.</p>
+      <h1 id="page-title" tabindex="-1">{{ t('Balanço mensal') }}</h1>
+      <p>{{ t('Acompanhe seus gastos e compras do mês.') }}</p>
     </div>
   </header>
   <lj-balance-filters [month]="store.month()" [months]="store.availableMonths().values" [rows]="store.rows()" [chosen]="store.chosen()"
     [selected]="store.selected()" [refreshable]="store.refreshable()" [refreshing]="refreshing()"
     (monthChanged)="setMonth($event)" (listChanged)="store.select($event.token, $event.checked)"
     (refresh)="refresh()" />
-  @if (notice()) { <p class="notice" role="status">{{ notice() }}</p> }
+  @if (notice()) { <p class="notice" role="status">{{ t(notice()) }}</p> }
   @let summary = store.summary();
-  <div class="summary">
-    <lj-total-card [cents]="summary.cents" [count]="summary.items.length" [missing]="summary.missing" />
-    <lj-category-summary [groups]="summary.groups" [cents]="summary.cents" />
-  </div>
-  @if (summary.items.length) { <lj-purchase-history [items]="summary.items" /> }
+  @for (total of summary.totals; track total.currency) {
+    @let showCode = summary.totals.length > 1 || total.currency !== 'BRL';
+    <div class="summary">
+      <lj-total-card [currency]="total.currency" [showCode]="showCode" [cents]="total.cents" [count]="total.count" [missing]="total.missing" />
+      <lj-category-summary [currency]="total.currency" [showCode]="showCode" [groups]="total.groups" [cents]="total.cents" />
+    </div>
+  } @empty {
+    <div class="summary">
+      <lj-total-card [currency]="emptyCurrency()" [showCode]="emptyCurrency() !== 'BRL'" [cents]="0" [count]="0" [missing]="0" />
+      <lj-category-summary [currency]="emptyCurrency()" [groups]="[]" [cents]="0" />
+    </div>
+  }
+  @if (summary.items.length) {
+    <lj-purchase-history [items]="summary.items" [showCodes]="summary.totals.length > 1" />
+  }
 </section>

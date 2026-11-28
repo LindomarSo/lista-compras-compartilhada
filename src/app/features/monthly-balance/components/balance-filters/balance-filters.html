@@ -1,6 +1,6 @@
 <div class="filters">
   <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
-    <mat-label>Mês</mat-label>
+    <mat-label>{{ t('Mês') }}</mat-label>
     <svg matIconPrefix lucideCalendarDays class="lj-icon filter-icon" aria-hidden="true"></svg>
     <mat-select id="balance-month" [value]="month()" [panelWidth]="null" (selectionChange)="monthChanged.emit($event.value)">
       <mat-select-trigger>
@@ -13,18 +13,18 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
-    <mat-label>Lista</mat-label>
+    <mat-label>{{ t('Lista') }}</mat-label>
     <svg matIconPrefix lucideLayers class="lj-icon filter-icon" aria-hidden="true"></svg>
     <mat-select id="balance-selection" multiple [value]="selectionValue()" [placeholder]="title()" [panelWidth]="null"
       (selectionChange)="changeLists($event)">
       <mat-select-trigger>{{ title() }}</mat-select-trigger>
-      <mat-option value="" [disabled]="!rows().length">Todas as listas</mat-option>
+      <mat-option value="" [disabled]="!rows().length">{{ t('Todas as listas') }}</mat-option>
       @for (row of rows(); track row.token) {
         <mat-option [value]="row.token">{{ row.list.name }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
   @if (refreshable()) {
-    <button mat-stroked-button id="balance-refresh" type="button" [disabled]="refreshing()" (click)="refresh.emit()">Atualizar listas</button>
+    <button mat-stroked-button id="balance-refresh" type="button" [disabled]="refreshing()" (click)="refresh.emit()">{{ t('Atualizar listas') }}</button>
   }
 </div>

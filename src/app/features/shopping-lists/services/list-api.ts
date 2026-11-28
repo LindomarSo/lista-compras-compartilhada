@@ -1,5 +1,7 @@
 import { supabaseKey } from '../../../core/platform.ts';
-import { sharedPrefix } from '../models/links.ts';
+import { translations } from '../../../core/translations.ts';
+import { currencySharedPrefix, sharedPrefix } from '../models/links.ts';
+import { isCurrency, listCurrency } from '../../../shared/locale-preferences.ts';
 import type { ListSnapshot, ShoppingItem } from '../models/shopping-list.ts';
 
 const endpoint = 'https://oybwldwkedzabfyckjct.supabase.co/functions/v1/list-api';
@@ -32,12 +34,15 @@ export async function callApi(body: ApiBody, options: ApiOptions = {}): Promise<
     headers['apikey'] = anonKey;
     headers['Authorization'] = 'Bearer ' + anonKey;
   }
-  const v2 = body.action === 'publish_list' || body.token?.startsWith(sharedPrefix);
+  const publishing = body.action === 'publish_list';
+  const currency = publishing && isRecord(body['list']) ? body['list']['currency'] : undefined;
+  const version = (publishing && currency !== undefined && currency !== 'BRL') || body.token?.startsWith(currencySharedPrefix)
+    ? '-v3' : publishing || body.token?.startsWith(sharedPrefix) ? '-v2' : '';
   const timeout = AbortSignal.timeout(10000);
   const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
   let response: Response;
   try {
-    response = await fetchImpl(options.endpoint ?? (v2 ? endpoint + '-v2' : endpoint), {
+    response = await fetchImpl(options.endpoint ?? endpoint + version, {
       method: 'POST', headers, body: JSON.stringify(body), signal,
     });
   } catch {
@@ -53,7 +58,7 @@ export async function callApi(body: ApiBody, options: ApiOptions = {}): Promise<
   }
   if (!response.ok) {
     const error = isRecord(payload) ? payload['error'] : undefined;
-    throw new ApiError(typeof error === 'string' && error.length < 250 ? error : 'Não foi possível concluir a operação. Tente novamente.',
+    throw new ApiError(typeof error === 'string' && Object.hasOwn(translations, error) ? error : 'Não foi possível concluir a operação. Tente novamente.',
       { status: response.status, code: 'HTTP_ERROR' });
   }
   if (!isRecord(payload)) throw new ApiError('O serviço retornou dados em formato inesperado.');
@@ -72,10 +77,10 @@ export function isSnapshot(value: unknown): value is ListSnapshot {
   if (!isRecord(value)) return false;
   const list = value['list'];
   const items = value['items'];
-  return isRecord(list) && typeof list['name'] === 'string' && Array.isArray(items) && items.every(isItem);
+  return isRecord(list) && typeof list['name'] === 'string' && (list['currency'] === undefined || isCurrency(list['currency'])) && Array.isArray(items) && items.every(isItem);
 }
 
-export function parseSnapshot(value: unknown): ListSnapshot {
-  if (!isSnapshot(value)) throw new ApiError('O serviço retornou a lista em formato inesperado.');
-  return { list: value.list, items: value.items };
+export function parseSnapshot(value: unknown, token: string): ListSnapshot {
+  if (!isSnapshot(value) || (token.startsWith(currencySharedPrefix) && (!value.list.currency || value.list.currency === 'BRL'))) throw new ApiError('O serviço retornou a lista em formato inesperado.');
+  return { list: { ...value.list, currency: listCurrency(value.list) }, items: value.items };
 }

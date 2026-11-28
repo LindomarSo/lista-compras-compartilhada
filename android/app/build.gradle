@@ -20,6 +20,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            if (project.hasProperty('listaJuntoTestPackage')) {
+                applicationIdSuffix '.teste'
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

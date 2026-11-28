@@ -3,20 +3,20 @@
     <li [class.purchased]="item.purchased">
       <div class="item-content">
         <mat-checkbox [checked]="item.purchased === true" [disabled]="disabled()" (change)="toggle(item, $event)"
-          [aria-label]="(item.purchased ? 'Desmarcar ' : 'Marcar ') + item.name + ' como comprado'">
+          [aria-label]="t(item.purchased ? 'Desmarcar {name} como comprado' : 'Marcar {name} como comprado', { name: item.name })">
           <span class="item-name">{{ item.name }}</span>
           @if (details(item); as description) { <small>{{ description }}</small> }
         </mat-checkbox>
         @let cost = subtotal(item);
         @if (cost !== null) {
-          <span class="price">{{ currency(cost) }}<small>{{ currency(unitPrice(item)) }} / {{ item.unit || 'un' }}</small></span>
+          <span class="price">{{ formatCurrency(cost, currency()) }}<small>{{ formatCurrency(unitPrice(item), currency()) }} / {{ item.unit || t('un') }}</small></span>
         }
       </div>
       <div class="item-actions">
-        <button mat-icon-button type="button" aria-haspopup="dialog" [disabled]="disabled()" [attr.aria-label]="'Editar ' + item.name" (click)="requestEdit(item, $event)">
+        <button mat-icon-button type="button" aria-haspopup="dialog" [disabled]="disabled()" [attr.aria-label]="t('Editar {name}', { name: item.name })" (click)="requestEdit(item, $event)">
           <svg lucidePencil class="lj-icon" aria-hidden="true"></svg>
         </button>
-        <button mat-icon-button class="delete-item" type="button" [disabled]="disabled()" [attr.aria-label]="'Excluir ' + item.name" (click)="removed.emit(item)">
+        <button mat-icon-button class="delete-item" type="button" [disabled]="disabled()" [attr.aria-label]="t('Excluir {name}', { name: item.name })" (click)="removed.emit(item)">
           <svg lucideTrash class="lj-icon" aria-hidden="true"></svg>
         </button>
       </div>
