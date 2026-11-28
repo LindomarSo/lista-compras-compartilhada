@@ -5,6 +5,11 @@
   @include mat.select-overrides((trigger-text-size: var(--lj-text-product-field)));
 }
 
+@supports (-webkit-touch-callout: none) {
+  // iOS WebKit can zoom the page when a smaller input receives focus.
+  input[matInput] { font-size: max(16px, var(--lj-text-product-field)); }
+}
+
 form { display: grid; gap: var(--lj-space-sm); }
 .composer, .field { display: grid; gap: var(--lj-space-xxs); min-width: 0; }
 label {

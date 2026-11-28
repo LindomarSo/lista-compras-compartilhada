@@ -192,6 +192,8 @@ button[mat-button], a[mat-button], button[mat-flat-button], button[mat-stroked-b
   .mat-mdc-dialog-container .mat-mdc-dialog-content {
     max-height: none;
     padding-block: var(--lj-space-sm) var(--lj-space-xs);
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
   }
   .mat-mdc-dialog-content .notice { margin-block-end: var(--lj-space-sm); }
   .mat-mdc-dialog-actions {

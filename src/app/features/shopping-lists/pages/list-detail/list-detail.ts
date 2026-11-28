@@ -143,6 +143,10 @@ export class ListDetail {
     dialog.afterOpened().subscribe(align);
     viewport?.addEventListener('resize', align);
     viewport?.addEventListener('scroll', align);
+    dialog.beforeClosed().subscribe(() => {
+      const focused = document.activeElement;
+      if (focused instanceof HTMLInputElement && document.getElementById(dialog.id)?.contains(focused)) focused.blur();
+    });
     dialog.afterClosed().subscribe(() => {
       viewport?.removeEventListener('resize', align);
       viewport?.removeEventListener('scroll', align);
