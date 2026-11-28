@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+def releaseVersionCode = providers.gradleProperty('listaJuntoVersionCode').map { it.toInteger() }
+def releaseVersionName = providers.gradleProperty('listaJuntoVersionName')
+
 android {
     namespace = "com.lindomarso.listajunto"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +10,8 @@ android {
         applicationId "com.lindomarso.listajunto"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode releaseVersionCode.getOrElse(1)
+        versionName releaseVersionName.getOrElse('1.0')
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

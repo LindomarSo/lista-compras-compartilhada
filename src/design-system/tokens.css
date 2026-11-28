@@ -9,6 +9,7 @@
 :root {
   /* Interface and interaction colors */
   --lj-color-background: #f5f9f4;
+  --lj-color-app-surround: #eaf1eb;
   --lj-color-surface: #fff;
   --lj-color-surface-accent: #eef6ee;
   --lj-color-text: #172c23;
@@ -59,7 +60,6 @@
   --lj-color-camera-surface: #173f30;
   --lj-color-camera-frame: #fff;
   --lj-color-camera-scrim: #061f1b68;
-  --lj-shadow-navigation: 0 -7px 25px #183d2a16;
   --lj-shadow-popover: 0 12px 32px #163d2826;
 
   /* Literal hex colors mirrored into static metadata by tokens:sync. */
@@ -126,6 +126,7 @@
   --lj-nav-item-height: 52px;
   --lj-item-row-height: 56px;
   --lj-list-row-height: 64px;
+  --lj-app-max-width: 48rem;
   --lj-topbar-height: 65px;
   --lj-nav-scroll-clearance: 5rem;
   --lj-nav-footer-clearance: 5.25rem;

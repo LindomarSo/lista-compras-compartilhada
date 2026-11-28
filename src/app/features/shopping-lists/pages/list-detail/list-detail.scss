@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-:host { display: block; max-width: 47rem; margin-inline: auto; }
+:host { display: block; }
 .back { justify-self: start; margin-inline-start: calc(-1 * var(--lj-space-sm)); }
 .actions, .feedback, .section-heading, .estimate, .estimate span { display: flex; align-items: center; }
 .heading-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--lj-space-xs); }
@@ -17,6 +17,7 @@
   color: var(--lj-color-action);
 }
 .list-badge .lj-icon { inline-size: var(--lj-space-lg); block-size: var(--lj-space-lg); }
+.actions > button { display: grid; place-items: center; padding: 0; }
 .actions .lj-icon {
   inline-size: var(--lj-space-xl);
   block-size: var(--lj-space-xl);

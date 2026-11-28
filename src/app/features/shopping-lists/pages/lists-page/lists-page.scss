@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-:host { display: block; max-width: 47rem; margin-inline: auto; }
+:host { display: block; }
 
 .welcome-card {
   @include mat.card-overrides((outlined-container-color: var(--lj-color-surface-accent)));

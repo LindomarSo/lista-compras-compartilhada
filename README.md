@@ -50,6 +50,29 @@ npm run android:open
 
 O Android Studio pode gerar um Android App Bundle (AAB) assinado em **Build > Generate Signed Bundle / APK**. Preserve a chave de assinatura e não a armazene neste repositório. O projeto está configurado para target API 36, atualmente exigida para novos apps e atualizações na Play Store a partir de 31 de agosto de 2026 ([política de API da Play](https://support.google.com/googleplay/android-developer/answer/11926878?hl=en-EN)).
 
+### Gerar o AAB pelo GitHub Actions
+
+Configure os quatro *repository secrets* em **Settings → Secrets and variables → Actions**. Use a chave de upload já cadastrada na Play Console para o pacote `com.lindomarso.listajunto`.
+
+| Secret | Valor |
+| --- | --- |
+| `ANDROID_UPLOAD_KEYSTORE_BASE64` | Conteúdo do arquivo de chave de upload (.jks ou .keystore) em Base64 |
+| `ANDROID_UPLOAD_STORE_PASSWORD` | Senha do arquivo de chave |
+| `ANDROID_UPLOAD_KEY_ALIAS` | Alias da chave de upload |
+| `ANDROID_UPLOAD_KEY_PASSWORD` | Senha da chave de upload. Se for igual à senha do arquivo, use o mesmo valor. |
+
+No PowerShell, com o GitHub CLI autenticado e a partir do repositório, envie a chave direto para o secret substituindo o caminho de exemplo pelo caminho do seu arquivo.
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\caminho\chave-upload.jks')) | gh secret set ANDROID_UPLOAD_KEYSTORE_BASE64
+```
+
+1. Com o workflow na `main`, abra **Actions → Gerar AAB para Google Play → Run workflow** e selecione `main`.
+2. Preencha `version_code` com um inteiro maior que o maior código já enviado à Play Console. Preencha `version_name` com a versão exibida aos usuários, por exemplo `1.0.1`.
+3. Abra a execução concluída e baixe `lista-junto-<version_code>-r<tentativa>.aab` em **Artifacts**. O download fica disponível por 14 dias. Envie o AAB pela Play Console à faixa desejada.
+
+O fluxo Android funciona em repositório privado com GitHub Actions habilitado e é independente do GitHub Pages, que hospeda a página de privacidade e a web dos convites.
+
 Os convites continuam apontando para `https://lindomarso.github.io/lista-compras-compartilhada/` e carregam o token no fragmento da URL. O app Android declara um App Link HTTPS para essa página. Para o Android verificar e abrir convites diretamente no app, publique também na raiz do domínio `https://lindomarso.github.io/.well-known/assetlinks.json` com o pacote `com.lindomarso.listajunto` e a impressão SHA-256 do certificado de assinatura usado pela Play Console. O exemplo está em `docs/assetlinks.json.example`. Como este repositório publica em um caminho de projeto, a associação na raiz do domínio precisa ser hospedada no site raiz de `lindomarso.github.io` ou o app deve passar a usar um domínio próprio. Sem esse arquivo no host, os convites ainda abrem no site, mas o Android não consegue confirmar automaticamente o App Link.
 
 A ficha, o roteiro de capturas Android, os testes em dois celulares e o piloto estão em [docs/google-play-release.md](docs/google-play-release.md).

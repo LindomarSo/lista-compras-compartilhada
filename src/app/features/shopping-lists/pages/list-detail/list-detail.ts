@@ -128,7 +128,7 @@ export class ListDetail {
       panelClass: 'lj-item-sheet',
       position: { bottom: '0' },
       width: '100%',
-      maxWidth: '100%',
+      maxWidth: 'var(--lj-app-max-width)',
       maxHeight: 'calc(min(100dvh, var(--lj-sheet-viewport, 100dvh)) - var(--lj-space-sm))',
     });
     this.itemSheet = dialog;
